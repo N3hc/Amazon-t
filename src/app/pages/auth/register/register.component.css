@@ -1,0 +1,29 @@
+@keyframes marquee-2 {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100vw); }
+  }
+  
+  @keyframes marquee-1 {
+    0% { transform: translateX(100vw); }
+    100% { transform: translateX(-100%); }
+  }
+
+  @keyframes marquee-3 {
+    0% { transform: translateX(100vw); }
+    100% { transform: translateX(-100%); }
+  }
+  
+  .animate-marquee-3 {
+    position: absolute;
+    animation: marquee-3 12s linear infinite;
+  }
+  
+  .animate-marquee-1 {
+    position: absolute;
+    animation: marquee-1 10s linear infinite;
+  }
+  
+  .animate-marquee-2 {
+    position: absolute;
+    animation: marquee-2 15s linear infinite;
+  }

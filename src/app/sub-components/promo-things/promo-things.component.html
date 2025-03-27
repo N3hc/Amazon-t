@@ -1,0 +1,165 @@
+<div class="flex items-center justify-center min-h-[600px] py-12 relative">
+    <div
+        class="flex gap-8 p-6 w-full max-w-7xl relative bg-indigo-50 dark:bg-[#151E21] rounded-2xl shadow-inner scroll-smooth mx-4">
+        <!-- Botón Anterior -->
+        <button
+            class="absolute left-4 md:left-8 top-1/2 px-4 py-3 z-20 -translate-y-1/2 
+        bg-blue-500 text-white rounded shadow-lg transition-all opacity-75 hover:opacity-100 hover:scale-110 hover:bg-blue-700 focus:outline-none"
+            (click)="anteriorProducto()" aria-label="Producto anterior">
+            &lt;
+        </button>
+
+        <!-- Contenedor de tarjetas -->
+        <div class="flex flex-1 items-center justify-center gap-4 p-4 overflow-hidden">
+            <!-- Tarjeta 1 -->
+            <div
+                class="flex flex-col items-center justify-center p-4 min-w-[200px] md:min-w-[240px] relative 
+          bg-white dark:bg-[#1E272A] rounded-xl shadow-md transition-all duration-300 opacity-30 scale-80 hover:shadow-xl hover:-translate-y-2 mx-1">
+                <div class="flex flex-col items-center justify-center space-y-3 cursor-pointer relative">
+                    <img [src]="Cards[(actual - 2 + Cards.length) % Cards.length].image"
+                        class="max-w-full h-auto w-[360px] h-[200px] p-2 mb-2 object-contain rounded-lg">
+                    <p class="text-base font-medium text-center text-gray-600 dark:text-gray-300 max-w-[220px]">
+                        {{Cards[(actual - 2 + Cards.length) % Cards.length].name}}
+                    </p>
+                    <div class="absolute inset-0 rounded-xl opacity-0 
+              bg-gradient-to-r from-transparent via-white/30 to-transparent 
+              transition-opacity hover:opacity-100"></div>
+                </div>
+            </div>
+
+            <!-- Tarjeta 2 -->
+            <div
+                class="flex flex-col items-center justify-center p-4 min-w-[220px] md:min-w-[260px] relative 
+          bg-white dark:bg-[#1E272A] rounded-xl shadow-md transition-all duration-300 opacity-50 scale-90 hover:shadow-xl hover:-translate-y-2 mx-1">
+                <div class="flex flex-col items-center justify-center space-y-3 cursor-pointer relative">
+                    <img [src]="Cards[(actual - 1 + Cards.length) % Cards.length].image"
+                        class="max-w-full h-auto w-[480px] h-[260px] p-2 mb-2 object-contain rounded-lg">
+                    <p class="text-lg font-semibold text-center text-gray-700 dark:text-gray-300 max-w-[240px]">
+                        {{Cards[(actual - 1 + Cards.length) % Cards.length].name}}
+                    </p>
+                    <div class="absolute inset-0 rounded-xl opacity-0 
+              bg-gradient-to-r from-transparent via-white/30 to-transparent 
+              transition-opacity hover:opacity-100"></div>
+                </div>
+            </div>
+
+            <!-- Tarjeta Actual -->
+            <div class="flex flex-col items-center justify-center p-6 min-w-[320px] md:min-w-[380px] relative z-10 
+            bg-white dark:bg-[#1E272A] rounded-xl shadow-2xl overflow-hidden 
+            transition-all duration-300 scale-110 md:hover:scale-100 md:hover:opacity-100 hover:scale-100 hover:opacity-100 mx-2">
+            <div class="flex flex-col items-center justify-center w-full space-y-3 cursor-pointer relative">
+                <img [src]="Cards[actual].image"
+                    class="max-w-full h-auto max-w-[520px] max-h-[300px] mb-2 object-contain">
+                <div class="w-full px-3 space-y-2">
+                    <p class="text-2xl font-bold text-center text-gray-900 dark:text-gray-100 break-words leading-tight">
+                        {{Cards[actual].name}}
+                    </p>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 text-center">{{Cards[actual].setName}}</p>
+                </div>
+                <!-- Aquí está la parte del hover para iluminar, solo en pantallas mayores a 'md' -->
+                <div class="absolute inset-0 rounded-xl opacity-0 
+                    bg-gradient-to-r from-transparent via-white/30 to-transparent 
+                    transition-opacity md:hover:opacity-100"></div>
+            </div>
+        </div>
+        
+            <!-- Tarjeta 4 -->
+            <div
+                class="flex flex-col items-center justify-center p-4 min-w-[220px] md:min-w-[260px] relative 
+          bg-white dark:bg-[#1E272A] rounded-xl shadow-md transition-all duration-300 opacity-50 scale-90 hover:shadow-xl hover:-translate-y-2 mx-1">
+                <div class="flex flex-col items-center justify-center space-y-3 cursor-pointer relative">
+                    <img [src]="Cards[(actual + 1) % Cards.length].image"
+                        class="max-w-full h-auto w-[480px] h-[260px] p-2 mb-2 object-contain rounded-lg">
+                    <p class="text-lg font-semibold text-center text-gray-700 dark:text-gray-300 max-w-[240px]">
+                        {{Cards[(actual + 1) % Cards.length].name}}
+                    </p>
+                    <div class="absolute inset-0 rounded-xl opacity-0 
+              bg-gradient-to-r from-transparent via-white/30 to-transparent 
+              transition-opacity hover:opacity-100"></div>
+                </div>
+            </div>
+
+            <!-- Tarjeta 5 -->
+            <div
+                class="flex flex-col items-center justify-center p-4 min-w-[200px] md:min-w-[240px] relative 
+          bg-white dark:bg-[#1E272A] rounded-xl shadow-md transition-all duration-300 opacity-30 scale-80 hover:shadow-xl hover:-translate-y-2 mx-1">
+                <div class="flex flex-col items-center justify-center space-y-3 cursor-pointer relative">
+                    <img [src]="Cards[(actual + 2) % Cards.length].image"
+                        class="max-w-full h-auto w-[360px] h-[200px] p-2 mb-2 object-contain rounded-lg">
+                    <p class="text-base font-medium text-center text-gray-600 dark:text-gray-300 max-w-[220px]">
+                        {{Cards[(actual + 2) % Cards.length].name}}
+                    </p>
+                    <div class="absolute inset-0 rounded-xl opacity-0 
+              bg-gradient-to-r from-transparent via-white/30 to-transparent 
+              transition-opacity hover:opacity-100"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón Siguiente -->
+        <button
+            class="absolute right-4 md:right-8 top-1/2 px-4 py-3 z-20 -translate-y-1/2 
+        bg-blue-500 text-white rounded shadow-lg transition-all opacity-75 hover:opacity-100 hover:scale-110 hover:bg-blue-700 focus:outline-none"
+            (click)="siguienteProducto()" aria-label="Producto siguiente">
+            &gt;
+        </button>
+    </div>
+</div>
+
+<div class="container mx-auto mt-4 p-4 bg-[#EDF1FF] dark:bg-[#121212] rounded-lg shadow-md">
+    @if (sets.length > 0) {
+    <table class="w-full border-collapse rounded-lg overflow-hidden shadow-md">
+        <thead class="bg-[#3D81B6] dark:bg-[#1E272A] text-white">
+            <tr>
+                <th class="px-4 py-2 text-left">
+                    <button class="filter-button" (click)="originalPos()">Nombre</button>
+                </th>
+                <th class="px-4 py-2 text-left">
+                    <button class="filter-button" (click)="SearchTime()">Fecha de Salida</button>
+                </th>
+                <th class="px-4 py-2 text-left">
+                    <button class="filter-button" (click)="totalSearchSets()">Total de Cartas</button>
+                </th>
+                <th class="px-4 py-2 text-left hidden sm:table-cell">Legalities</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-300 dark:divide-gray-600">
+            @for (serie of series; track $index) {
+            @if (any == 0){
+            <tr class="bg-blue-100 dark:bg-[#2C3E50]">
+                <td colspan="4" class="px-4 py-2 font-semibold text-[#3D81B6] dark:text-[#81A1C1]">{{ serie }}</td>
+            </tr>
+            @for (set of sets; track $index) {
+            @if (serie == set.series) {
+            <tr class="hover:bg-blue-200 dark:hover:bg-[#34495E] transition text-black dark:text-white">
+                <td class="px-4 py-2 inline-flex items-baseline ">{{ set.name }}
+                    <img src={{set.images.symbol}} class="w-[20px] h-[20px] ml-3" alt="">
+                </td>
+                <td class="px-4 py-2">{{ set.releaseDate }}</td>
+                <td class="px-4 py-2">{{ set.total }}</td>
+                <td class="px-4 py-2 hidden sm:table-cell">{{ set.legalities.unlimited }}</td>
+            </tr>
+            }
+            }
+            } @else {
+            <tr class="bg-blue-100 dark:bg-[#2C3E50]">
+                <td colspan="4" class="px-4 py-2 font-semibold text-[#3D81B6] dark:text-[#81A1C1]"></td>
+            </tr>
+            @for (set of sets; track $index) {
+            <tr class="hover:bg-blue-200 dark:hover:bg-[#34495E] transition text-black dark:text-white">
+                <td class="px-4 py-2 inline-flex items-baseline ">{{ set.name }}
+                    <img src={{set.images.symbol}} class="w-[20px] h-[20px] ml-3" alt="">
+                </td>
+                <td class="px-4 py-2">{{ set.releaseDate }}</td>
+                <td class="px-4 py-2">{{ set.total }}</td>
+                <td class="px-4 py-2 hidden sm:table-cell">{{ set.legalities.unlimited }}</td>
+            </tr>
+            }
+            }
+            }
+        </tbody>
+    </table>
+    } @else {
+    <h1 class="text-[#3D81B6] dark:text-[#81A1C1] text-2xl font-bold text-center">Cargando...</h1>
+    }
+</div>

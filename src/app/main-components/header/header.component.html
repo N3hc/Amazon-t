@@ -2,7 +2,7 @@
     <div class="bg-[#1064A6] p-2.5 grid grid-cols-1 md:grid-cols-12 items-center text-center">
         <!-- Primera columna: logo y toggle de tema -->
         <div class="ml-2 md:col-span-3 flex justify-between items-center">
-            <img src="assets/logos/logo.png" alt="Logo" class="max-h-[40px] hidden md:block">
+            <img src="assets/logos/logo.png" alt="Logo" class="max-h-[40px] hidden md:block" (click)="goToHome()">
             <p class="hidden md:block"></p>
             <img class="max-h-[60px] cursor-pointer hidden md:block" (click)="toggleTheme()"
                 [src]="isDarkMode ? 'assets/icons/solgaleoCoin.png' : 'assets/icons/lunalaCoin.png'" alt="Theme Icon">

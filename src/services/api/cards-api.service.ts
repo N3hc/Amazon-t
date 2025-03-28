@@ -42,6 +42,11 @@ export class CardsApiService {
     return this.handleApiResponse(this.callApi<any>('/cards', params), 'getCards', []);
   }
 
+  getCardById(cardId: string): Observable<any> {
+    return this.handleApiResponse(this.callApi<any>(`/cards/${cardId}`, {}), 'getCardById', {});
+  }
+  
+
   getUniquePokemon(name: string): Observable<any> {
     const params = {
       q: `name:${name}`,

@@ -1,4 +1,5 @@
 import { Component, HostListener, EventEmitter, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { SearchService } from '../../../services/search/search.service';
 import { CardsApiService } from '../../../services/api/cards-api.service';
 
@@ -16,11 +17,13 @@ export class CarrouselComponent implements OnInit {
   screenWidth: number = window.innerWidth;
 
   constructor(private cardsApiService: CardsApiService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private router: Router
   ) { }
 
   selectCategory(category: string) {
     this.searchService.setCategory(category);
+    this.router.navigate(['/products']);
   }
 
 

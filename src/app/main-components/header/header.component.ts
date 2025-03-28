@@ -31,6 +31,10 @@ export class HeaderComponent implements OnInit{
     this.themeService.toggleTheme();
   }
 
+  goToHome(){
+    this.router.navigate(['/home']);
+  }
+
   goToLogin() {
     this.router.navigate(['/login']);
   }

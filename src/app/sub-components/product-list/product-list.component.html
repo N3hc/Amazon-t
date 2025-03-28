@@ -1,0 +1,31 @@
+<div class="flex flex-wrap justify-center gap-6 p-6 rounded-2xl shadow-inner">
+    @if (cards.length > 0) {
+        @for (card of cards; track $index) {
+            @if (card.cardmarket?.prices?.averageSellPrice) {
+                <div class="flex justify-center">
+                    <div class="bg-white dark:bg-[#1E272A] p-4 rounded-xl shadow-lg hover:shadow-2xl transition-all w-full max-w-xs">
+                        <div class="text-center cursor-pointer" (click)="selectProduct(card)">
+                            <img [src]="card.images.small" class="w-full h-auto rounded-lg shadow-md">
+                            <div class="mt-4">
+                                <h4 class="text-lg font-bold text-gray-800 dark:text-gray-200">{{card.name}}</h4>
+                                <h6 class="mt-1 text-gray-500 dark:text-gray-400 text-sm max-w-[30vh]">
+                                    @if(card.flavorText == null) {
+                                        {{card.rules}}
+                                    } @else {
+                                        {{card.flavorText}}
+                                    }
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-4 border-t pt-2 border-gray-300 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-400 text-sm">Precio</span>
+                            <span class="text-lg font-semibold text-blue-600 dark:text-blue-400">{{ card.cardmarket?.prices?.averageSellPrice || 'unknow' }} €</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    } @else {
+        <p class="text-gray-500 dark:text-gray-400 italic">Cargando cartas...</p>
+    }
+</div>

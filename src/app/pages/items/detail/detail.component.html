@@ -1,0 +1,90 @@
+<app-header></app-header>
+<div [class.dark]="isDarkMode">
+    <div class="dark:bg-[#121212] min-h-screen w-full flex flex-col">
+
+        <button class="flex items-center gap-2 text-gray-800 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition duration-300 py-2 px-3 rounded-md focus:outline-none" (click)="backToProducts()">
+            <i class="bi bi-arrow-left"></i> Go back
+        </button>
+        
+        
+
+        <div class="container mx-auto mt-5 p-4 dark:bg-[#121212] text-gray-900 dark:text-gray-200">
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Product Images -->
+                <div class="flex justify-center">
+                    <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg holographic-card">
+                        <img [src]="card.images?.large" class="w-full max-w-xs rounded-lg" [alt]="card.name" />
+                    </div>
+                </div>
+
+                <!-- Product Details -->
+                <div>
+                    <h2 class="text-2xl font-semibold"> {{ card.name }} </h2>
+                    <p class="text-gray-500 dark:text-gray-400 mb-4">Card ID: {{card.id}}</p>
+                    <div class="text-xl font-bold">{{ card.cardmarket?.prices?.trendPrice }} €</div>
+
+                    <div class="flex items-center my-3">
+                        <i class="bi bi-star-fill text-yellow-400"></i>
+                        <i class="bi bi-star-fill text-yellow-400"></i>
+                        <i class="bi bi-star-fill text-yellow-400"></i>
+                        <i class="bi bi-star-fill text-yellow-400"></i>
+                        <i class="bi bi-star-half text-yellow-400"></i>
+                        <span class="ml-2">4.5 (120 reviews)</span>
+                    </div>
+
+                    <ul class="space-y-2">
+                        <li><strong>Supertipo:</strong> {{ card.supertype }}</li>
+                        <li><strong>Subtipos:</strong> {{ card.subtypes ? card.subtypes.join(', ') : 'Ninguno' }}</li>
+                        <li><strong>Evoluciona de:</strong> {{ card.evolvesFrom || 'No aplica' }}</li>
+                        <li><strong>Rareza:</strong> {{ card.rarity || 'No especificada' }}</li>
+                        <li><strong>Regulación:</strong> {{ card.regulationMark || 'Desconocida' }}</li>
+                    </ul>
+
+                    <div class="mt-4">
+                        <label for="quantity" class="block mb-1">Cantidad:</label>
+                        <input type="number" id="quantity" value="1" min="1"
+                            class="w-20 p-2 border rounded dark:bg-gray-800 dark:border-gray-600">
+                    </div>
+
+                    <div class="flex gap-3 mt-4">
+                        <button
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center gap-2">
+                            <i class="bi bi-cart-plus"></i> Añadir al Carrito
+                        </button>
+                        <button
+                            class="border border-gray-500 hover:border-gray-700 px-4 py-2 rounded flex items-center gap-2">
+                            <i class="bi bi-heart"></i> Añadir a Favoritos
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Ataques y Habilidades -->
+            <div class="mt-6">
+                @if (card.abilities) {
+                <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
+                    <h4 class="text-lg font-semibold mb-2">Habilidades</h4>
+                    <ul class="space-y-2">
+                        @for (ability of card.abilities; track $index) {
+                        <li><strong>{{ ability.name }}:</strong> {{ ability.text }}</li>
+                        }
+                    </ul>
+                </div>
+                }
+
+                <h4 class="text-lg font-semibold mt-4">Ataques</h4>
+                <ul class="space-y-2">
+                    @for (attack of card.attacks; track $index) {
+                    <li>
+                        @for (energy of attack.cost; track $index) {
+                        <img class="inline-block w-5" [src]="routes + energy + '.png'">
+                        }
+                        <strong>{{ attack.name }}:</strong> {{ attack.damage }} de daño
+                        <p class="text-sm">{{ attack.text }}</p>
+                    </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

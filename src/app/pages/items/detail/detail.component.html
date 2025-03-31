@@ -40,14 +40,14 @@
                         <li><strong>Regulación:</strong> {{ card.regulationMark || 'Desconocida' }}</li>
                     </ul>
 
-                    <div class="mt-4">
+                 <!--   <div class="mt-4">
                         <label for="quantity" class="block mb-1">Cantidad:</label>
                         <input type="number" id="quantity" value="1" min="1"
                             class="w-20 p-2 border rounded dark:bg-gray-800 dark:border-gray-600">
-                    </div>
+                    </div> -->
 
                     <div class="flex gap-3 mt-4">
-                        <button
+                        <button (click)="addToCart(card)"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center gap-2">
                             <i class="bi bi-cart-plus"></i> Añadir al Carrito
                         </button>

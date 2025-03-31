@@ -4,6 +4,8 @@ import { SearchService } from '../../../../services/search/search.service';
 import { HeaderComponent } from "../../../main-components/header/header.component";
 import { ThemeService } from '../../../../services/theme/theme.service';
 import { CardsApiService } from '../../../../services/api/cards-api.service';
+import { CartService } from '../../../../services/cart/cart.service';
+import { CartItem } from '../../../../interface/productos.interface';
 
 @Component({
   selector: 'app-detail',
@@ -23,8 +25,21 @@ export class DetailComponent {
     private cardsApiService: CardsApiService,
     private themeService: ThemeService,
     private searchService: SearchService,
-    private router: Router
+    private router: Router,
+    private cartService: CartService
   ) {}
+
+  addToCart(product: any) {
+    const item: CartItem = {
+      id: product.id,
+      name: product.name,
+      price: product.cardmarket.prices.averageSellPrice,
+      image: product.images.small,
+      quantity: 1
+    };
+    console.log(item)
+    this.cartService.addToCart(item);
+  }
 
   backToProducts() {
     // Emitimos el set de la carta (suponiendo que `card.set.id` contiene el ID del set)

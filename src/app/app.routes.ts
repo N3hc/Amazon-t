@@ -4,6 +4,7 @@ import { LoginComponent } from './pages/auth/login/login.component';
 import { RegisterComponent } from './pages/auth/register/register.component';
 import { ProductsComponent } from './pages/items/products/products.component';
 import { DetailComponent } from './pages/items/detail/detail.component';
+import { CartComponent } from './pages/cart/cart.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' }, 
@@ -12,6 +13,7 @@ export const routes: Routes = [
     { path: 'register', component: RegisterComponent },
     { path: 'products', component: ProductsComponent },
     { path: 'products/details/:id', component: DetailComponent },
+    { path: 'cart', component: CartComponent },
     { path: '**', redirectTo: 'home' }
   ];
   

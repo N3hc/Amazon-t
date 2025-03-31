@@ -1,0 +1,12 @@
+<app-header></app-header>
+<div [class.dark]="isDarkMode">
+    <div class="dark:bg-[#121212] h-full w-full">
+        @for (item of cart; track $index) {
+        <li>
+            <img [src]="item.image" alt="{{ item.name }}">
+            <p>{{ item.name }} - ${{ item.price }} (x{{ item.quantity }})</p>
+            <button (click)="removeFromCart(item.id)">Eliminar</button>
+        </li>
+        }
+    </div>
+</div>

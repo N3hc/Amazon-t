@@ -39,4 +39,7 @@ export class HeaderComponent implements OnInit{
     this.router.navigate(['/login']);
   }
 
+  goToCard() {
+    this.router.navigate(['/cart'])
+  }
 }

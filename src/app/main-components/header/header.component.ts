@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ThemeService } from '../../../services/theme/theme.service';
+import { CartService } from '../../../services/cart/cart.service';
+import { CartItem } from '../../../interface/productos.interface';
 
 @Component({
   selector: 'app-header',
@@ -13,11 +15,21 @@ import { ThemeService } from '../../../services/theme/theme.service';
 export class HeaderComponent implements OnInit{
 
   isDarkMode: boolean = false;
+    cart: CartItem[] = [];
 
   constructor(
     private themeService: ThemeService, 
-    private router: Router
-  ) {}
+    private router: Router,
+    private cartService: CartService
+  ) {
+    this.cartService.cart$.subscribe((cart) => {
+      this.cart = cart;
+    });
+  }
+
+  getTotalItems(): number {
+    return this.cart.reduce((total, item) => total + item.quantity, 0);
+  }
 
 
   ngOnInit() {

@@ -23,7 +23,7 @@ export class CarrouselComponent implements OnInit {
 
   selectCategory(category: string) {
     this.searchService.setCategory(category);
-    this.router.navigate(['/products']);
+    this.router.navigate(['home/products']);
   }
 
 

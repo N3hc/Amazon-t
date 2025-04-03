@@ -1,7 +1,7 @@
 <app-header></app-header>
 <div [class.dark]="isDarkMode">
-    <div class="dark:bg-[#121212] h-full w-full">
+    <div class="dark:bg-[#121212] min-h-screen w-full flex flex-col">
         <app-carrousel></app-carrousel>
-        <app-promo-things></app-promo-things>
+        <router-outlet></router-outlet>
     </div>
 </div>

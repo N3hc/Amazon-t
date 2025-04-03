@@ -5,6 +5,7 @@ import { CarrouselComponent } from '../../../main-components/carrousel/carrousel
 import { PromoThingsComponent } from '../../../sub-components/promo-things/promo-things.component';
 import { FooterComponent } from "../../../main-components/footer/footer.component";
 import { ThemeService } from '../../../../services/theme/theme.service';
+import { SearchService } from '../../../../services/search/search.service';
 
 @Component({
   selector: 'app-home',
@@ -16,11 +17,23 @@ import { ThemeService } from '../../../../services/theme/theme.service';
 export class HomeComponent {
   isDarkMode = false;
 
-  constructor(private themeService: ThemeService) {}
+  selectedProduct: any = null;
+  selectedCategory: any = null;
+
+  onProductSelected(product: any) {
+    this.selectedProduct = product;
+  }
+
+  constructor(private themeService: ThemeService,
+    private searchService: SearchService
+  ) {}
 
   ngOnInit() {
     this.themeService.theme$.subscribe(theme => {
       this.isDarkMode = theme === 'dark';
+    });
+    this.searchService.selectedCategory$.subscribe(category => {
+      this.selectedCategory = category;
     });
   }
 }

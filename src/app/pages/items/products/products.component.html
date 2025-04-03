@@ -1,7 +1,1 @@
-<app-header></app-header>
-<div [class.dark]="isDarkMode">
-    <div class="dark:bg-[#121212] min-h-screen w-full flex flex-col">
-        <app-carrousel></app-carrousel>
-        <app-product-list (productSelected)="onProductSelected($event)"></app-product-list>
-    </div>
-</div>
+<app-product-list (productSelected)="onProductSelected($event)"></app-product-list>

@@ -46,7 +46,7 @@ export class DetailComponent {
     if (this.card && this.card.set && this.card.set.id) {
       this.searchService.setCategory(this.card.set.id); // Emitimos el ID del set
     }
-      this.router.navigate(['/products']);
+      this.router.navigate(['/home/products']);
   }
   
 

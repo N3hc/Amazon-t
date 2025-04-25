@@ -6,6 +6,7 @@ import { ProductsComponent } from './pages/items/products/products.component';
 import { DetailComponent } from './pages/items/detail/detail.component';
 import { CartComponent } from './pages/cart/cart.component';
 import { PromoThingsComponent } from './sub-components/promo-things/promo-things.component';
+import { PaymentComponent } from './pages/cart/payment/payment.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' }, 
@@ -19,9 +20,9 @@ export const routes: Routes = [
   },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
-    { path: 'products', component: ProductsComponent },
     { path: 'products/details/:id', component: DetailComponent },
     { path: 'cart', component: CartComponent },
+    { path: 'cart/payment', component: PaymentComponent},
     { path: '**', redirectTo: 'home' }
   ];
   

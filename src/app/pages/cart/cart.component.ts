@@ -49,7 +49,7 @@ export class CartComponent {
 
   // Método para proceder al pago
   proceedToCheckout(): void {
-    this.router.navigate(['/checkout']);
+    this.router.navigate(['cart/payment']);
   }
 
   // Aumenta la cantidad de un producto
@@ -75,6 +75,6 @@ export class CartComponent {
 
   // Redirige a la página de productos
   continueShopping(): void {
-    this.router.navigate(['/products']);
+    this.router.navigate(['/home/products']);
   }
 }

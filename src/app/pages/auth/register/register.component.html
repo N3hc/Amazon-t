@@ -7,7 +7,7 @@
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()"
         class="w-full max-w-sm bg-black/20 p-6 rounded-lg shadow-md transition duration-300 hover:bg-black/70">
-        
+
         <div class="relative mb-4 flex flex-col">
             <label for="name" class="text-white mb-1">Nombre Completo</label>
             <input type="text" id="name" formControlName="name" placeholder="Tu nombre completo"
@@ -49,11 +49,11 @@
               }
             </button>
           </div>
-          
+
           @if (registerForm.hasError('mismatch') && registerForm.controls['confirmPassword'].touched) {
             <p class="text-red-500 text-sm mt-1">Las contraseñas no coinciden</p>
           }
-          
+
 
         @if (registerForm.controls['password'].invalid && registerForm.controls['password'].touched) {
             <p class="text-red-500 text-sm mt-1">La contraseña debe tener al menos 6 caracteres</p>
@@ -67,19 +67,29 @@
             <label for="accountType" class="text-white mb-1">Tipo de Cuenta</label>
             <select id="accountType" formControlName="accountType"
                 class="w-full bg-transparent p-2 text-white border border-gray-400 rounded focus:outline-none" required>
-                <option value="client">Cliente</option>
-                <option value="seller">Vendedor</option>
+                <option value="0">Cliente</option>
+                <option value="1">Vendedor</option>
             </select>
         </div>
+
+        <div class="relative mb-4 flex flex-col">
+          <label for="Genre" class="text-white mb-1">Género</label>
+          <select id="Genre" formControlName="accountType"
+              class="w-full bg-transparent p-2 text-white border border-gray-400 rounded focus:outline-none" required>
+              <option value="0">Man</option>
+              <option value="1">Female</option>
+              <option value="2">Other</option>
+          </select>
+      </div>
 
         <div class="relative mb-4 flex items-center">
             <input type="checkbox" id="terms" formControlName="termsAccepted" class="text-white" required />
             <label for="terms" class="text-white text-sm ml-2">
-              Acepto los 
+              Acepto los
               <a href="#" class="text-teal-300 hover:underline">términos y condiciones</a>
             </label>
         </div>
-    
+
         <button type="submit"
             class="w-full bg-gradient-to-r from-teal-500 to-teal-400 py-2 text-white font-semibold rounded-lg hover:scale-105 transition-transform"
             [disabled]="registerForm.invalid">
@@ -87,7 +97,7 @@
         </button>
 
         <div class="mt-4 text-center">
-            <p class="text-gray-400 text-sm">¿Ya tienes cuenta? 
+            <p class="text-gray-400 text-sm">¿Ya tienes cuenta?
                 <a (click)="goToLogin()" class="text-teal-300 hover:underline">Inicia sesión aquí</a>
             </p>
             <a class="text-teal-300 text-sm hover:underline" (click)="continueWithoutSession()">
@@ -95,7 +105,7 @@
             </a>
         </div>
     </form>
-  
+
     <!-- Pikachu GIF (abajo) -->
     <img src="assets/backgrounds/pikachu.gif" alt="Running Pikachu"
         class="absolute bottom-10 left-0 w-24 animate-marquee-2" />

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -26,6 +26,12 @@ export class Api2Service {
   deleteUser(id: number): Observable<any> {
     return this.http.request('delete', `${this.baseUrl}/delete/user`, { body: { id } });
   }
+
+  login(credentials: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/login/user`, credentials);
+
+  }
+
 
   // 💳 CARDS
   getCards(): Observable<any> {

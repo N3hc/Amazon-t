@@ -12,7 +12,7 @@ import { Api2Service } from '../services/api/api2.service';
 export class AppComponent {
   title = 'PokemonTV2';
   constructor(private api2Service: Api2Service) {
-    this.api2Service.getAllUsers().subscribe({
+    this.api2Service.getUsers().subscribe({
       next: (data) => {
         console.log(data);
       },
@@ -21,7 +21,7 @@ export class AppComponent {
       }
     });
 
-    this.api2Service.getAllProducts().subscribe({
+    this.api2Service.getProducts().subscribe({
       next: (data: any) => {
         console.log(data);
       },
@@ -30,7 +30,7 @@ export class AppComponent {
       }
     });
 
-    this.api2Service.getAllCategories().subscribe({
+    this.api2Service.getCategories().subscribe({
       next: (data: any) => {
         console.log(data);
       },
@@ -39,7 +39,7 @@ export class AppComponent {
       }
     });
 
-    this.api2Service.getAllCards().subscribe({
+    this.api2Service.getCards().subscribe({
       next: (data: any) => {
         console.log(data);
       },

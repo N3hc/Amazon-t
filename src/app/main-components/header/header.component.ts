@@ -12,13 +12,14 @@ import { CartItem } from '../../../interface/productos.interface';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit{
+export class HeaderComponent implements OnInit {
 
   isDarkMode: boolean = false;
-    cart: CartItem[] = [];
+  cart: CartItem[] = [];
+  loggedIn: boolean = true; // Cambia esto según tu lógica de autenticación
 
   constructor(
-    private themeService: ThemeService, 
+    private themeService: ThemeService,
     private router: Router,
     private cartService: CartService
   ) {
@@ -43,15 +44,20 @@ export class HeaderComponent implements OnInit{
     this.themeService.toggleTheme();
   }
 
-  goToHome(){
+  goToHome() {
     this.router.navigate(['/home']);
   }
 
   goToLogin() {
-    this.router.navigate(['/login']);
+    if (this.loggedIn) {
+      this.router.navigate(['/user'])
+    } else {
+      this.router.navigate(['/login'])
+    };
   }
 
   goToCard() {
     this.router.navigate(['/cart'])
   }
+
 }

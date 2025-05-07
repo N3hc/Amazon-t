@@ -1,41 +1,48 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { User } from '../../interface/user.interface'; // Asegúrate de que el path sea correcto
+import { BehaviorSubject, Observable } from 'rxjs';
+import { User } from '../../interface/user.interface'; // Ajusta el path según tu proyecto
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private userSubject = new BehaviorSubject<User>({
-    username: 'juanperez',
-    email: 'juan.perez@example.com',
-    name: 'Juan',
-    surname: 'Pérez',
-    password: '',
-    oldPassword: '',
-    role: 0,
-    birthDate: new Date(1990, 4, 15),
-    vendor: 0,
-    gender: 'male'
-  });
+  // Puede ser null si no hay sesión iniciada
+  private userSubject = new BehaviorSubject<User | null>(null);
 
   constructor() {}
 
   // Obtener el usuario como observable
-  getUser(): Observable<User> {
+  getUser(): Observable<User | null> {
     return this.userSubject.asObservable();
   }
 
-  // Actualizar los datos del usuario
+  // Obtener el usuario actual (sincrónicamente)
+  getCurrentUser(): User | null {
+    return this.userSubject.value;
+  }
+
+  // Establecer el usuario completo
+  setUser(user: User): void {
+    this.userSubject.next(user);
+  }
+
+  // Actualizar parcialmente los datos del usuario
   updateUser(updatedUser: Partial<User>): void {
     const currentUser = this.userSubject.value;
+    if (!currentUser) return;
+
     this.userSubject.next({ ...currentUser, ...updatedUser });
   }
 
-  // (Opcional) Simular cambio de contraseña
+  // Limpiar usuario (por ejemplo al cerrar sesión)
+  clearUser(): void {
+    this.userSubject.next(null);
+  }
+
+  // Simular cambio de contraseña (solo si ya hay sesión)
   changePassword(oldPassword: string, newPassword: string): boolean {
     const currentUser = this.userSubject.value;
-    if (currentUser.password === oldPassword) {
+    if (currentUser && currentUser.password === oldPassword) {
       this.userSubject.next({ ...currentUser, password: newPassword });
       return true;
     }

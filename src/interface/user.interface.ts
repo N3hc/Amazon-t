@@ -8,5 +8,5 @@ export interface User {
     role: number;
     birthDate: Date;
     vendor: number;
-    gender: string;
+    gender: number;
 }

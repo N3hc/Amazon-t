@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
 import { User } from '../../../../interface/user.interface';
 import { CommonModule } from '@angular/common';
 import { Api2Service } from '../../../../services/api/api2.service'; // Ajusta el path según tu estructura
+import { UserService } from '../../../../services/user/user.service';
 
 @Component({
   selector: 'app-login',
@@ -14,9 +15,9 @@ import { Api2Service } from '../../../../services/api/api2.service'; // Ajusta e
 })
 export class LoginComponent {
   showPassword: boolean = false;
-  constructor(private api2service : Api2Service, private router: Router) {}
+  constructor(private api2service : Api2Service, private router: Router, private userService: UserService) {}
 
-  user: User = {
+  User: User = {
     username: '',
     email: '',
     name: '',
@@ -26,8 +27,9 @@ export class LoginComponent {
     role: 0,
     birthDate: new Date(),
     vendor: 0,
-    gender: ''
+    gender: 0
   };
+
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
@@ -38,11 +40,13 @@ export class LoginComponent {
       console.error('Formulario inválido');
       return;
     }
-
+  
     this.api2service.login(this.loginForm.value).subscribe({
       next: (user: any) => {
-        console.log('Usuario autenticado:', user);
-        console.log(user);
+        this.User = user;
+        this.userService.setUser(user);
+  
+        console.log('Usuario actualizado en el servicio:', this.User);
         this.router.navigate(['/home']);
       },
       error: (err: any) => {
@@ -50,6 +54,7 @@ export class LoginComponent {
       }
     });
   }
+  
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;

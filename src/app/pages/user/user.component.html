@@ -3,14 +3,13 @@
   <div class="dark:bg-[#0a0a0a] min-h-screen w-full flex flex-col">
     <div class="mx-auto max-w-screen-md px-4 2xl:px-0 py-8">
 
-    <div class="bg-gradient-to-r from-purple-500 to-blue-600 rounded-2xl p-6 mb-8 shadow-lg">
+      <div class="bg-gradient-to-r from-purple-500 to-blue-600 rounded-2xl p-6 mb-8 shadow-lg">
         <h2 class="text-2xl font-bold text-white sm:text-3xl">👤 Perfil de Usuario</h2>
         <p class="text-purple-100 mt-2">Gestiona y visualiza tu información personal</p>
       </div>
 
-    <div class="max-w-xl mx-auto py-8 px-4 dark:bg-gray-900 bg-white rounded-xl shadow-md">
-        <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Editar Perfil</h2>
-      
+      <!-- Contenedor principal del formulario -->
+      <div class="max-w-xl mx-auto py-8 px-4 dark:bg-gray-900 bg-white rounded-xl shadow-md">
         <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -110,11 +109,19 @@
             </label>
           </div>
       
-          <div class="flex justify-end pt-4">
+          <div class="flex justify-end gap-4 pt-4">
+            @if (isEditMode) {
             <button type="submit"
               class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:scale-105 transition-transform"
               [disabled]="userForm.invalid">
               Guardar Cambios
+            </button>
+          }
+
+            <button type="button"
+              class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
+              (click)="toggleEditMode()">
+              {{ isEditMode ? 'Cancelar' : 'Editar Perfil' }}
             </button>
           </div>
         </form>

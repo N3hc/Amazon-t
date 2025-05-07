@@ -13,9 +13,9 @@ export class UserService {
     surname: 'Pérez',
     password: '',
     oldPassword: '',
-    role: false,
+    role: 0,
     birthDate: new Date(1990, 4, 15),
-    vendor: false,
+    vendor: 0,
     gender: 'male'
   });
 

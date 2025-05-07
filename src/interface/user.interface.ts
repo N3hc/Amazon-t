@@ -6,7 +6,7 @@ export interface User {
     password: string;
     oldPassword: string;
     role: number;
-    birthDate: Date;
+    birthDate: string;
     vendor: number;
     gender: number;
 }

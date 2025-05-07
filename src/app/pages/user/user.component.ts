@@ -19,7 +19,6 @@ export class UserComponent implements OnInit {
   showPassword = false;
   showOldPassword = false;
   isEditMode = false;
-
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
@@ -27,11 +26,22 @@ export class UserComponent implements OnInit {
     private themeService: ThemeService
   ) {}
 
+  private mapGender(value: number): string {
+    switch (value) {
+      case 0: return 'male';
+      case 1: return 'female';
+      case 2: return 'other';
+      default: return '';
+    }
+  }
+
+
   ngOnInit(): void {
     // Escuchar cambios de tema
     this.themeService.theme$.subscribe(theme => {
       this.isDarkMode = theme === 'dark';
     });
+    
 
     // Escuchar el usuario actual
     this.userService.getUser().subscribe((user: User | null) => {
@@ -42,15 +52,16 @@ export class UserComponent implements OnInit {
       }
 
       // Inicializar formulario con datos del usuario
+      console.log('User data:', user);
       this.userForm = this.fb.group({
         username: [user.username, [Validators.required]],
         email: [user.email, [Validators.required, Validators.email]],
         name: [user.name, [Validators.required]],
         surname: [user.surname, [Validators.required]],
         birthDate: [this.formatDate(user.birthDate), [Validators.required]],
-        gender: [user.gender, [Validators.required]],
-        vendor: [user.vendor],
-        role: [user.role],
+        gender: [this.mapGender(user.gender), [Validators.required]],
+        vendor: [!!user.vendor],
+        role: [!!user.role],
         oldPassword: [''],
         password: ['', [Validators.minLength(6)]],
         confirmPassword: ['']

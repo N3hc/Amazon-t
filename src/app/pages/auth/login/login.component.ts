@@ -25,7 +25,7 @@ export class LoginComponent {
     password: '',
     oldPassword: '',
     role: 0,
-    birthDate: new Date(),
+    birthDate: '',
     vendor: 0,
     gender: 0
   };
@@ -40,12 +40,12 @@ export class LoginComponent {
       console.error('Formulario inválido');
       return;
     }
-  
+
     this.api2service.login(this.loginForm.value).subscribe({
       next: (user: any) => {
         this.User = user;
         this.userService.setUser(user);
-  
+
         console.log('Usuario actualizado en el servicio:', this.User);
         this.router.navigate(['/home']);
       },
@@ -54,7 +54,7 @@ export class LoginComponent {
       }
     });
   }
-  
+
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;

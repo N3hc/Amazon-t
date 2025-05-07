@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ThemeService } from '../../../services/theme/theme.service';
 import { CartService } from '../../../services/cart/cart.service';
 import { CartItem } from '../../../interface/productos.interface';
-
+import { UserService } from '../../../services/user/user.service';
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -15,13 +15,15 @@ import { CartItem } from '../../../interface/productos.interface';
 export class HeaderComponent implements OnInit {
 
   isDarkMode: boolean = false;
+  user: any = null; // Cambia esto según tu lógica de usuario
   cart: CartItem[] = [];
   loggedIn: boolean = false; // Cambia esto según tu lógica de autenticación
 
   constructor(
     private themeService: ThemeService,
     private router: Router,
-    private cartService: CartService
+    private cartService: CartService,
+    private userService: UserService
   ) {
     this.cartService.cart$.subscribe((cart) => {
       this.cart = cart;
@@ -34,6 +36,7 @@ export class HeaderComponent implements OnInit {
 
 
   ngOnInit() {
+
     // Cargar el tema guardado desde localStorage
     this.themeService.theme$.subscribe(theme => {
       this.isDarkMode = theme === 'dark';

@@ -13,6 +13,10 @@ export class UserService {
 
   // Obtener el usuario como observable
   getUser(): Observable<User | null> {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser && !this.userSubject.value) {
+      this.userSubject.next(JSON.parse(savedUser));
+    }
     return this.userSubject.asObservable();
   }
 
@@ -24,6 +28,7 @@ export class UserService {
   // Establecer el usuario completo
   setUser(user: User): void {
     this.userSubject.next(user);
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   // Actualizar parcialmente los datos del usuario

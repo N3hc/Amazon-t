@@ -36,11 +36,19 @@ export class HeaderComponent implements OnInit {
 
 
   ngOnInit() {
-
     // Cargar el tema guardado desde localStorage
     this.themeService.theme$.subscribe(theme => {
       this.isDarkMode = theme === 'dark';
     });
+
+    if (this.userService.isLogged()) {
+      // Suscribirse al observable para obtener el usuario
+      this.userService.getUser().subscribe(user => {
+        this.user = user;
+        this.loggedIn = true;  // Marcar como logueado
+        console.log(this.user);  // Verifica si el usuario se carga correctamente
+      });
+    }
   }
 
   toggleTheme() {

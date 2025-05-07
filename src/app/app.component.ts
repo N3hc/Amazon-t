@@ -20,7 +20,7 @@ export class AppComponent {
         console.error('Error fetching users:', error);
       }
     });
-
+/**
     this.api2Service.getProducts().subscribe({
       next: (data: any) => {
         console.log(data);
@@ -47,6 +47,7 @@ export class AppComponent {
         console.error('Error fetching cards:', error);
       }
     });
+    */
   }
 
 

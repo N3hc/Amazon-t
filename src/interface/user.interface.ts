@@ -5,9 +5,8 @@ export interface User {
     surname: string;
     password: string;
     oldPassword: string;
-    role: boolean;
+    role: number;
     birthDate: Date;
-    vendor: boolean;
+    vendor: number;
     gender: string;
 }
-  

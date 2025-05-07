@@ -16,7 +16,7 @@ export class HeaderComponent implements OnInit {
 
   isDarkMode: boolean = false;
   cart: CartItem[] = [];
-  loggedIn: boolean = true; // Cambia esto según tu lógica de autenticación
+  loggedIn: boolean = false; // Cambia esto según tu lógica de autenticación
 
   constructor(
     private themeService: ThemeService,

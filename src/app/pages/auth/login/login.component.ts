@@ -8,7 +8,7 @@ import { Api2Service } from '../../../../services/api/api2.service'; // Ajusta e
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule,],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -16,13 +16,24 @@ export class LoginComponent {
   showPassword: boolean = false;
   constructor(private api2service : Api2Service, private router: Router) {}
 
+  user: User = {
+    username: '',
+    email: '',
+    name: '',
+    surname: '',
+    password: '',
+    oldPassword: '',
+    role: 0,
+    birthDate: new Date(),
+    vendor: 0,
+    gender: ''
+  };
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
 
   onSubmit(): void {
-    console.log('Formulario enviado:', this.loginForm.value);
     if (this.loginForm.invalid) {
       console.error('Formulario inválido');
       return;
@@ -31,6 +42,7 @@ export class LoginComponent {
     this.api2service.login(this.loginForm.value).subscribe({
       next: (user: any) => {
         console.log('Usuario autenticado:', user);
+        console.log(user);
         this.router.navigate(['/home']);
       },
       error: (err: any) => {

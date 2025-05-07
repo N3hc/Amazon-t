@@ -27,8 +27,6 @@ export class LoginComponent {
       console.error('Formulario inválido');
       return;
     }
-      console.log(JSON.stringify(this.loginForm.value));
-    const formData = this.loginForm.value;
 
     this.api2service.login(this.loginForm.value).subscribe({
       next: (user: any) => {

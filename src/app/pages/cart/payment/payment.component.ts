@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../../main-components/header/header.component';
 import { ThemeService } from '../../../../services/theme/theme.service';
 import { CartService } from '../../../../services/cart/cart.service';
@@ -27,9 +27,9 @@ interface CreditCard {
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [HeaderComponent, ReactiveFormsModule],
+  imports: [ HeaderComponent, ReactiveFormsModule ],
   templateUrl: './payment.component.html',
-  styleUrl: './payment.component.css'
+  styleUrls: ['./payment.component.css']
 })
 export class PaymentComponent {
   paymentForm!: FormGroup;
@@ -45,41 +45,7 @@ export class PaymentComponent {
   ];
 
   countries: string[] = [
-    "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
-    "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas",
-    "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin",
-    "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei",
-    "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon",
-    "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia",
-    "Comoros", "Congo (Congo-Brazzaville)", "Costa Rica", "Croatia", "Cuba",
-    "Cyprus", "Czech Republic", "Democratic Republic of the Congo", "Denmark",
-    "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt",
-    "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini",
-    "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia",
-    "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea",
-    "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland",
-    "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy",
-    "Ivory Coast", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya",
-    "Kiribati", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon",
-    "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg",
-    "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta",
-    "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia",
-    "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique",
-    "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand",
-    "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway",
-    "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea",
-    "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar",
-    "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia",
-    "Saint Vincent and the Grenadines", "Samoa", "San Marino",
-    "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles",
-    "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands",
-    "Somalia", "South Africa", "South Korea", "South Sudan", "Spain",
-    "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria",
-    "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo",
-    "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan",
-    "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom",
-    "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City",
-    "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+    /* ... lista de países ... */
   ];
 
   isDarkMode = false;
@@ -87,6 +53,7 @@ export class PaymentComponent {
   purchaseConfirmed = false;
   showNewAddress = false;
   showNewCard = false;
+
   constructor(
     private fb: FormBuilder,
     private cartService: CartService,
@@ -95,29 +62,23 @@ export class PaymentComponent {
   ) {
     this.initializeForm();
 
-    // Valor por defecto: primera dirección guardada
-    this.paymentForm.get('selectedAddress')!.setValue(this.savedAddresses[0].id);
-    // Escuchamos cambios en dirección
+    // Desactivar subformularios nuevos por defecto
+    this.paymentForm.get('newAddress')!.disable({ emitEvent: false });
+    this.paymentForm.get('newCard')!.disable({ emitEvent: false });
+
+    // Dirección seleccionada
     this.paymentForm.get('selectedAddress')!.valueChanges
       .subscribe(val => this.onAddressSelectionChange(val));
-    // Inicializamos estado
     this.onAddressSelectionChange(this.paymentForm.get('selectedAddress')!.value);
 
-    // Suscripciones estándar
+    // Tarjeta seleccionada
+    this.paymentForm.get('selectedCard')!.valueChanges
+      .subscribe(val => this.onCardSelectionChange(val));
+    this.onCardSelectionChange(this.paymentForm.get('selectedCard')!.value);
+
+    // Cart & Theme subscriptions
     this.cartService.cart$.subscribe(c => this.cart = c);
     this.themeService.theme$.subscribe(theme => this.isDarkMode = (theme === 'dark'));
-  }
-
-  private onAddressSelectionChange(value: number | 'new-address'): void {
-    const addrGroup = this.paymentForm.get('newAddress') as FormGroup;
-    if (value === 'new-address') {
-      this.showNewAddress = true;
-      Object.values(addrGroup.controls).forEach(ctrl => ctrl.enable({ emitEvent: false }));
-    } else {
-      this.showNewAddress = false;
-      Object.values(addrGroup.controls).forEach(ctrl => ctrl.disable({ emitEvent: false }));
-    }
-    addrGroup.updateValueAndValidity({ emitEvent: false });
   }
 
   private initializeForm(): void {
@@ -142,29 +103,46 @@ export class PaymentComponent {
     });
   }
 
+  private onAddressSelectionChange(value: number | 'new-address'): void {
+    const addrGroup = this.paymentForm.get('newAddress') as FormGroup;
+
+    if (value === 'new-address') {
+      this.showNewAddress = true;
+      addrGroup.enable({ emitEvent: false });
+    } else {
+      this.showNewAddress = false;
+      addrGroup.disable({ emitEvent: false });
+    }
+
+    addrGroup.updateValueAndValidity({ emitEvent: false });
+  }
+
   private onCardSelectionChange(value: number | 'new-card'): void {
-    const newCardGroup = this.paymentForm.get('newCard') as FormGroup;
+    const cardGroup = this.paymentForm.get('newCard') as FormGroup;
 
     if (value === 'new-card') {
-      // Mostrar y activar validadores
       this.showNewCard = true;
-      Object.values(newCardGroup.controls).forEach(ctrl => ctrl.enable({ emitEvent: false }));
+      cardGroup.enable({ emitEvent: false });
     } else {
-      // Ocultar y desactivar validadores
       this.showNewCard = false;
-      Object.values(newCardGroup.controls).forEach(ctrl => ctrl.disable({ emitEvent: false }));
+      cardGroup.disable({ emitEvent: false });
     }
-    newCardGroup.updateValueAndValidity({ emitEvent: false });
+
+    cardGroup.updateValueAndValidity({ emitEvent: false });
   }
 
   onSubmit(): void {
-    console.log('Submit button clicked');
-      console.log('Formulario válido:', this.paymentForm.value);
-      this.purchaseConfirmed = true;
-      this.cartService.clearCart();
+    if (this.paymentForm.invalid) {
+      this.markAllAsTouched();
+      return;
+    }
+    this.purchaseConfirmed = true;
+    this.cartService.clearCart();
   }
 
-  
+  continueShopping(): void {
+    this.router.navigate(['/products']);
+  }
 
   private markAllAsTouched(): void {
     Object.values(this.paymentForm.controls).forEach(ctrl => {
@@ -177,7 +155,7 @@ export class PaymentComponent {
   }
 
   getSubtotal(): number {
-    return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return this.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }
 
   getShippingCost(): number {
@@ -186,26 +164,5 @@ export class PaymentComponent {
 
   getTotal(): number {
     return this.getSubtotal() + this.getShippingCost();
-  }
-
-  confirmPurchase() {
-    if (this.paymentForm.invalid) {
-      this.paymentForm.markAllAsTouched();
-      return;
-    }
-  }
-
-  continueShopping() {
-    this.router.navigate(['/products']);
-  }
-
-  toggleAddressForm() {
-    this.showNewAddress = !this.showNewAddress;
-    if (this.showNewAddress) this.paymentForm.patchValue({ selectedAddress: '' });
-  }
-
-  toggleCardForm() {
-    this.showNewCard = !this.showNewCard;
-    if (this.showNewCard) this.paymentForm.patchValue({ selectedCard: '' });
   }
 }

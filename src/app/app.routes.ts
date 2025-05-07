@@ -7,22 +7,23 @@ import { DetailComponent } from './pages/items/detail/detail.component';
 import { CartComponent } from './pages/cart/cart.component';
 import { PromoThingsComponent } from './sub-components/promo-things/promo-things.component';
 import { PaymentComponent } from './pages/cart/payment/payment.component';
+import { UserComponent } from './pages/user/user.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'home', pathMatch: 'full' }, 
-    { 
-      path: 'home', 
-      component: HomeComponent,
-      children: [
-          { path: '', component: PromoThingsComponent}, 
-          { path: 'products', component: ProductsComponent }
-      ]
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  {
+    path: 'home',
+    component: HomeComponent,
+    children: [
+      { path: '', component: PromoThingsComponent },
+      { path: 'products', component: ProductsComponent }
+    ]
   },
-    { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent },
-    { path: 'products/details/:id', component: DetailComponent },
-    { path: 'cart', component: CartComponent },
-    { path: 'cart/payment', component: PaymentComponent},
-    { path: '**', redirectTo: 'home' }
-  ];
-  
+  { path: 'user', component: UserComponent, },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'products/details/:id', component: DetailComponent },
+  { path: 'cart', component: CartComponent },
+  { path: 'cart/payment', component: PaymentComponent },
+  { path: '**', redirectTo: 'home' }
+];

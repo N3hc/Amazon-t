@@ -20,6 +20,14 @@ export class HeaderComponent implements OnInit {
 
   showUserMenu: boolean = false;
 
+  handleClick(): void {
+    if (this.loggedIn) {
+      this.toggleUserMenu();
+    } else {
+      this.goToLogin();
+    }
+  }
+  
   toggleUserMenu() {
     this.showUserMenu = !this.showUserMenu;
   }
@@ -65,7 +73,7 @@ export class HeaderComponent implements OnInit {
       this.userService.getUser().subscribe((user) => {
         this.user = user;
         this.loggedIn = true; // Marcar como logueado
-        console.log(this.user); // Verifica si el usuario se carga correctamente
+        //console.log(this.user); // Verifica si el usuario se carga correctamente
       });
     }
   }

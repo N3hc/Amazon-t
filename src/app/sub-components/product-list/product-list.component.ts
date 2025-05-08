@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter} from '@angular/core';
 import { Router } from '@angular/router';
 import { CardsApiService } from '../../../services/api/cards-api.service';
 import { SearchService } from '../../../services/search/search.service';
+import { Api2Service } from '../../../services/api/api2.service';
 import { combineLatest } from 'rxjs';
 
 @Component({
@@ -15,17 +16,13 @@ export class ProductListComponent {
 
   @Output() productSelected = new EventEmitter<any>();
 
-  selectProduct(card: any) {
-    this.searchService.setCategory(card); // Guarda la carta seleccionada
-    this.router.navigate(['/products/details', card.id]); // Redirige al detalle
-    console.log(card);
-  }
   cards: any[] = [];
   categories: any[] = [];
 
-  constructor(private cardsApiService: CardsApiService,
-              private searchService: SearchService,
-              private router: Router
+  constructor(
+    private api2Service: Api2Service,
+    private searchService: SearchService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -35,38 +32,35 @@ export class ProductListComponent {
     ]).subscribe(([query, category]) => {
       if (query) {
         this.searchCards(query);
-        console.log("paso 1")
       } else if (category) {
-        
         this.searchCardsFromSet(category);
-        console.log("paso 2")
       } else {
         this.loadCards();
-        console.log("paso 3")
       }
     });
   }
 
   loadCards(): void {
     this.cards = [];
-    this.cardsApiService.getCards().subscribe({
-      next: (cards) => {
-        this.cards = cards.data;
-        console.log(cards);
+    this.api2Service.getCards().subscribe({
+      next: (response) => {
+        console.log(response);
+        this.cards = response.card  ;
       },
       error: (error) => {
-        console.error('Error al cargar los sets:', error);
+        console.error('Error al cargar las cartas:', error);
       }
     });
   }
 
   searchCards(query: string): void {
     this.cards = [];
-
-    this.cardsApiService.getUniquePokemon(query).subscribe({
-      next: (cards) => {
-        this.cards = cards.data;
-        console.log(cards);
+    this.api2Service.getCards().subscribe({
+      next: (response) => {
+        this.cards = response.data.filter((card: any) =>
+          card.deleted === 0 &&
+          card.name.toLowerCase().includes(query.toLowerCase())
+        );
       },
       error: (error) => {
         console.error('Error al buscar cartas:', error);
@@ -74,18 +68,23 @@ export class ProductListComponent {
     });
   }
 
-  searchCardsFromSet(query: string): void {
+  searchCardsFromSet(categoryId: string): void {
     this.cards = [];
-
-    this.cardsApiService.getPokemonsFromSets(query).subscribe({
-      next: (cards) => {
-        this.cards = cards.data;
-        console.log(cards);
+    this.api2Service.getCards().subscribe({
+      next: (response) => {
+        this.cards = response.data.filter((card: any) =>
+          card.deleted === 0 &&
+          String(card.id_set) === String(categoryId)
+        );
       },
       error: (error) => {
-        console.error('Error al buscar cartas:', error);
+        console.error('Error al buscar cartas por categoría:', error);
       }
     });
   }
 
+  selectProduct(card: any): void {
+    this.searchService.setCategory(card);
+    this.router.navigate(['/products/details', card.id]);
+  }
 }

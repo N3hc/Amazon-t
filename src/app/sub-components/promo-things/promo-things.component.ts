@@ -155,9 +155,9 @@ export class PromoThingsComponent {
           this.series = Array.from(seriesSet);
           this.ids = Array.from(seriesSet2);
 
-          console.log(sets);
-          console.log(this.series);
-          console.log(this.ids);
+          //console.log(sets);
+          //console.log(this.series);
+          //console.log(this.ids);
         },
         error: (error) => {
           console.error('Error al cargar los sets:', error);

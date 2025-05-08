@@ -46,7 +46,7 @@ export class LoginComponent {
         this.User = user;
         this.userService.setUser(user);
 
-        console.log('Usuario actualizado en el servicio:', this.User);
+        //console.log('Usuario actualizado en el servicio:', this.User);
         this.router.navigate(['/home']);
       },
       error: (err: any) => {

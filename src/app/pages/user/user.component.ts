@@ -52,7 +52,7 @@ export class UserComponent implements OnInit {
       }
 
       // Inicializar formulario con datos del usuario
-      console.log('User data:', user);
+      //console.log('User data:', user);
       this.userForm = this.fb.group({
         username: [user.username, [Validators.required]],
         email: [user.email, [Validators.required, Validators.email]],

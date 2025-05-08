@@ -36,7 +36,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     if (this.registerForm.valid) {
-      console.log('Formulario enviado', this.registerForm.value);
+      //console.log('Formulario enviado', this.registerForm.value);
       alert('¡Creacion de cuenta exitosa!');
       this.router.navigate(['/login']);
     } else {

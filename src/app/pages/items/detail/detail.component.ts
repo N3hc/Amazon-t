@@ -37,7 +37,7 @@ export class DetailComponent {
       image: product.images.small,
       quantity: 1
     };
-    console.log(item)
+    //console.log(item)
     this.cartService.addToCart(item);
   }
 
@@ -55,7 +55,7 @@ export class DetailComponent {
     if (cardId) {
       this.cardsApiService.getCardById(cardId).subscribe(response => {
         this.card = response.data; // La API devuelve un objeto con `data`
-        console.log("Carta cargada:", this.card);
+        //console.log("Carta cargada:", this.card);
       });
     }
 

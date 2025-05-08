@@ -2,6 +2,7 @@ import { Component, HostListener, EventEmitter, OnInit, Output } from '@angular/
 import { Router } from '@angular/router';
 import { SearchService } from '../../../services/search/search.service';
 import { CardsApiService } from '../../../services/api/cards-api.service';
+import { Api2Service } from '../../../services/api/api2.service';
 
 @Component({
   selector: 'app-carrousel',
@@ -18,15 +19,15 @@ export class CarrouselComponent implements OnInit {
 
   constructor(private cardsApiService: CardsApiService,
     private searchService: SearchService,
-    private router: Router
+    private router: Router,
+    private api2Service: Api2Service
   ) { }
 
   selectCategory(category: string) {
     this.searchService.setCategory(category);
     this.router.navigate(['home/products']);
   }
-
-
+  
   ngOnInit(): void {
     this.loadSets();
     const savedTheme = localStorage.getItem('theme');
@@ -39,17 +40,19 @@ export class CarrouselComponent implements OnInit {
     }
   }
 
-  loadSets(): void {
-    this.cardsApiService.getPokemonAllSets().subscribe({
-      next: (sets) => {
-        this.sets = this.shuffleArray(sets.data);
-        console.log(sets)
-      },
-      error: (error) => {
-        console.error('Error al cargar los sets:', error);
-      }
-    });
-  }
+
+    loadSets(): void {
+      this.api2Service.getCategories().subscribe({
+        next: (categories) => {
+          this.sets = this.shuffleArray(categories);
+          //console.log(categories);
+        },
+        error: (error) => {
+          console.error('Error al cargar las categorías:', error);
+        }
+      });
+    }
+    
 
 
   move(direction: number): void {
@@ -65,10 +68,10 @@ export class CarrouselComponent implements OnInit {
     // Si el ancho de la pantalla es menor que 768px, mostramos 1 o 2 elementos
     if (this.screenWidth < 768) {
       numVisibleItems = 3; // Mostrar solo 1 elemento
-      console.log("Modo Movil")
+      //console.log("Modo Movil")
     } else {
       numVisibleItems = 5; // Mostrar 5 elementos en pantallas más grandes
-      console.log("Modo Ordenador")
+      //console.log("Modo Ordenador")
 
     }
 

@@ -1,6 +1,5 @@
 import { Component, OnInit, Output, EventEmitter} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CardsApiService } from '../../../../services/api/cards-api.service';
 import { SearchService } from '../../../../services/search/search.service';
 import { HeaderComponent } from '../../../main-components/header/header.component';
 import { ThemeService } from '../../../../services/theme/theme.service';

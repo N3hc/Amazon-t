@@ -50,6 +50,15 @@ export class Api2Service {
     return this.http.request('delete', `${this.baseUrl}/delete/card`, { body: { id } });
   }
 
+  getCardsFromSet(setId: any): Observable<any> {
+    console.log('Fetching cards from set:', setId);
+    const params = new HttpParams().set('id_set', setId); // Pasamos el id_set como parámetro de consulta
+    return this.http.get(`${this.baseUrl}/index/card`, { params }); // Enviamos el parámetro como parte de la URL
+  }
+  
+  
+  
+
   // 📦 PRODUCTS
   getProducts(): Observable<any> {
     return this.http.get(`${this.baseUrl}/index/products`);

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { CardsApiService } from '../../../services/api/cards-api.service';
 import { SearchService } from '../../../services/search/search.service';
@@ -13,7 +13,6 @@ import { combineLatest } from 'rxjs';
   styleUrl: './product-list.component.css'
 })
 export class ProductListComponent {
-
   @Output() productSelected = new EventEmitter<any>();
 
   cards: any[] = [];
@@ -23,7 +22,7 @@ export class ProductListComponent {
     private api2Service: Api2Service,
     private searchService: SearchService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     combineLatest([
@@ -35,17 +34,19 @@ export class ProductListComponent {
       } else if (category) {
         this.searchCardsFromSet(category);
       } else {
-        this.loadCards();
+        this.loadCards("1");  // Aquí cargarías un set por defecto, por ejemplo "base1"
       }
     });
   }
 
-  loadCards(): void {
+  // Cargar las cartas de un set
+  loadCards(idset: any): void {
     this.cards = [];
-    this.api2Service.getCards().subscribe({
+    this.api2Service.getCardsFromSet(idset).subscribe({
       next: (response) => {
-        console.log(response);
-        this.cards = response.card  ;
+        // Asegúrate de que 'response.card' tenga los datos esperados
+        this.cards = response;  // Cambié 'response.card' por 'response.data'
+        console.log(this.cards);
       },
       error: (error) => {
         console.error('Error al cargar las cartas:', error);
@@ -53,6 +54,7 @@ export class ProductListComponent {
     });
   }
 
+  // Buscar cartas con un término
   searchCards(query: string): void {
     this.cards = [];
     this.api2Service.getCards().subscribe({
@@ -68,14 +70,13 @@ export class ProductListComponent {
     });
   }
 
-  searchCardsFromSet(categoryId: string): void {
+  // Buscar cartas por un set (categoría)
+  searchCardsFromSet(idset: any): void {
     this.cards = [];
-    this.api2Service.getCards().subscribe({
+    this.api2Service.getCardsFromSet(idset).subscribe({
       next: (response) => {
-        this.cards = response.data.filter((card: any) =>
-          card.deleted === 0 &&
-          String(card.id_set) === String(categoryId)
-        );
+        this.cards = response; 
+        console.log(this.cards);
       },
       error: (error) => {
         console.error('Error al buscar cartas por categoría:', error);
@@ -83,8 +84,9 @@ export class ProductListComponent {
     });
   }
 
+  // Seleccionar un producto (carta) para ver más detalles
   selectProduct(card: any): void {
-    this.searchService.setCategory(card);
-    this.router.navigate(['/products/details', card.id]);
+    this.searchService.setCategory(card);  // Guarda la carta seleccionada
+    this.router.navigate(['/products/details', card.id]);  // Redirige al detalle
   }
 }

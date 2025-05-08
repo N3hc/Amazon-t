@@ -15,7 +15,7 @@
           <!-- Ajustes para modo móvil y ordenador -->
           <div class="item bg-white dark:bg-[#1E272A] rounded-xl shadow-md hover:shadow-xl p-2 sm:p-4 flex flex-col items-center justify-center transition-all duration-300 hover:-translate-y-2 
           min-w-[100px] sm:min-w-[180px] md:min-w-[250px] w-[100px] sm:w-[180px] md:w-[250px] h-[120px] sm:h-[200px] md:h-[250px] relative">
-            <div class="content cursor-pointer flex flex-col items-center justify-center space-y-2 sm:space-y-3" (click)="selectCategory(sets[i].id_set)">
+            <div class="content cursor-pointer flex flex-col items-center justify-center space-y-2 sm:space-y-3" (click)="selectCategory(sets[i].id)">
               <img [src]="sets[i].logo" [alt]="sets[i].name" class="w-[60px] sm:w-[120px] md:w-[150px] h-[40px] sm:h-[80px] md:h-[100px] object-contain rounded-lg mb-2 p-2">
               <p class="font-semibold text-gray-700 dark:text-gray-300 text-xs sm:text-sm md:text-base text-center min-h-[30px] sm:min-h-[40px] md:min-h-[50px]">
                 {{ sets[i].name }}

@@ -10,14 +10,34 @@ import { UserService } from '../../../services/user/user.service';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.css',
 })
 export class HeaderComponent implements OnInit {
-
   isDarkMode: boolean = false;
   user: any = null; // Cambia esto según tu lógica de usuario
   cart: CartItem[] = [];
   loggedIn: boolean = false; // Cambia esto según tu lógica de autenticación
+
+  showUserMenu: boolean = false;
+
+  toggleUserMenu() {
+    this.showUserMenu = !this.showUserMenu;
+  }
+
+  viewProfile(event: Event) {
+    event.stopPropagation();
+    this.router.navigate(['/user']);
+    this.showUserMenu = false;
+  }
+
+  logout(event: Event) {
+    event.stopPropagation();
+    this.userService.clearUser();
+    this.loggedIn = false;
+    this.user = null;
+    this.showUserMenu = false;
+    this.router.navigate(['/login']);
+  }
 
   constructor(
     private themeService: ThemeService,
@@ -34,19 +54,18 @@ export class HeaderComponent implements OnInit {
     return this.cart.reduce((total, item) => total + item.quantity, 0);
   }
 
-
   ngOnInit() {
     // Cargar el tema guardado desde localStorage
-    this.themeService.theme$.subscribe(theme => {
+    this.themeService.theme$.subscribe((theme) => {
       this.isDarkMode = theme === 'dark';
     });
 
     if (this.userService.isLogged()) {
       // Suscribirse al observable para obtener el usuario
-      this.userService.getUser().subscribe(user => {
+      this.userService.getUser().subscribe((user) => {
         this.user = user;
-        this.loggedIn = true;  // Marcar como logueado
-        console.log(this.user);  // Verifica si el usuario se carga correctamente
+        this.loggedIn = true; // Marcar como logueado
+        console.log(this.user); // Verifica si el usuario se carga correctamente
       });
     }
   }
@@ -61,14 +80,13 @@ export class HeaderComponent implements OnInit {
 
   goToLogin() {
     if (this.loggedIn) {
-      this.router.navigate(['/user'])
+      this.router.navigate(['/user']);
     } else {
-      this.router.navigate(['/login'])
-    };
+      this.router.navigate(['/login']);
+    }
   }
 
   goToCard() {
-    this.router.navigate(['/cart'])
+    this.router.navigate(['/cart']);
   }
-
 }

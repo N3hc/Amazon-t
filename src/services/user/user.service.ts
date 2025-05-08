@@ -3,24 +3,24 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../../interface/user.interface'; // Ajusta el path según tu proyecto
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   // Flag para activar o desactivar el usuario falso
-  private useFakeUser = true; // Cambia esta línea para activar/desactivar el usuario falso
+  private useFakeUser = false; // Cambia esta línea para activar/desactivar el usuario falso
 
   // Puede ser null si no hay sesión iniciada
   private userSubject = new BehaviorSubject<User | null>(null);
 
   constructor() {
     // Inicializar el usuario falso solo si useFakeUser es verdadero
-    if (this.useFakeUser) {
+    /*     if (this.useFakeUser) {
       this.initializeFakeUser();
-    }
+    } */
   }
 
   // Inicializar un usuario falso si no hay ninguno en el localStorage
-  private initializeFakeUser() {
+  /*   private initializeFakeUser() {
     const savedUser = localStorage.getItem('user');
     if (!savedUser) {
       const fakeUser: User = {
@@ -39,16 +39,21 @@ export class UserService {
       this.userSubject.next(fakeUser);
       localStorage.setItem('user', JSON.stringify(fakeUser));
     }
-  }
+  } */
 
   // Obtener el usuario como observable
-  getUser(): Observable<User | null> {
-    return this.userSubject.asObservable();
-  }
-
   // Obtener el usuario actual (sincrónicamente)
   getCurrentUser(): User | null {
     return this.userSubject.value;
+  }
+
+  getUser(): Observable<User | null> {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser && !this.userSubject.value) {
+      this.userSubject.next(JSON.parse(savedUser));
+      return this.userSubject.asObservable();
+    }
+    return this.userSubject.asObservable();
   }
 
   // Establecer el usuario completo

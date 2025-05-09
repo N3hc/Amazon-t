@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule, Form } from '@angular/forms';
 import { HeaderComponent } from '../../main-components/header/header.component';
 import { ThemeService } from '../../../services/theme/theme.service';
 import { Router } from '@angular/router';
@@ -16,6 +16,7 @@ import { User } from '../../../interface/user.interface';
 export class UserComponent implements OnInit {
   isDarkMode = false;
   userForm!: FormGroup;
+  userFormEdit! :FormGroup;
   showPassword = false;
   showOldPassword = false;
   isEditMode = false;
@@ -35,39 +36,43 @@ export class UserComponent implements OnInit {
     }
   }
 
+    paymentHistory = [
+    { date: '2025-05-01', amount: 50, status: 'Completado' },
+    { date: '2025-04-15', amount: 30, status: 'Pendiente' },
+    { date: '2025-03-20', amount: 100, status: 'En Proceso' },
+    { date: '2025-02-10', amount: 25, status: 'Completado' },
+  ];
+
 
   ngOnInit(): void {
-    // Escuchar cambios de tema
-    this.themeService.theme$.subscribe(theme => {
-      this.isDarkMode = theme === 'dark';
-    });
-    
-
-    // Escuchar el usuario actual
     this.userService.getUser().subscribe((user: User | null) => {
       if (!user) {
         // Podrías redirigir o mostrar un mensaje
         console.warn('No hay usuario cargado');
+        this.router.navigate(['/home']);
         return;
+      } else {
+        this.userForm = this.fb.group({
+          username: [user.username, [Validators.required]],
+          email: [user.email, [Validators.required, Validators.email]],
+          name: [user.name, [Validators.required]],
+          surname: [user.surname, [Validators.required]],
+          birthDate: [this.formatDate(user.birthDate), [Validators.required]],
+          gender: [this.mapGender(user.gender), [Validators.required]],
+          vendor: [!!user.vendor],
+          role: [!!user.role],
+          oldPassword: [user.oldPassword, [Validators.minLength(6)]],
+          password: [user.password, [Validators.minLength(6)]],
+          confirmPassword: ['']
+        }, { validators: this.passwordMatchValidator });
+
+        this.userForm.disable();
       }
+    // Escuchar cambios de tema
+    this.themeService.theme$.subscribe(theme => {
+      this.isDarkMode = theme === 'dark';
+    });
 
-      // Inicializar formulario con datos del usuario
-      //console.log('User data:', user);
-      this.userForm = this.fb.group({
-        username: [user.username, [Validators.required]],
-        email: [user.email, [Validators.required, Validators.email]],
-        name: [user.name, [Validators.required]],
-        surname: [user.surname, [Validators.required]],
-        birthDate: [this.formatDate(user.birthDate), [Validators.required]],
-        gender: [this.mapGender(user.gender), [Validators.required]],
-        vendor: [!!user.vendor],
-        role: [!!user.role],
-        oldPassword: [''],
-        password: ['', [Validators.minLength(6)]],
-        confirmPassword: ['']
-      }, { validators: this.passwordMatchValidator });
-
-      this.userForm.disable();
     });
   }
 
@@ -87,6 +92,7 @@ export class UserComponent implements OnInit {
   onSubmit(): void {
     if (this.userForm.valid) {
       const { confirmPassword, ...userData } = this.userForm.value;
+      console.log('Datos del formulario:', userData);
       this.userService.updateUser(userData);
       this.router.navigate(['/user/profile']);
     } else {
@@ -117,4 +123,3 @@ export class UserComponent implements OnInit {
     return null;
   }
 }
-

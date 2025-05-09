@@ -14,7 +14,7 @@ export class AppComponent {
   constructor(private api2Service: Api2Service) {
     this.api2Service.getUsers().subscribe({
       next: (data) => {
-        //console.log(data);
+        console.log(data);
       },
       error: (error) => {
         console.error('Error fetching users:', error);

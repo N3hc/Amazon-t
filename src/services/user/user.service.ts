@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../../interface/user.interface'; // Ajusta el path según tu proyecto
+import { User } from '../../interface/user.interface';
 
 @Injectable({
   providedIn: 'root',

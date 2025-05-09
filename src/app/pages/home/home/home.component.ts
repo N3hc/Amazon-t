@@ -36,4 +36,30 @@ export class HomeComponent {
       this.selectedCategory = category;
     });
   }
+
+   isEditing = false;
+  
+  user = {
+    name: 'John Doe',
+    email: 'john@example.com'
+  };
+
+  orders = [
+    { id: '1234', date: new Date(), total: 89.99, status: 'Delivered' },
+    { id: '5678', date: new Date(), total: 149.99, status: 'Pending' }
+  ];
+
+  paymentMethods = [
+    { id: 1, last4: '4242', expiry: '12/25' },
+    { id: 2, last4: '3579', expiry: '03/27' }
+  ];
+
+  toggleEdit() {
+    this.isEditing = !this.isEditing;
+  }
+
+  saveProfile() {
+    // Lógica para guardar los cambios
+    this.isEditing = false;
+  }
 }

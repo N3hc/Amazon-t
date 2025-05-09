@@ -18,6 +18,7 @@ export class LoginComponent {
   constructor(private api2service : Api2Service, private router: Router, private userService: UserService) {}
 
   User: User = {
+    id: 0,
     username: '',
     email: '',
     name: '',

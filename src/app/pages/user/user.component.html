@@ -60,9 +60,9 @@
             <div>
               <label class="block text-sm text-gray-600 dark:text-gray-300">Género</label>
               <select formControlName="gender" class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white">
-                <option value="male">Hombre</option>
-                <option value="female">Mujer</option>
-                <option value="other">Otro</option>
+                <option value="0">Hombre</option>
+                <option value="1">Mujer</option>
+                <option value="2">Otro</option>
               </select>
               @if (userForm.controls['gender'].invalid && userForm.controls['gender'].touched) {
               <p class="text-red-500 text-sm">Género requerido</p>
@@ -73,13 +73,13 @@
           <div>
             <label class="block text-sm text-gray-600 dark:text-gray-300">Contraseña actual</label>
             <div class="relative">
-              <input [type]="showOldPassword ? 'text' : 'password'" formControlName="oldPassword"
+              <input [type]="showPassword ? 'text' : 'password'" formControlName="oldPassword"
                 class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white" />
               <button type="button" (click)="toggleOldPassword()"
                 class="absolute right-3 top-2.5 text-sm text-blue-500">
-                {{ showOldPassword ? 'Ocultar' : 'Mostrar' }}
+                {{ showPassword ? 'Ocultar' : 'Mostrar' }}
               </button>
-              @if (userForm.controls['oldPassword'].invalid && userForm.controls['oldPassword'].touched) {
+              @if (userForm.controls['password'].invalid && userForm.controls['oldPassword'].touched) {
               <p class="text-red-500 text-sm">Contraseña actual requerida</p>
               }
             </div>
@@ -88,12 +88,12 @@
           <div>
             <label class="block text-sm text-gray-600 dark:text-gray-300">Nueva contraseña</label>
             <div class="relative">
-              <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
+              <input [type]="showOldPassword ? 'text' : 'password'" formControlName="password"
                 class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white" />
               <button type="button" (click)="togglePassword()" class="absolute right-3 top-2.5 text-sm text-blue-500">
-                {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+                {{ showOldPassword ? 'Ocultar' : 'Mostrar' }}
               </button>
-              @if (userForm.controls['password'].invalid && userForm.controls['password'].touched) {
+              @if (userForm.controls['oldPassword'].invalid && userForm.controls['password'].touched) {
               <p class="text-red-500 text-sm">Mínimo 6 caracteres</p>
               }
             </div>

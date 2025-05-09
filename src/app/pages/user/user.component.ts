@@ -54,8 +54,8 @@ export class UserComponent implements OnInit {
           gender: [this.mapGender(user.gender), [Validators.required]],
           vendor: [!!user.vendor],
           role: [!!user.role],
-          oldPassword: [''],
-          password: ['', [Validators.minLength(6)]],
+          oldPassword: [user.oldPassword, [Validators.minLength(6)]],
+          password: [user.password, [Validators.minLength(6)]],
           confirmPassword: ['']
         }, { validators: this.passwordMatchValidator });
 
@@ -85,6 +85,7 @@ export class UserComponent implements OnInit {
   onSubmit(): void {
     if (this.userForm.valid) {
       const { confirmPassword, ...userData } = this.userForm.value;
+      console.log('Datos del formulario:', userData);
       this.userService.updateUser(userData);
       this.router.navigate(['/user/profile']);
     } else {

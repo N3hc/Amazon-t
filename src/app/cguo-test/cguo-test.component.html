@@ -227,7 +227,8 @@
                         <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                             <div class="flex justify-between items-center">
                                 <span class="text-lg font-bold text-gray-800 dark:text-white">Total:</span>
-                                <span class="text-2xl font-bold text-gray-800 dark:text-white">{{selectedTicket.total}}</span>
+                                <span
+                                    class="text-2xl font-bold text-gray-800 dark:text-white">{{selectedTicket.total}}</span>
                             </div>
                         </div>
 
@@ -252,10 +253,12 @@
         <div class="space-y-6">
             <!-- Métodos de Pago -->
             <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Payment Methods</h3>
                 <app-payment-form></app-payment-form>
             </div>
             <!-- Address del Usuario -->
             <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">User Address</h3>
                 <app-address-form></app-address-form>
             </div>
 

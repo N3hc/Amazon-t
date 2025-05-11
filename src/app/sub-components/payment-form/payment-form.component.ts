@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { Payment } from '../../../interface/payment.interface';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
@@ -6,13 +6,23 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 @Component({
   selector: 'app-payment-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ],
   templateUrl: './payment-form.component.html',
   styleUrl: './payment-form.component.css'
 })
 export class PaymentFormComponent {
   paymentForm: FormGroup;
   addingCard = false;
+
+  @Input() enableSelection: boolean = false;
+  
+  selectedCardId: number | null = null;
+
+  onCardSelect(cardId: number) {
+    if (this.enableSelection) {
+      this.selectedCardId = this.selectedCardId === cardId ? null : cardId;
+    }
+  }
 
 
    examplePayments: Payment[] = [

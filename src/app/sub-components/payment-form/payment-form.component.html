@@ -3,77 +3,78 @@
     <!-- Modo Añadir Tarjeta -->
     @if (addingCard) {
 
-        <div
-            class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-200 dark:border-gray-700">
-            <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()" class="space-y-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo de
-                        tarjeta</label>
-                    <select formControlName="name"
-                        class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white">
-                        @for (type of cardTypes; track type.value) {
-                        <option [value]="type.value">{{ type.label }}</option>
-                        }
-                    </select>
-                </div>
+    <div
+        class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-200 dark:border-gray-700">
+        <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()" class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo de
+                    tarjeta</label>
+                <select formControlName="name" class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white">
+                    @for (type of cardTypes; track type.value) {
+                    <option [value]="type.value">{{ type.label }}</option>
+                    }
+                </select>
+            </div>
 
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Número de
+                    tarjeta</label>
+                <input type="text" formControlName="number" (input)="formatCardNumber($event)"
+                    placeholder="0000 0000 0000 0000"
+                    class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                    [class.border-red-500]="paymentForm.controls['number'].invalid && paymentForm.controls['number'].touched">
+                @if (paymentForm.controls['number'].invalid && paymentForm.controls['number'].touched) {
+                <p class="text-red-500 text-sm mt-1">Número de tarjeta inválido (16 dígitos)</p>
+                }
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Número de
-                        tarjeta</label>
-                    <input type="text" formControlName="number" (input)="formatCardNumber($event)"
-                        placeholder="0000 0000 0000 0000"
-                        class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-                        [class.border-red-500]="paymentForm.controls['number'].invalid && paymentForm.controls['number'].touched">
-                    @if (paymentForm.controls['number'].invalid && paymentForm.controls['number'].touched) {
-                    <p class="text-red-500 text-sm mt-1">Número de tarjeta inválido (16 dígitos)</p>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fecha de
+                        expiración</label>
+                    <input type="text" formControlName="expiration_date" (input)="formatExpirationDate($event)"
+                        placeholder="MM/AA" class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                        [class.border-red-500]="paymentForm.controls['expiration_date'].invalid && paymentForm.controls['expiration_date'].touched">
+                    @if (paymentForm.controls['expiration_date'].invalid &&
+                    paymentForm.controls['expiration_date'].touched) {
+                    <p class="text-red-500 text-sm mt-1">Formato MM/AA</p>
                     }
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fecha de
-                            expiración</label>
-                        <input type="text" formControlName="expiration_date" (input)="formatExpirationDate($event)"
-                            placeholder="MM/AA" class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-                            [class.border-red-500]="paymentForm.controls['expiration_date'].invalid && paymentForm.controls['expiration_date'].touched">
-                        @if (paymentForm.controls['expiration_date'].invalid &&
-                        paymentForm.controls['expiration_date'].touched) {
-                        <p class="text-red-500 text-sm mt-1">Formato MM/AA</p>
-                        }
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">CVV</label>
-                        <input type="text" formControlName="cvv" maxlength="3" placeholder="123"
-                            class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-                            [class.border-red-500]="paymentForm.controls['cvv'].invalid && paymentForm.controls['cvv'].touched">
-                        @if (paymentForm.controls['cvv'].invalid && paymentForm.controls['cvv'].touched) {
-                        <p class="text-red-500 text-sm mt-1">Código de 3 dígitos</p>
-                        }
-                    </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">CVV</label>
+                    <input type="text" formControlName="cvv" maxlength="3" placeholder="123"
+                        class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                        [class.border-red-500]="paymentForm.controls['cvv'].invalid && paymentForm.controls['cvv'].touched">
+                    @if (paymentForm.controls['cvv'].invalid && paymentForm.controls['cvv'].touched) {
+                    <p class="text-red-500 text-sm mt-1">Código de 3 dígitos</p>
+                    }
                 </div>
+            </div>
 
-                <button type="submit"
-                    class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
-                    [disabled]="paymentForm.invalid">
-                    Guardar Método de Pago
-                </button>
-            </form>
-        </div>
-        <div class="mt-4 flex justify-between">
-            <button type="button" (click)="addingCard = false"
-            class="w-full py-2 text-blue-600 dark:text-blue-400 hover:underline">
-                - Cancelar
+            <button type="submit"
+                class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                [disabled]="paymentForm.invalid">
+                Guardar Método de Pago
             </button>
-        </div>
+        </form>
+    </div>
+    <div class="mt-4 flex justify-between">
+        <button type="button" (click)="addingCard = false"
+            class="w-full py-2 text-blue-600 dark:text-blue-400 hover:underline">
+            - Cancelar
+        </button>
+    </div>
     }
 
     <!-- Listado de Tarjetas Guardadas -->
     @else {
     <div class="space-y-4">
         @for (card of examplePayments; track card.id) {
-        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-            <div>
+        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg transition-all cursor-pointer"
+            [class.border-2]="enableSelection" [class.border-blue-500]="enableSelection && selectedCardId === card.id"
+            (click)="onCardSelect(card.id)">
+            <div class="flex-1">
                 <p class="font-medium dark:text-white">**** **** **** {{ card.number.slice(-4) }}</p>
                 <div class="text-sm text-gray-500 dark:text-gray-400">
                     <span>{{ card.name }}</span>
@@ -81,16 +82,19 @@
                     <span>Expira: {{ card.expiration_date }}</span>
                 </div>
             </div>
+
+            @if (!enableSelection) {
             <button (click)="deleteCard(card.id)"
-                class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">
+                class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 ml-4">
                 Eliminar
             </button>
+            }
         </div>
         }
-
-        <button (click)="addingCard = true" class="w-full py-2 text-blue-600 dark:text-blue-400 hover:underline">
-            + Añadir Tarjeta
-        </button>
     </div>
+
+    <button (click)="addingCard = true" class="w-full py-2 text-blue-600 dark:text-blue-400 hover:underline">
+        + Añadir Tarjeta
+    </button>
     }
 </div>

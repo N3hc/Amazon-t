@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CardsApiService } from '../../../services/api/cards-api.service';
 import { SearchService } from '../../../services/search/search.service';
 import { Api2Service } from '../../../services/api/api2.service';
+import { CardObject } from '../../../interface/card.interface';
 import { combineLatest } from 'rxjs';
 
 @Component({
@@ -85,8 +86,9 @@ export class ProductListComponent {
   }
 
   // Seleccionar un producto (carta) para ver más detalles
-  selectProduct(card: any): void {
-    this.searchService.setCategory(card);  // Guarda la carta seleccionada
-    this.router.navigate(['/products/details', card.id]);  // Redirige al detalle
+  selectProduct(card: CardObject): void {
+    this.searchService.setCard(card);  // 👈 pasa el objeto completo
+    this.router.navigate(['/products/details', card.id]);
   }
+  
 }

@@ -1,73 +1,66 @@
 <div class="space-y-4">
     <!-- Lista de Direcciones -->
     @for (address of addressList; track address.id) {
-      <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-        <div>
-          <p class="font-medium dark:text-white">{{ address.address }}, {{ address.number }}</p>
-          <div class="text-sm text-gray-500 dark:text-gray-400">
-            <span>Creada: {{ address.createdAt}}</span>
-          </div>
+    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg transition-all cursor-pointer"
+        [class.border-2]="enableSelection" [class.border-blue-500]="enableSelection && selectedAddressId === address.id"
+        (click)="onAddressSelect(address.id)">
+        <div class="flex-1">
+            <p class="font-medium dark:text-white">{{ address.address }}, {{ address.number }}</p>
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+                <span>Creada: {{ address.createdAt}}</span>
+            </div>
         </div>
-        <button 
-          (click)="deleteAddress(address.id)"
-          class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">
-          Eliminar
+        @if (!enableSelection) {
+        <button (click)="deleteAddress(address.id)"
+            class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 ml-4">
+            Eliminar
         </button>
-      </div>
+        }
+    </div>
     }
-    
+
     <!-- Botón para añadir nueva dirección -->
     @if (!addingAddress) {
-      <button 
-        (click)="addingAddress = true"
-        class="w-full py-2 text-blue-600 dark:text-blue-400 hover:underline">
+    <button (click)="addingAddress = true" class="w-full py-2 text-blue-600 dark:text-blue-400 hover:underline">
         + Añadir Dirección
-      </button>
+    </button>
     }
-  
+
     <!-- Formulario para nueva dirección -->
     @if (addingAddress) {
-      <div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-200 dark:border-gray-700">
+    <div
+        class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-200 dark:border-gray-700">
         <form [formGroup]="addressForm" (ngSubmit)="onSubmitAddress()" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Dirección</label>
-            <input 
-              type="text" 
-              formControlName="address" 
-              class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-              placeholder="Calle Principal 123">
-            @if (addressForm.controls['address'].invalid && addressForm.controls['address'].touched) {
-              <p class="text-red-500 text-sm mt-1">Dirección requerida</p>
-            }
-          </div>
-  
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Número</label>
-            <input 
-              type="text" 
-              formControlName="number" 
-              class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-              placeholder="123">
-            @if (addressForm.controls['number'].invalid && addressForm.controls['number'].touched) {
-              <p class="text-red-500 text-sm mt-1">Número requerido</p>
-            }
-          </div>
-  
-          <div class="flex justify-end gap-3">
-            <button 
-              type="button"
-              (click)="addingAddress = false"
-              class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">
-              Cancelar
-            </button>
-            <button 
-              type="submit"
-              [disabled]="addressForm.invalid"
-              class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50">
-              Guardar
-            </button>
-          </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Dirección</label>
+                <input type="text" formControlName="address"
+                    class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                    placeholder="Calle Principal 123">
+                @if (addressForm.controls['address'].invalid && addressForm.controls['address'].touched) {
+                <p class="text-red-500 text-sm mt-1">Dirección requerida</p>
+                }
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Número</label>
+                <input type="text" formControlName="number"
+                    class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white" placeholder="123">
+                @if (addressForm.controls['number'].invalid && addressForm.controls['number'].touched) {
+                <p class="text-red-500 text-sm mt-1">Número requerido</p>
+                }
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <button type="button" (click)="addingAddress = false"
+                    class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">
+                    Cancelar
+                </button>
+                <button type="submit" [disabled]="addressForm.invalid"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50">
+                    Guardar
+                </button>
+            </div>
         </form>
-      </div>
+    </div>
     }
-  </div>
+</div>

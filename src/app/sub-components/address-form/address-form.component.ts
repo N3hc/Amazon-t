@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Address } from '../../../interface/address.interface';
 
@@ -12,6 +12,16 @@ import { Address } from '../../../interface/address.interface';
 export class AddressFormComponent {
   addingAddress = false;
   addressForm: FormGroup;
+
+    @Input() enableSelection: boolean = false;
+    
+    selectedAddressId: number | null = null;
+  
+    onAddressSelect(addressId: number) {
+      if (this.enableSelection) {
+        this.selectedAddressId = this.selectedAddressId === addressId ? null : addressId;
+      }
+    }
 
   // Ejemplo de datos
   addressList: Address[] = [

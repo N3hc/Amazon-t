@@ -2,11 +2,13 @@
 <div [class.dark]="isDarkMode">
     <div class="dark:bg-[#121212] min-h-screen w-full flex flex-col">
 
-        <button class="flex items-center gap-2 text-gray-800 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition duration-300 py-2 px-3 rounded-md focus:outline-none" (click)="backToProducts()">
+        <button
+            class="flex items-center gap-2 text-gray-800 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition duration-300 py-2 px-3 rounded-md focus:outline-none"
+            (click)="backToProducts()">
             <i class="bi bi-arrow-left"></i> Go back
         </button>
-        
-        
+
+
 
         <div class="container mx-auto mt-5 p-4 dark:bg-[#121212] text-gray-900 dark:text-gray-200">
             <div class="grid md:grid-cols-2 gap-6">
@@ -40,7 +42,7 @@
                         <li><strong>Regulación:</strong> {{ card.regulationMark || 'Desconocida' }}</li>
                     </ul>
 
-                 <!--   <div class="mt-4">
+                    <!--   <div class="mt-4">
                         <label for="quantity" class="block mb-1">Cantidad:</label>
                         <input type="number" id="quantity" value="1" min="1"
                             class="w-20 p-2 border rounded dark:bg-gray-800 dark:border-gray-600">

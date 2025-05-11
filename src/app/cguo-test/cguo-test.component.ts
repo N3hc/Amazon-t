@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CurrencyPipe, DatePipe } from '@angular/common';
-
+import { PaymentComponent } from '../pages/cart/payment/payment.component';
 import { User } from '../../interface/user.interface';
 import { Ticket } from '../../interface/ticket.interface';
+import { PaymentFormComponent } from "../sub-components/payment-form/payment-form.component";
+import { AddressFormComponent } from '../sub-components/address-form/address-form.component';
 
 @Component({
   selector: 'app-cguo-test',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, PaymentComponent, PaymentFormComponent, AddressFormComponent],
   templateUrl: './cguo-test.component.html',
   styleUrl: './cguo-test.component.css'
 })

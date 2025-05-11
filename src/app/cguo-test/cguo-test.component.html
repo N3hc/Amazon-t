@@ -252,21 +252,11 @@
         <div class="space-y-6">
             <!-- Métodos de Pago -->
             <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Payment Methods</h3>
-                <div class="space-y-4">
-                    @for (card of paymentMethods; track card.id) {
-                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                        <div>
-                            <p class="font-medium dark:text-white">**** **** **** {{ card.last4 }}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ card.expiry }}</p>
-                        </div>
-                        <button class="text-red-600 hover:text-red-800">Delete</button>
-                    </div>
-                    }
-                    <button class="w-full py-2 text-blue-600 dark:text-blue-400 hover:underline">
-                        + Add Payment Method
-                    </button>
-                </div>
+                <app-payment-form></app-payment-form>
+            </div>
+            <!-- Address del Usuario -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+                <app-address-form></app-address-form>
             </div>
 
             <!-- Configuración de Seguridad -->
@@ -276,10 +266,6 @@
                     <div class="flex items-center justify-between">
                         <span class="text-gray-700 dark:text-gray-300">Two-Factor Authentication</span>
                         <button class="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm">Enable</button>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-700 dark:text-gray-300">Change Password</span>
-                        <button class="text-blue-600 hover:underline">Change</button>
                     </div>
                 </div>
             </div>

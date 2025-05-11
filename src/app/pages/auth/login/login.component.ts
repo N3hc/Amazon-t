@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { User } from '../../../../interface/user.interface';
+//import { User } from '../../../../interface/user.interface';
 import { CommonModule } from '@angular/common';
 import { Api2Service } from '../../../../services/api/api2.service'; // Ajusta el path según tu estructura
 import { UserService } from '../../../../services/user/user.service';
@@ -17,17 +17,19 @@ export class LoginComponent {
   showPassword: boolean = false;
   constructor(private api2service : Api2Service, private router: Router, private userService: UserService) {}
 
-  User: User = {
+  User = {
+    id: '',
     username: '',
     email: '',
     name: '',
     surname: '',
     password: '',
     oldPassword: '',
-    role: 0,
+    role: '',
     birthDate: '',
-    vendor: 0,
-    gender: 0
+    vendor: '',
+    gender: '',
+    createdAt: ''
   };
 
   loginForm = new FormGroup({

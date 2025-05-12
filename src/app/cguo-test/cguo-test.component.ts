@@ -67,7 +67,6 @@ export class CguoTestComponent implements OnInit {
     birthDate: '1990-01-01',
     vendor: 0,
     gender: 1,
-    createdAt: '2024-01-01'
   };
 
   completedTickets: Ticket[] = [

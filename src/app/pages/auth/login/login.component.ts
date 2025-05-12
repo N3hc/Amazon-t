@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-//import { User } from '../../../../interface/user.interface';
+import { User } from '../../../../interface/user.interface';
 import { CommonModule } from '@angular/common';
 import { Api2Service } from '../../../../services/api/api2.service'; // Ajusta el path según tu estructura
 import { UserService } from '../../../../services/user/user.service';
@@ -26,11 +26,10 @@ export class LoginComponent {
     surname: '',
     password: '',
     oldPassword: '',
-    role: '',
+    role: 0,
     birthDate: '',
-    vendor: '',
-    gender: '',
-    createdAt: ''
+    vendor: 0,
+    gender: 0
   };
 
   loginForm = new FormGroup({

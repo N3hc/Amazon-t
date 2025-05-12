@@ -1,136 +1,267 @@
 <app-header></app-header>
 <div [class.dark]="isDarkMode">
   <div class="dark:bg-[#0a0a0a] min-h-screen w-full flex flex-col">
-    <div class="mx-auto max-w-screen-md px-4 2xl:px-0 py-8">
-
+    <div class="mx-auto max-w-screen-xl px-4 2xl:px-0 py-8">
+      <!-- Sección de Perfil -->
       <div class="bg-gradient-to-r from-purple-500 to-blue-600 rounded-2xl p-6 mb-8 shadow-lg">
-        <h2 class="text-2xl font-bold text-white sm:text-3xl">👤 Perfil de Usuario</h2>
-        <p class="text-purple-100 mt-2">Gestiona y visualiza tu información personal</p>
+        <h2 class="text-2xl font-bold text-white sm:text-3xl">👤 User Profile</h2>
+        <p class="text-purple-100 mt-2">Manage your personal information</p>
       </div>
 
-      <!-- Contenedor principal del formulario -->
-      <div class="max-w-xl mx-auto py-8 px-4 dark:bg-gray-900 bg-white rounded-xl shadow-md">
-        <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm text-gray-600 dark:text-gray-300">Nombre</label>
-              <input type="text" formControlName="name"
-                class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white" />
-              @if (userForm.controls['name'].invalid && userForm.controls['name'].touched) {
-              <p class="text-red-500 text-sm">Nombre requerido</p>
-              }
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Información del Perfil -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Información Personal</h3>
             </div>
+            <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-4">
+              <div class="space-y-6">
+                <!-- Campos del formulario -->
+                <div>
+                  <label class="block text-sm text-gray-600 dark:text-gray-300">Nombre</label>
+                  <input type="text" formControlName="name" [disabled]="!isEditMode"
+                    class="w-full p-2 border rounded dark:bg-gray-800 dark:text-white bg-gray-50 disabled:opacity-75" />
+                  @if (userForm.controls['name'].invalid && userForm.controls['name'].touched) {
+                  <p class="text-red-500 text-sm mt-1">Nombre requerido</p>
+                  }
+                </div>
 
-            <div>
-              <label class="block text-sm text-gray-600 dark:text-gray-300">Apellido</label>
-              <input type="text" formControlName="surname"
-                class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white" />
-              @if (userForm.controls['surname'].invalid && userForm.controls['surname'].touched) {
-              <p class="text-red-500 text-sm">Apellido requerido</p>
-              }
-            </div>
+                <div>
+                  <label class="block text-sm text-gray-600 dark:text-gray-300">Apellido</label>
+                  <input type="text" formControlName="surname" [disabled]="!isEditMode"
+                    class="w-full p-2 border rounded dark:bg-gray-800 dark:text-white bg-gray-50 disabled:opacity-75" />
+                  @if (userForm.controls['surname'].invalid && userForm.controls['surname'].touched) {
+                  <p class="text-red-500 text-sm mt-1">Apellido requerido</p>
+                  }
+                </div>
 
-            <div>
-              <label class="block text-sm text-gray-600 dark:text-gray-300">Correo electrónico</label>
-              <input type="email" formControlName="email"
-                class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white" />
-              @if (userForm.controls['email'].invalid && userForm.controls['email'].touched) {
-              <p class="text-red-500 text-sm">Correo inválido</p>
-              }
-            </div>
+                <div>
+                  <label class="block text-sm text-gray-600 dark:text-gray-300">Correo electrónico</label>
+                  <input type="email" formControlName="email" [disabled]="!isEditMode"
+                    class="w-full p-2 border rounded dark:bg-gray-800 dark:text-white bg-gray-50 disabled:opacity-75" />
+                  @if (userForm.controls['email'].invalid && userForm.controls['email'].touched) {
+                  <p class="text-red-500 text-sm mt-1">Correo inválido</p>
+                  }
+                </div>
 
-            <div>
-              <label class="block text-sm text-gray-600 dark:text-gray-300">Usuario</label>
-              <input type="text" formControlName="username"
-                class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white" />
-              @if (userForm.controls['username'].invalid && userForm.controls['username'].touched) {
-              <p class="text-red-500 text-sm">Usuario requerido</p>
-              }
-            </div>
+                <div>
+                  <label class="block text-sm text-gray-600 dark:text-gray-300">Usuario</label>
+                  <input type="text" formControlName="username" [disabled]="!isEditMode"
+                    class="w-full p-2 border rounded dark:bg-gray-800 dark:text-white bg-gray-50 disabled:opacity-75" />
+                  @if (userForm.controls['username'].invalid && userForm.controls['username'].touched) {
+                  <p class="text-red-500 text-sm mt-1">Usuario requerido</p>
+                  }
+                </div>
 
-            <div>
-              <label class="block text-sm text-gray-600 dark:text-gray-300">Fecha de nacimiento</label>
-              <input type="date" formControlName="birthDate"
-                class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white" />
-              @if (userForm.controls['birthDate'].invalid && userForm.controls['birthDate'].touched) {
-              <p class="text-red-500 text-sm">Fecha requerida</p>
-              }
-            </div>
+                <div>
+                  <label class="block text-sm text-gray-600 dark:text-gray-300">Fecha de nacimiento</label>
+                  <input type="date" formControlName="birthDate" [disabled]="!isEditMode"
+                    class="w-full p-2 border rounded dark:bg-gray-800 dark:text-white bg-gray-50 disabled:opacity-75" />
+                  @if (userForm.controls['birthDate'].invalid && userForm.controls['birthDate'].touched) {
+                  <p class="text-red-500 text-sm mt-1">Fecha requerida</p>
+                  }
+                </div>
 
-            <div>
-              <label class="block text-sm text-gray-600 dark:text-gray-300">Género</label>
-              <select formControlName="gender" class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white">
-                <option value="0">Hombre</option>
-                <option value="1">Mujer</option>
-                <option value="2">Otro</option>
-              </select>
-              @if (userForm.controls['gender'].invalid && userForm.controls['gender'].touched) {
-              <p class="text-red-500 text-sm">Género requerido</p>
-              }
-            </div>
-          </div>
-            @if (isEditMode) {
-              <div>
-                <label class="block text-sm text-gray-600 dark:text-gray-300">Nueva contraseña</label>
-                <div class="relative">
-                  <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
-                    class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white" />
-                  <button type="button" (click)="togglePassword()" class="absolute right-3 top-2.5 text-sm text-blue-500">
-                    {{ showPassword ? 'Ocultar' : 'Mostrar' }}
-                  </button>
+                <div>
+                  <label class="block text-sm text-gray-600 dark:text-gray-300">Género</label>
+                  <select formControlName="gender" [disabled]="!isEditMode"
+                    class="w-full p-2 border rounded dark:bg-gray-800 dark:text-white bg-gray-50 disabled:opacity-75">
+                    <option value="0">Hombre</option>
+                    <option value="1">Mujer</option>
+                    <option value="2">Otro</option>
+                  </select>
+                  @if (userForm.controls['gender'].invalid && userForm.controls['gender'].touched) {
+                  <p class="text-red-500 text-sm mt-1">Género requerido</p>
+                  }
+                </div>
+
+                @if (isEditMode) {
+                <div>
+                  <label class="block text-sm text-gray-600 dark:text-gray-300">Nueva contraseña</label>
+                  <div class="relative">
+                    <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
+                      class="w-full p-2 border rounded dark:bg-gray-800 dark:text-white bg-gray-50" />
+                    <button type="button" (click)="togglePassword()"
+                      class="absolute right-3 top-2.5 text-sm text-blue-500">
+                      {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+                    </button>
+                  </div>
                   @if (userForm.controls['password'].invalid && userForm.controls['password'].touched) {
-                    <p class="text-red-500 text-sm">Mínimo 6 caracteres</p>
+                  <p class="text-red-500 text-sm mt-1">Mínimo 6 caracteres</p>
+                  }
+                </div>
+                }
+
+                <div class="space-y-4">
+                  @if (userForm.get('role')?.value === 1) {
+                  <label class="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                    <input type="checkbox" formControlName="role" [disabled]="!isEditMode" class="mr-2" />
+                    Rol Administrador
+                  </label>
+                  }
+                  <label class="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                    <input type="checkbox" formControlName="vendor" [disabled]="!isEditMode" class="mr-2" />
+                    Es vendedor
+                  </label>
+                </div>
+              </div>
+
+              <div class="flex justify-end gap-4 pt-4">
+                @if (isEditMode) {
+                <button type="submit"
+                  class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
+                  [disabled]="userForm.invalid">
+                  Guardar Cambios
+                </button>
+                }
+
+                <button type="button"
+                  class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+                  (click)="toggleEditMode()">
+                  {{ isEditMode ? 'Cancelar' : 'Editar Perfil' }}
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Historial de Pedidos -->
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+            <!-- Listado de Tickets Completados -->
+            <div class="space-y-4">
+              <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Tickets Completados</h2>
+
+              @for (ticket of completedTickets; track ticket.id) {
+              <div
+                class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                [class.border-blue-500]="selectedTicket?.id === ticket.id" (click)="showTicketDetails(ticket)">
+                <div class="flex justify-between items-center">
+                  <div>
+                    <p class="font-medium text-gray-800 dark:text-white">Ticket #{{ticket.id}}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ticket.createdAt}}</p>
+                  </div>
+                  <span class="text-lg font-semibold text-gray-800 dark:text-white">
+                    {{ticket.total}}
+                  </span>
+                </div>
+              </div>
+              } @empty {
+              <div class="p-4 text-center text-gray-600 dark:text-gray-400">
+                No hay tickets completados
+              </div>
+              }
+            </div>
+
+            <!-- Detalle del Ticket Seleccionado -->
+            <div class="sticky top-4 h-fit">
+              @if (selectedTicket) {
+              <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-200 dark:border-gray-700">
+                <!-- Encabezado -->
+                <div class="mb-6 border-b pb-4 border-gray-200 dark:border-gray-700">
+                  <div class="flex justify-between items-start mb-2">
+                    <div>
+                      <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Ticket
+                        #{{selectedTicket.id}}</h2>
+                      <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                        Fecha: {{selectedTicket.createdAt}}
+                      </p>
+                    </div>
+                    <span
+                      class="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                      Completado
+                    </span>
+                  </div>
+
+                  <div class="space-y-1 text-sm">
+                    <p class="text-gray-600 dark:text-gray-300">
+                      Usuario: <span class="font-medium">{{selectedTicket.id_user}}</span>
+                    </p>
+                    <p class="text-gray-600 dark:text-gray-300">
+                      Dirección: <span class="font-medium">{{selectedTicket.id_address}}</span>
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Líneas del Ticket -->
+                <div class="mb-6">
+                  <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Productos</h3>
+                  <ul class="space-y-4">
+                    @for (line of selectedTicket.ticketLines; track line.id) {
+                    <li class="border-b pb-4 border-gray-200 dark:border-gray-700 last:border-0">
+                      <div class="grid grid-cols-4 gap-4 text-sm">
+                        <div class="col-span-2">
+                          <p class="font-medium text-gray-800 dark:text-white">Producto
+                            #{{line.id_product}}</p>
+                          <p class="text-gray-600 dark:text-gray-300 text-sm">Cantidad:
+                            {{line.quantity}}</p>
+                        </div>
+                        <div class="text-right">
+                          <p class="text-gray-600 dark:text-gray-300">Precio unitario</p>
+                          <p class="font-medium text-gray-800 dark:text-white">{{line.price}}</p>
+                        </div>
+                        <div class="text-right">
+                          <p class="text-gray-600 dark:text-gray-300">Subtotal</p>
+                          <p class="font-medium text-gray-800 dark:text-white">{{(line.price *
+                            line.quantity)}}</p>
+                        </div>
+                      </div>
+                    </li>
+                    }
+                  </ul>
+                </div>
+
+                <!-- Total -->
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                  <div class="flex justify-between items-center">
+                    <span class="text-lg font-bold text-gray-800 dark:text-white">Total:</span>
+                    <span class="text-2xl font-bold text-gray-800 dark:text-white">{{selectedTicket.total}}</span>
+                  </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="mt-6 text-sm text-gray-600 dark:text-gray-400 text-center">
+                  <p>Ticket generado el {{selectedTicket.createdAt}}</p>
+                  @if (selectedTicket.deleted) {
+                  <p class="text-red-500 mt-2">Este ticket ha sido anulado</p>
                   }
                 </div>
               </div>
-            }
-
-
-          <div class="flex items-center space-x-4">
-            @if (userForm.get('role')?.value === 1) {
-            <label class="flex items-center text-sm text-gray-600 dark:text-gray-300">
-              <input type="checkbox" formControlName="role" class="mr-2" />
-              Rol Administrador
-            </label>
-            }
-            <label class="flex items-center text-sm text-gray-600 dark:text-gray-300">
-              <input type="checkbox" formControlName="vendor" class="mr-2" />
-              Es vendedor
-            </label>
-          </div>
-
-          <div class="flex justify-end gap-4 pt-4">
-            @if (isEditMode) {
-            <button type="submit"
-              class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:scale-105 transition-transform"
-              [disabled]="userForm.invalid">
-              Guardar Cambios
-            </button>
-            }
-
-            <button type="button" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
-              (click)="toggleEditMode()">
-              {{ isEditMode ? 'Cancelar' : 'Editar Perfil' }}
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <div class="max-w-xl mx-auto py-8 px-4 dark:bg-gray-900 bg-white rounded-xl shadow-md mt-8">
-        <h3 class="text-xl font-semibold text-gray-700 dark:text-white mb-4">Historial de Pagos</h3>
-        <div class="space-y-4">
-          @for(payment of paymentHistory; track $index) {
-            <div class="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-sm">
-              <div class="flex justify-between items-center">
-                <p class="text-sm text-gray-600 dark:text-gray-300">{{ payment.date }}</p>
-                <p class="text-sm font-bold text-blue-600">{{ payment.amount }}</p>
+              } @else {
+              <div class="p-8 text-center text-gray-600 dark:text-gray-400 border-2 border-dashed rounded-lg">
+                Selecciona un ticket para ver los detalles
               </div>
-              <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Estado:
-                <span>{{ payment.status }}</span>
-              </p>
+              }
             </div>
-          }
+          </div>
+        </div>
+
+        <!-- Métodos de Pago y Seguridad -->
+        <div class="space-y-6">
+          <!-- Métodos de Pago -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Payment Methods</h3>
+            <app-payment-form></app-payment-form>
+          </div>
+          <!-- Address del Usuario -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">User Address</h3>
+            <app-address-form></app-address-form>
+          </div>
+
+          <!-- Configuración de Seguridad -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Security Settings</h3>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="text-gray-700 dark:text-gray-300">Two-Factor Authentication</span>
+                <button class="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm">Enable</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
     </div>
+  </div>
+</div>

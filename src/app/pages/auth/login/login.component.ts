@@ -17,8 +17,9 @@ export class LoginComponent {
   showPassword: boolean = false;
   constructor(private api2service : Api2Service, private router: Router, private userService: UserService) {}
 
-  User = {
-    id: '',
+
+  User: User = {
+    id: 0,
     username: '',
     email: '',
     name: '',

@@ -5,6 +5,7 @@ import { ThemeService } from '../../../services/theme/theme.service';
 import { Router } from '@angular/router';
 import { UserService } from '../../../services/user/user.service';
 import { User } from '../../../interface/user.interface';
+import { Api2Service } from '../../../services/api/api2.service';
 
 @Component({
   selector: 'app-user',
@@ -24,17 +25,14 @@ export class UserComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private api2Service: Api2Service
   ) {}
 
-  private mapGender(value: number): string {
-    switch (value) {
-      case 0: return 'male';
-      case 1: return 'female';
-      case 2: return 'other';
-      default: return '';
-    }
+  private mapGender(value: number): number {
+    return value;
   }
+
 
     paymentHistory = [
     { date: '2025-05-01', amount: 50, status: 'Completado' },
@@ -47,39 +45,50 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getUser().subscribe((user: User | null) => {
       if (!user) {
-        // Podrías redirigir o mostrar un mensaje
         console.warn('No hay usuario cargado');
         this.router.navigate(['/home']);
         return;
-      } else {
-        this.userForm = this.fb.group({
-          username: [user.username, [Validators.required]],
-          email: [user.email, [Validators.required, Validators.email]],
-          name: [user.name, [Validators.required]],
-          surname: [user.surname, [Validators.required]],
-          birthDate: [this.formatDate(user.birthDate), [Validators.required]],
-          gender: [this.mapGender(user.gender), [Validators.required]],
-          vendor: [!!user.vendor],
-          role: [!!user.role],
-          oldPassword: [user.oldPassword, [Validators.minLength(6)]],
-          password: [user.password, [Validators.minLength(6)]],
-          confirmPassword: ['']
-        }, { validators: this.passwordMatchValidator });
-
-        this.userForm.disable();
       }
-    // Escuchar cambios de tema
-    this.themeService.theme$.subscribe(theme => {
-      this.isDarkMode = theme === 'dark';
-    });
 
+      this.userForm = this.fb.group({
+        id: [user.id],
+        username: [user.username, [Validators.required]],
+        email: [user.email, [Validators.required, Validators.email]],
+        name: [user.name, [Validators.required]],
+        surname: [user.surname, [Validators.required]],
+        birthDate: [this.formatDate(user.birthDate), [Validators.required]],
+        gender: [this.mapGender(user.gender), [Validators.required]],
+        vendor: [!!user.vendor],
+        role: [!!user.role],
+        password: ['', [Validators.minLength(6)]]
+      });
+
+
+      // Tema oscuro
+      this.themeService.theme$.subscribe(theme => {
+        this.isDarkMode = theme === 'dark';
+      });
     });
   }
 
   toggleEditMode(): void {
     this.isEditMode = !this.isEditMode;
-    this.isEditMode ? this.userForm.enable() : this.userForm.disable();
+
+    const fieldsToToggle = [
+      'username', 'email', 'name', 'surname', 'birthDate',
+      'gender', 'vendor','password'
+    ];
+
+    fieldsToToggle.forEach(field => {
+      const control = this.userForm.get(field);
+      if (this.isEditMode) {
+        control?.enable();
+      } else {
+        control?.disable();
+      }
+    });
   }
+
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
@@ -89,16 +98,32 @@ export class UserComponent implements OnInit {
     this.showOldPassword = !this.showOldPassword;
   }
 
-  onSubmit(): void {
-    if (this.userForm.valid) {
-      const { confirmPassword, ...userData } = this.userForm.value;
-      console.log('Datos del formulario:', userData);
-      this.userService.updateUser(userData);
-      this.router.navigate(['/user/profile']);
-    } else {
-      this.userForm.markAllAsTouched();
-    }
+onSubmit(): void {
+  if (this.userForm.invalid) {
+    this.userForm.markAllAsTouched();
+    return;
   }
+
+  const userData = { ...this.userForm.value };
+
+  // Si no hay contraseña, elimínala antes de enviar
+  if (!userData.password) {
+    delete userData.password;
+  }
+  console.log('Datos del formulario:', userData);
+  this.userService.updateUser(userData);
+  this.api2Service.updateUser(userData).subscribe({
+    next: (response) => { 
+      console.log('Usuario actualizado:', response);
+      //this.userService.setUser(userData);
+    },
+    error: (error) => {
+      console.error('Error al actualizar el usuario:', error);
+    }
+  });
+  this.router.navigate(['/user/profile']);
+}
+
 
   cancel(): void {
     this.router.navigate(['/user/profile']);

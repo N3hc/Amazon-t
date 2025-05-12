@@ -1,6 +1,10 @@
 import { Component, Input} from '@angular/core';
 import { Payment } from '../../../interface/payment.interface';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { UserService } from '../../../services/user/user.service';
+import { OnInit } from '@angular/core';
+import { Api2Service } from '../../../services/api/api2.service';
+import { User } from '../../../interface/user.interface';
 
 
 @Component({
@@ -10,9 +14,12 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
   templateUrl: './payment-form.component.html',
   styleUrl: './payment-form.component.css'
 })
-export class PaymentFormComponent {
+
+export class PaymentFormComponent implements OnInit {
   paymentForm: FormGroup;
   addingCard = false;
+
+  
 
   @Input() enableSelection: boolean = false;
   
@@ -23,6 +30,23 @@ export class PaymentFormComponent {
       this.selectedCardId = this.selectedCardId === cardId ? null : cardId;
     }
   }
+
+ngOnInit() {
+  this.userService.getUser().subscribe((user: User | null) => {
+    console.log('Usuario actual:', user);
+
+    if (!user) {
+      console.warn('No hay usuario cargado');
+      return;
+    }
+
+    this.api2service.getPagosByUser(user.id).subscribe((pagos: Payment[]) => {
+      this.examplePayments = pagos;
+      console.log('Pagos del usuario:', pagos);
+      console.log('Pagos del usuario:', this.examplePayments);  
+    });
+  });
+}
 
 
    examplePayments: Payment[] = [
@@ -83,7 +107,7 @@ export class PaymentFormComponent {
     { value: 'Mastercard', label: 'Mastercard' }
   ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private userService: UserService, private api2service: Api2Service) {
     this.paymentForm = this.fb.group({
       name: ['Visa', [Validators.required]],
       number: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]],

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { __param } from 'tslib';
 
 @Injectable({
   providedIn: 'root',
@@ -98,6 +99,12 @@ export class Api2Service {
     return this.http.get(`${this.baseUrl}/index/adress`);
   }
 
+  getDireccionesByUser(id: number): Observable<any> {
+    console.log('Fetching addresses for user ID:', id);
+    const params = new HttpParams().set('id_user', id); // Pasamos el id como parámetro de consulta
+    return this.http.get(`${this.baseUrl}/index/adress`, { params });
+  }
+
   storeAddress(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/store/adress`, data);
   }
@@ -142,5 +149,27 @@ export class Api2Service {
 
   deleteTicketLine(id: number): Observable<any> {
     return this.http.request('delete', `${this.baseUrl}/delete/tiket_lineas`, { body: { id } });
+  }
+
+//Pagos 
+
+  getPagos(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/index/pago`, );
+  }
+  getPagosByUser(id: number): Observable<any> {
+  console.log('Fetching pagos for user ID:', id);
+  const params = new HttpParams().set('id_user', id); // Pasamos el id como parámetro de consulta
+  return this.http.get(`${this.baseUrl}/index/pago/`, { params });
+}
+  storePago(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/store/pago`, data);
+  }
+
+  updatePago(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/update/pago`, data);
+  }
+
+  deletePago(id_user: number): Observable<any> {
+    return this.http.request('delete', `${this.baseUrl}/delete/pago`, { body: { id_user } });
   }
 }

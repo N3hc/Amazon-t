@@ -1,6 +1,10 @@
 import { Component, Input} from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Address } from '../../../interface/address.interface';
+import { UserService } from '../../../services/user/user.service';
+import { OnInit } from '@angular/core';
+import { Api2Service } from '../../../services/api/api2.service';
+import { User } from '../../../interface/user.interface';
 
 @Component({
   selector: 'app-address-form',
@@ -9,7 +13,7 @@ import { Address } from '../../../interface/address.interface';
   templateUrl: './address-form.component.html',
   styleUrl: './address-form.component.css'
 })
-export class AddressFormComponent {
+export class AddressFormComponent implements OnInit {
   addingAddress = false;
   addressForm: FormGroup;
 
@@ -43,10 +47,23 @@ export class AddressFormComponent {
     }
   ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private userService: UserService, private api2service: Api2Service) {
     this.addressForm = this.fb.group({
       address: ['', [Validators.required]],
       number: ['', [Validators.required]]
+    });
+  }
+  ngOnInit(): void {
+    this.userService.getUser().subscribe((user: User | null) => {
+      if (!user) {
+        console.warn('No user is currently loaded');
+        return;
+      }
+
+      this.api2service.getDireccionesByUser(user.id).subscribe((addresses: Address[]) => {
+        this.addressList = addresses;
+        console.log('User addresses:', this.addressList);
+      });
     });
   }
 

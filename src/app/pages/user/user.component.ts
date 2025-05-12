@@ -5,6 +5,7 @@ import { ThemeService } from '../../../services/theme/theme.service';
 import { Router } from '@angular/router';
 import { UserService } from '../../../services/user/user.service';
 import { User } from '../../../interface/user.interface';
+import { Api2Service } from '../../../services/api/api2.service';
 
 @Component({
   selector: 'app-user',
@@ -24,7 +25,8 @@ export class UserComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private api2Service: Api2Service
   ) {}
 
   private mapGender(value: number): number {
@@ -49,18 +51,18 @@ export class UserComponent implements OnInit {
       }
 
       this.userForm = this.fb.group({
-        username: [{ value: user.username, disabled: true }, [Validators.required]],
-        email: [{ value: user.email, disabled: true }, [Validators.required, Validators.email]],
-        name: [{ value: user.name, disabled: true }, [Validators.required]],
-        surname: [{ value: user.surname, disabled: true }, [Validators.required]],
-        birthDate: [{ value: this.formatDate(user.birthDate), disabled: true }, [Validators.required]],
-        gender: [{ value: this.mapGender(user.gender), disabled: true }, [Validators.required]],
-        vendor: [{ value: !!user.vendor, disabled: true }],
-        role: [{ value: !!user.role, disabled: true }],
-        oldPassword: [{ value: '', disabled: true }, [Validators.minLength(6)]],
-        password: [{ value: '', disabled: true }, [Validators.minLength(6)]],
-        confirmPassword: [{ value: '', disabled: true }]
-      }, { validators: this.passwordMatchValidator });
+        id: [user.id],
+        username: [user.username, [Validators.required]],
+        email: [user.email, [Validators.required, Validators.email]],
+        name: [user.name, [Validators.required]],
+        surname: [user.surname, [Validators.required]],
+        birthDate: [this.formatDate(user.birthDate), [Validators.required]],
+        gender: [this.mapGender(user.gender), [Validators.required]],
+        vendor: [!!user.vendor],
+        role: [!!user.role],
+        password: ['', [Validators.minLength(6)]]
+      });
+
 
       // Tema oscuro
       this.themeService.theme$.subscribe(theme => {
@@ -74,7 +76,7 @@ export class UserComponent implements OnInit {
 
     const fieldsToToggle = [
       'username', 'email', 'name', 'surname', 'birthDate',
-      'gender', 'vendor', 'oldPassword', 'password', 'confirmPassword'
+      'gender', 'vendor','password'
     ];
 
     fieldsToToggle.forEach(field => {
@@ -96,16 +98,32 @@ export class UserComponent implements OnInit {
     this.showOldPassword = !this.showOldPassword;
   }
 
-  onSubmit(): void {
-    if (this.userForm.valid) {
-      const { confirmPassword, ...userData } = this.userForm.value;
-      console.log('Datos del formulario:', userData);
-      this.userService.updateUser(userData);
-      this.router.navigate(['/user/profile']);
-    } else {
-      this.userForm.markAllAsTouched();
-    }
+onSubmit(): void {
+  if (this.userForm.invalid) {
+    this.userForm.markAllAsTouched();
+    return;
   }
+
+  const userData = { ...this.userForm.value };
+
+  // Si no hay contraseña, elimínala antes de enviar
+  if (!userData.password) {
+    delete userData.password;
+  }
+  console.log('Datos del formulario:', userData);
+  this.userService.updateUser(userData);
+  this.api2Service.updateUser(userData).subscribe({
+    next: (response) => { 
+      console.log('Usuario actualizado:', response);
+      //this.userService.setUser(userData);
+    },
+    error: (error) => {
+      console.error('Error al actualizar el usuario:', error);
+    }
+  });
+  this.router.navigate(['/user/profile']);
+}
+
 
   cancel(): void {
     this.router.navigate(['/user/profile']);

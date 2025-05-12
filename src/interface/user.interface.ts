@@ -1,5 +1,5 @@
 export interface User {
-  id:number;
+    id:number;
     username: string;
     email: string;
     name: string;
@@ -10,4 +10,5 @@ export interface User {
     birthDate: string;
     vendor: number;
     gender: number;
+    createdAt: string;
 }

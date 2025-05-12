@@ -6,11 +6,12 @@ import { PromoThingsComponent } from '../../../sub-components/promo-things/promo
 import { FooterComponent } from "../../../main-components/footer/footer.component";
 import { ThemeService } from '../../../../services/theme/theme.service';
 import { SearchService } from '../../../../services/search/search.service';
+import { CguoTestComponent } from '../../../cguo-test/cguo-test.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, CarrouselComponent, FooterComponent, PromoThingsComponent],
+  imports: [RouterOutlet, HeaderComponent, CarrouselComponent, FooterComponent, PromoThingsComponent, CguoTestComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

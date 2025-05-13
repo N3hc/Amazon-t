@@ -9,11 +9,18 @@ import { Api2Service } from '../../../services/api/api2.service';
 import { PaymentFormComponent } from '../../sub-components/payment-form/payment-form.component';
 import { AddressFormComponent } from '../../sub-components/address-form/address-form.component';
 import { Ticket, TicketLine } from '../../../interface/ticket.interface';
+import { switchMap, map } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
+import { VendorComponent } from './vendor/vendor.component';
+
+interface TicketWithLines extends Ticket {
+  ticketLines: TicketLine[];
+}
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [HeaderComponent, ReactiveFormsModule, PaymentFormComponent, AddressFormComponent],
+  imports: [HeaderComponent, ReactiveFormsModule, PaymentFormComponent, AddressFormComponent, VendorComponent],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
@@ -22,12 +29,8 @@ export class UserComponent implements OnInit {
   isEditMode = false;
   showPassword = false;
   showOldPassword = false;
-  selectedTicket: Ticket | null = null;
+  selectedTicket: TicketWithLines | null = null;
   isDarkMode = false;
-
-
-
-
 
 
   completedTicketLines: TicketLine[] = [
@@ -51,39 +54,30 @@ export class UserComponent implements OnInit {
     }
   ];
 
-  completedTickets: Ticket[] = [
-    {
-      id: 1,
-      id_user: 123,
-      id_address: 456,
-      total: 149.99,
-      completed: true,
-      deleted: false,
-      createdAt: new Date('2024-03-15').toISOString(),
-
-    },
-    {
-      id: 12345,
-      id_user: 987,
-      id_address: 456,
-      total: 147.50,
-      completed: true,
-      deleted: false,
-      createdAt: new Date().toISOString()
-    },
+  completedTickets: TicketWithLines[] = [
+  {
+    id: 1,
+    id_user: 123,
+    id_address: 456,
+    total: 149.99,
+    completed: true,
+    deleted: false,
+    createdAt: new Date('2024-03-15').toISOString(),
+    ticketLines: [  // Añade esta propiedad
+      {
+        id: 1,
+        id_ticket: 1,
+        id_product: 101,
+        quantity: 2,
+        price: 25.99,
+        deleted: false,
+        createdAt: new Date().toISOString()
+      }
+    ]
+  },
   ];
 
-  
-
-  constructor(
-    private fb: FormBuilder,
-    private userService: UserService,
-    private router: Router,
-    private themeService: ThemeService,
-    private api2Service: Api2Service
-  ) { }
-
-    ngOnInit(): void {
+  ngOnInit(): void {
     this.userService.getUser().subscribe((user: User | null) => {
       if (!user) {
         console.warn('No hay usuario cargado');
@@ -91,18 +85,7 @@ export class UserComponent implements OnInit {
         return;
       }
 
-      this.api2Service.getTicketsByUser(user.id).subscribe((tickets: Ticket[]) => {
-        this.completedTickets = tickets;
-
-        for (const ticket of this.completedTickets) {
-          this.api2Service.getTicketLinesByTicket(ticket.id).subscribe((lines: TicketLine[]) => {
-            this.completedTicketLines = [...this.completedTicketLines, ...lines];
-          });
-        }
-
-        console.log('Tickets obtenidos:', this.completedTickets);
-      });
-
+      this.loadUserTickets(user.id);
 
       this.userForm = this.fb.group({
         id: [user.id],
@@ -124,7 +107,44 @@ export class UserComponent implements OnInit {
     });
   }
 
-    private mapGender(value: number): number {
+private loadUserTickets(userId: number): void {
+  this.api2Service.getTicketsByUser(userId).pipe(
+    switchMap((tickets: Ticket[]) => {
+      const ticketRequests = tickets.map(ticket => 
+        this.api2Service.getTicketLinesByTicket(ticket.id).pipe(
+          map(lines => ({
+            ...ticket,
+            ticketLines: lines,
+            total: this.calculateTotal(lines)
+          } as TicketWithLines))  // Cambia el tipo aquí
+        )
+      );
+      return forkJoin(ticketRequests);
+    })
+  ).subscribe({
+    next: (completeTickets: TicketWithLines[]) => {  // Actualiza el tipo aquí
+      this.completedTickets = completeTickets;
+      console.log('Tickets completos:', this.completedTickets);
+    },
+    error: (err) => console.error('Error cargando tickets:', err)
+  });
+}
+
+  private calculateTotal(lines: TicketLine[]): number {
+    return lines.reduce((acc, line) => acc + (line.price * line.quantity), 0);
+  }
+
+
+
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private router: Router,
+    private themeService: ThemeService,
+    private api2Service: Api2Service
+  ) { }
+
+  private mapGender(value: number): number {
     return value;
   }
 
@@ -196,9 +216,14 @@ export class UserComponent implements OnInit {
     return null;
   }
 
-    showTicketDetails(ticket: Ticket): void {
-    this.selectedTicket = this.selectedTicket?.id === ticket.id ? null : ticket;
+showTicketDetails(ticket: TicketWithLines): void {
+  if (this.selectedTicket?.id === ticket.id) {
+    this.selectedTicket = null;
+  } else {
+    const fullTicket = this.completedTickets.find(t => t.id === ticket.id);
+    this.selectedTicket = fullTicket || null;
   }
+}
 
 
 }

@@ -1,0 +1,178 @@
+<div class="dark:bg-[#0a0a0a] min-h-screen w-full flex flex-col">
+    <div class="mx-auto max-w-screen-xl px-4 2xl:px-0 py-8">
+        <!-- Encabezado -->
+        <div class="bg-gradient-to-r from-purple-500 to-blue-600 rounded-2xl p-6 mb-8 shadow-lg">
+            <h2 class="text-2xl font-bold text-white sm:text-3xl">Añadir Producto</h2>
+        </div>
+
+        <!-- Contenedor principal -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+            <!-- Stepper personalizado -->
+            <div class="flex justify-center mb-8">
+                <div class="flex items-center gap-4">
+                    @for (step of ['Set', 'Carta', 'Detalles']; track $index; let i = $index) {
+                    <div class="flex items-center gap-2">
+                        <div [class]="['w-8 h-8 rounded-full flex items-center justify-center', 
+                  currentStep() > i ? 'bg-blue-600 text-white' : 
+                  currentStep() === i ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300' : 
+                  'bg-gray-100 dark:bg-gray-700 text-gray-500']">
+                            {{ currentStep() > i ? '✓' : i + 1 }}
+                        </div>
+                        <span
+                            [class]="['text-sm', currentStep() === i ? 'font-medium text-blue-600 dark:text-blue-300' : 'text-gray-500']">
+                            {{ step }}
+                        </span>
+                    </div>
+                    @if (i < 2) { <div class="w-12 h-px bg-gray-200 dark:bg-gray-600">
+                </div>
+                }
+                }
+            </div>
+        </div>
+
+        <!-- Paso 1: Selección de Set -->
+        @if (currentStep() === 0) {
+        <div class="space-y-6">
+            <div class="relative">
+                <input type="text" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
+                    (input)="filterSets(searchTerm())" placeholder="Buscar set por nombre o ID..." class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 
+              dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500">
+                @if (filteredSets().length > 0) {
+                <div
+                    class="absolute z-10 w-full mt-2 bg-white dark:bg-gray-700 rounded-lg shadow-lg max-h-96 overflow-y-auto">
+                    @for (set of filteredSets(); track set.id) {
+                    <div (click)="selectSet(set)"
+                        class="p-3 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer flex items-center gap-4">
+                        <img [src]="set.logo" class="w-12 h-12 object-contain">
+                        <div>
+                            <p class="font-medium dark:text-white">{{ set.name }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-300">ID: {{ set.id_set }}</p>
+                        </div>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+
+            @if (selectedSet()) {
+            <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg flex items-center gap-4">
+                <img [src]="selectedSet()?.logo" class="w-16 h-16 object-contain">
+                <div>
+                    <h3 class="text-xl font-bold dark:text-white">{{ selectedSet()?.name }}</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300">
+                        Lanzamiento: {{ selectedSet()?.release_date }} |
+                        Cartas: {{ selectedSet()?.total_cards }}
+                    </p>
+                </div>
+            </div>
+            }
+        </div>
+        }
+
+        <!-- Paso 2: Selección de Carta -->
+        @if (currentStep() === 1) {
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            @for (card of cards(); track card.id_card) {
+            <div (click)="selectCard(card)" [class]="['relative cursor-pointer group border rounded-lg p-2 transition-all',
+                   selectedCard()?.id_card === card.id_card ? 
+                   'border-blue-500 ring-2 ring-blue-500/20' : 
+                   'border-gray-200 dark:border-gray-600 hover:border-blue-300']">
+                <img [src]="card.image_small" class="w-full h-48 object-contain mb-2">
+                <div class="p-2">
+                    <p class="font-medium dark:text-white truncate">{{ card.name }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
+                        #{{ card.id_card }}
+                    </p>
+                </div>
+            </div>
+            }
+        </div>
+        }
+
+        <!-- Paso 3: Detalles del Producto -->
+        @if (currentStep() === 2) {
+        <form [formGroup]="productForm" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium mb-2 dark:text-white">Cantidad</label>
+                    <input type="number" formControlName="quantity" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
+                              dark:border-gray-600 focus:ring-2 focus:ring-blue-500">
+                    @if (productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched) {
+                    <p class="text-red-500 text-sm mt-1">Mínimo 1 unidad</p>
+                    }
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-2 dark:text-white">Precio (€)</label>
+                    <input type="number" step="0.01" formControlName="price" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
+                              dark:border-gray-600 focus:ring-2 focus:ring-blue-500">
+                    @if (productForm.get('price')?.invalid && productForm.get('price')?.touched) {
+                    <p class="text-red-500 text-sm mt-1">Precio inválido</p>
+                    }
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-2 dark:text-white">Estado</label>
+                    <select formControlName="state" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
+                               dark:border-gray-600 focus:ring-2 focus:ring-blue-500">
+                        <option value="Nuevo">Nuevo</option>
+                        <option value="Usado">Usado</option>
+                        <option value="Deteriorado">Deteriorado</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Resumen -->
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                <h3 class="text-lg font-semibold mb-4 dark:text-white">Resumen del Producto</h3>
+                <div class="flex items-center gap-4 mb-4">
+                    @if (selectedCard()) {
+                    <img [src]="selectedCard()?.image_small" class="w-16 h-16 object-contain">
+                    }
+                    <div>
+                        <p class="font-medium dark:text-white">{{ selectedCard()?.name || 'Carta no seleccionada' }}
+                        </p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            Set: {{ selectedSet()?.name || 'No seleccionado' }}
+                        </p>
+                    </div>
+                </div>
+                <dl class="grid grid-cols-2 gap-4 text-sm">
+                    <dt class="text-gray-600 dark:text-gray-300">Cantidad:</dt>
+                    <dd class="font-medium dark:text-white">{{ productForm.value.quantity || 0 }}</dd>
+
+                    <dt class="text-gray-600 dark:text-gray-300">Precio unitario:</dt>
+                    <dd class="font-medium dark:text-white">{{ productForm.value.price || 0 | currency:'EUR' }}</dd>
+
+                    <dt class="text-gray-600 dark:text-gray-300">Total:</dt>
+                    <dd class="font-medium text-blue-600 dark:text-blue-400">
+                        {{ (productForm.value.quantity * productForm.value.price) || 0 | currency:'EUR' }}
+                    </dd>
+                </dl>
+            </div>
+        </form>
+        }
+
+        <!-- Controles de navegación -->
+        <div class="mt-8 flex justify-between">
+            @if (currentStep() > 0) {
+            <button (click)="prevStep()"
+                class="px-6 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                ← Atrás
+            </button>
+            }
+            @if (currentStep() < 2) { <button (click)="nextStep()" [disabled]="!canProceed()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+                           disabled:opacity-50 disabled:cursor-not-allowed">
+                Continuar →
+                </button>
+                }
+                @if (currentStep() === 2) {
+                <button (click)="submitProduct()" [disabled]="!productForm.valid" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 
+                           disabled:opacity-50 disabled:cursor-not-allowed">
+                    Publicar Producto
+                </button>
+                }
+        </div>
+    </div>
+</div>
+</div>

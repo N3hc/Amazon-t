@@ -147,39 +147,47 @@ ngOnInit() {
     return null;
   }
 
-  onSubmit() {
-    this.userService.getUser().subscribe((user: User | null) => {
-      console.log('Usuario actual:', user);
+onSubmit() {
+  this.userService.getUser().subscribe((user: User | null) => {
+    console.log('Usuario actual:', user);
 
-      if (!user) {
-        console.warn('No hay usuario cargado');
-        return;
+    if (!user) {
+      console.warn('No hay usuario cargado');
+      return;
+    }
+  });
+  
+  if (this.paymentForm.valid) {
+    // Obtener el valor del formulario
+    const formValue = this.paymentForm.value;
+    
+    // Dividir la fecha MM/YY y añadir el día "01"
+    const [month, year] = formValue.expiration_date.split('/');
+    const expirationDate = `01/${month}/${year}`; // Formato DD/MM/YY
+
+    // Crear el nuevo pago con la fecha transformada
+    const newPayment: Payment = {
+      ...formValue,
+      expiration_date: expirationDate, 
+      user_id: this.user?.id,
+    };
+    console.log('Nuevo pago:', newPayment);
+
+    this.api2service.storePago(newPayment).subscribe({
+      next: (response) => {
+        console.log('Tarjeta guardada:', response);
+        // Añadir la tarjeta usando la respuesta del servidor (contiene la fecha completa)
+        this.examplePayments.push(response); 
+      },
+      error: (error) => {
+        console.log('Error al guardar la tarjeta:', newPayment);
+        console.error('Error al guardar la tarjeta:', error);
       }
     });
-    if (this.paymentForm.valid) {
-      const newPayment: Payment = {
-        ...this.paymentForm.value,
-        id_user: this.user?.id, // ID del usuario actual
-        //createdAt: new Date().toISOString()
-      };
-
-      this.api2service.storePago(newPayment).subscribe({
-        next: (response) => {
-          console.log('Tarjeta guardada:', response);
-          this.examplePayments.push(newPayment);
-        },
-        error: (error) => {
-          console.log('Error al guardar la tarjeta:', newPayment);
-          console.error('Error al guardar la tarjeta:', error);
-        }
-      });
-    }
   }
+}
 
   // Generador de nuevos IDs
-  private generateNewId(): number {
-    return Math.max(...this.examplePayments.map(p => p.id)) + 1;
-  }
 
   // Mejorado el formateo del número de tarjeta
   formatCardNumber(event: Event) {

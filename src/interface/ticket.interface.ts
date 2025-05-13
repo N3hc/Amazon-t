@@ -16,5 +16,4 @@ export interface Ticket {
   completed: boolean;
   deleted: boolean;
   createdAt: string;
-  ticketLines: TicketLine[];
 }

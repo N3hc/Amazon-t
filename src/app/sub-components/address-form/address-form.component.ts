@@ -18,9 +18,9 @@ export class AddressFormComponent implements OnInit {
   addressForm: FormGroup;
 
     @Input() enableSelection: boolean = false;
-    
+
     selectedAddressId: number | null = null;
-  
+
     onAddressSelect(addressId: number) {
       if (this.enableSelection) {
         this.selectedAddressId = this.selectedAddressId === addressId ? null : addressId;
@@ -76,7 +76,7 @@ export class AddressFormComponent implements OnInit {
         delated: false,
         createdAt: new Date().toISOString()
       };
-      
+
       this.addressList.push(newAddress);
       this.addingAddress = false;
       this.addressForm.reset();
@@ -84,7 +84,10 @@ export class AddressFormComponent implements OnInit {
   }
 
   deleteAddress(addressId: number) {
-    this.addressList = this.addressList.filter(addr => addr.id !== addressId);
+    this.api2service.updateAddress({id:addressId, deleted: 1}).subscribe((response) => {
+      console.log('Address deleted:', addressId);
+      this.addressList = this.addressList.filter(address => address.id !== addressId);
+    });
   }
 
   private generateNewId(): number {

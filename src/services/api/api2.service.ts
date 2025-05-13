@@ -56,9 +56,9 @@ export class Api2Service {
     const params = new HttpParams().set('id_set', setId); // Pasamos el id_set como parámetro de consulta
     return this.http.get(`${this.baseUrl}/index/card`, { params }); // Enviamos el parámetro como parte de la URL
   }
-  
-  
-  
+
+
+
 
   // 📦 PRODUCTS
   getProducts(): Observable<any> {
@@ -122,6 +122,12 @@ export class Api2Service {
     return this.http.get(`${this.baseUrl}/index/tikets`);
   }
 
+  getTicketsByUser(id: number): Observable<any> {
+    console.log('Fetching tickets for user ID:', id);
+    const params = new HttpParams().set('id_user', id); // Pasamos el id como parámetro de consulta
+    return this.http.get(`${this.baseUrl}/index/tikets`, { params });
+  }
+
   storeTicket(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/store/tikets`, data);
   }
@@ -139,6 +145,12 @@ export class Api2Service {
     return this.http.get(`${this.baseUrl}/index/tiket_lineas`);
   }
 
+  getTicketLinesByTicket(id: number): Observable<any> {
+    console.log('Fetching ticket lines for ticket ID:', id);
+    const params = new HttpParams().set('id_ticket', id); // Pasamos el id como parámetro de consulta
+    return this.http.get(`${this.baseUrl}/index/tiket_lineas`, { params });
+  }
+
   storeTicketLine(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/store/tiket_lineas`, data);
   }
@@ -151,7 +163,7 @@ export class Api2Service {
     return this.http.request('delete', `${this.baseUrl}/delete/tiket_lineas`, { body: { id } });
   }
 
-//Pagos 
+//Pagos
 
   getPagos(): Observable<any> {
     return this.http.get(`${this.baseUrl}/index/pago`, );
@@ -162,6 +174,7 @@ export class Api2Service {
   return this.http.get(`${this.baseUrl}/index/pago/`, { params });
 }
   storePago(data: any): Observable<any> {
+    console.log('Storing payment data:', data);
     return this.http.post(`${this.baseUrl}/store/pago`, data);
   }
 

@@ -8,7 +8,7 @@ import { User } from '../../../interface/user.interface';
 import { Api2Service } from '../../../services/api/api2.service';
 import { PaymentFormComponent } from '../../sub-components/payment-form/payment-form.component';
 import { AddressFormComponent } from '../../sub-components/address-form/address-form.component';
-import { Ticket } from '../../../interface/ticket.interface';
+import { Ticket, TicketLine } from '../../../interface/ticket.interface';
 
 @Component({
   selector: 'app-user',
@@ -25,6 +25,56 @@ export class UserComponent implements OnInit {
   selectedTicket: Ticket | null = null;
   isDarkMode = false;
 
+
+
+
+
+
+  completedTicketLines: TicketLine[] = [
+    {
+      id: 1,
+      id_ticket: 1,
+      id_product: 101,
+      quantity: 2,
+      price: 25.99,
+      deleted: false,
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: 2,
+      id_ticket: 12345,
+      id_product: 205,
+      quantity: 1,
+      price: 95.52,
+      deleted: false,
+      createdAt: new Date().toISOString()
+    }
+  ];
+
+  completedTickets: Ticket[] = [
+    {
+      id: 1,
+      id_user: 123,
+      id_address: 456,
+      total: 149.99,
+      completed: true,
+      deleted: false,
+      createdAt: new Date('2024-03-15').toISOString(),
+
+    },
+    {
+      id: 12345,
+      id_user: 987,
+      id_address: 456,
+      total: 147.50,
+      completed: true,
+      deleted: false,
+      createdAt: new Date().toISOString()
+    },
+  ];
+
+  
+
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
@@ -40,6 +90,19 @@ export class UserComponent implements OnInit {
         this.router.navigate(['/home']);
         return;
       }
+
+      this.api2Service.getTicketsByUser(user.id).subscribe((tickets: Ticket[]) => {
+        this.completedTickets = tickets;
+
+        for (const ticket of this.completedTickets) {
+          this.api2Service.getTicketLinesByTicket(ticket.id).subscribe((lines: TicketLine[]) => {
+            this.completedTicketLines = [...this.completedTicketLines, ...lines];
+          });
+        }
+
+        console.log('Tickets obtenidos:', this.completedTickets);
+      });
+
 
       this.userForm = this.fb.group({
         id: [user.id],
@@ -137,55 +200,5 @@ export class UserComponent implements OnInit {
     this.selectedTicket = this.selectedTicket?.id === ticket.id ? null : ticket;
   }
 
-    completedTickets: Ticket[] = [
-    {
-      id: 1,
-      id_user: 123,
-      id_address: 456,
-      total: 149.99,
-      completed: true,
-      deleted: false,
-      createdAt: new Date('2024-03-15').toISOString(),
-      ticketLines: [
-        {
-          id: 1,
-          id_ticket: 1,
-          id_product: 101,
-          quantity: 2,
-          price: 25.99,
-          deleted: false,
-          createdAt: new Date().toISOString()
-        }
-      ]
-    },
-    {
-      id: 12345,
-      id_user: 987,
-      id_address: 456,
-      total: 147.50,
-      completed: true,
-      deleted: false,
-      createdAt: new Date().toISOString(),
-      ticketLines: [
-        {
-          id: 1,
-          id_ticket: 12345,
-          id_product: 101,
-          quantity: 2,
-          price: 25.99,
-          deleted: false,
-          createdAt: new Date().toISOString()
-        },
-        {
-          id: 2,
-          id_ticket: 12345,
-          id_product: 205,
-          quantity: 1,
-          price: 95.52,
-          deleted: false,
-          createdAt: new Date().toISOString()
-        }
-      ]
-    },
-  ];
+
 }

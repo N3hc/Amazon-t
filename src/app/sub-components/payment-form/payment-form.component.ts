@@ -19,10 +19,10 @@ export class PaymentFormComponent implements OnInit {
   paymentForm: FormGroup;
   addingCard = false;
 
-  
+
 
   @Input() enableSelection: boolean = false;
-  
+
   selectedCardId: number | null = null;
 
   onCardSelect(cardId: number) {
@@ -31,9 +31,12 @@ export class PaymentFormComponent implements OnInit {
     }
   }
 
+user: User | null = null;
+
 ngOnInit() {
   this.userService.getUser().subscribe((user: User | null) => {
     console.log('Usuario actual:', user);
+    this.user = user;
 
     if (!user) {
       console.warn('No hay usuario cargado');
@@ -43,7 +46,7 @@ ngOnInit() {
     this.api2service.getPagosByUser(user.id).subscribe((pagos: Payment[]) => {
       this.examplePayments = pagos;
       console.log('Pagos del usuario:', pagos);
-      console.log('Pagos del usuario:', this.examplePayments);  
+      console.log('Pagos del usuario:', this.examplePayments);
     });
   });
 }
@@ -124,31 +127,52 @@ ngOnInit() {
   private expirationDateValidator(control: any) {
     const value = control.value;
     if (!value) return null;
-    
-    const [month, year] = value.split('/');
-    const currentYear = new Date().getFullYear() % 100;
-    const currentMonth = new Date().getMonth() + 1;
 
-    if (parseInt(year) < currentYear || 
-       (parseInt(year) === currentYear && parseInt(month) < currentMonth)) {
+    const [monthStr, yearStr] = value.split('/');
+    const month = parseInt(monthStr, 10);
+    const year = parseInt(yearStr, 10);
+
+    if (isNaN(month) || isNaN(year) || month < 1 || month > 12) {
+      return { invalidFormat: true };
+    }
+
+    const expirationDate = new Date(2000 + year, month - 1, 1); // día 1 del mes/año indicado
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // ignorar hora para comparación de solo fechas
+
+    if (expirationDate < today) {
       return { expired: true };
     }
+
     return null;
   }
 
   onSubmit() {
+    this.userService.getUser().subscribe((user: User | null) => {
+      console.log('Usuario actual:', user);
+
+      if (!user) {
+        console.warn('No hay usuario cargado');
+        return;
+      }
+    });
     if (this.paymentForm.valid) {
       const newPayment: Payment = {
         ...this.paymentForm.value,
-        id: this.generateNewId(),
-        id_user: 1, // ID del usuario actual
-        delated: false,
-        createdAt: new Date().toISOString()
+        id_user: this.user?.id, // ID del usuario actual
+        //createdAt: new Date().toISOString()
       };
-      
-      this.examplePayments.push(newPayment);
-      this.addingCard = false;
-      this.paymentForm.reset({ name: 'Visa' });
+
+      this.api2service.storePago(newPayment).subscribe({
+        next: (response) => {
+          console.log('Tarjeta guardada:', response);
+          this.examplePayments.push(newPayment);
+        },
+        error: (error) => {
+          console.log('Error al guardar la tarjeta:', newPayment);
+          console.error('Error al guardar la tarjeta:', error);
+        }
+      });
     }
   }
 
@@ -161,17 +185,17 @@ ngOnInit() {
   formatCardNumber(event: Event) {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/\D/g, '');
-    
+
     if (value.length > 16) {
       value = value.substr(0, 16);
     }
-    
+
     // Formatear con espacios cada 4 dígitos
     const parts = [];
     for (let i = 0; i < value.length; i += 4) {
       parts.push(value.substr(i, 4));
     }
-    
+
     input.value = parts.join(' ');
     this.paymentForm.get('number')?.setValue(value);
   }
@@ -180,21 +204,30 @@ ngOnInit() {
   formatExpirationDate(event: Event) {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/\D/g, '');
-    
+
     if (value.length >= 3) {
       value = value.replace(/(\d{2})(\d+)/, '$1/$2');
     }
-    
+
     if (value.length > 5) {
       value = value.substring(0, 5);
     }
-    
+
     input.value = value;
     this.paymentForm.get('expiration_date')?.setValue(value);
   }
 
   deleteCard(cardId: number) {
-    this.examplePayments = this.examplePayments.filter(card => card.id !== cardId);
+    console.log('Eliminando tarjeta con ID:', cardId);
+    this.api2service.updatePago({ id: cardId, deleted: 1 }).subscribe({
+      next: () => {
+        this.examplePayments = this.examplePayments.filter(card => card.id !== cardId);
+        console.log('Tarjeta eliminada correctamente');
+      },
+      error: (error) => {
+        console.error('Error al eliminar la tarjeta:', error);
+      }
+    });
   }
 
 }

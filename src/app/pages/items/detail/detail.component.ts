@@ -18,6 +18,7 @@ export class DetailComponent {
 
   isDarkMode = false;
   card: any;
+  cardid: any;
   routes = "assets/energy/";
 
   constructor(
@@ -51,6 +52,7 @@ export class DetailComponent {
     this.searchService.selectedCard$.subscribe(card => {
       if (card && card.description) {
         try {
+          this.cardid = card.id;
           this.card = JSON.parse(card.description);
         } catch (e) {
           console.error('Error al parsear la descripción de la carta:', e);
@@ -60,7 +62,7 @@ export class DetailComponent {
       }
     });
     
-    this.api2Service.getProductByCardId(this.card.id).subscribe((data: any) => { 
+    this.api2Service.getProductByCardId(this.cardid).subscribe((data: any) => { 
       this.card = data.find((item: any) => item.id === this.card.id);
       console.log('Carta obtenida:', this.card);
     }

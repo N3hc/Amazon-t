@@ -260,6 +260,11 @@
         </div>
       </div>
     </div>
-    <app-vendor></app-vendor>
+    @if (userForm.get('vendor')?.value === 1) {
+          <app-vendor></app-vendor>
+    }
+    @if (userForm.get('role')?.value === 1) {
+          <app-admin></app-admin>
+    }
   </div>
 </div>

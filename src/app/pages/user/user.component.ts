@@ -12,6 +12,7 @@ import { Ticket, TicketLine } from '../../../interface/ticket.interface';
 import { switchMap, map } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
 import { VendorComponent } from './vendor/vendor.component';
+import { AdminComponent } from './admin/admin.component';
 
 interface TicketWithLines extends Ticket {
   ticketLines: TicketLine[];
@@ -20,7 +21,7 @@ interface TicketWithLines extends Ticket {
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [HeaderComponent, ReactiveFormsModule, PaymentFormComponent, AddressFormComponent, VendorComponent],
+  imports: [HeaderComponent, ReactiveFormsModule, PaymentFormComponent, AddressFormComponent, VendorComponent, AdminComponent],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })

@@ -5,6 +5,7 @@ import { HeaderComponent } from "../../../main-components/header/header.componen
 import { ThemeService } from '../../../../services/theme/theme.service';
 import { CartService } from '../../../../services/cart/cart.service';
 import { CartItem } from '../../../../interface/productos.interface';
+import { Api2Service } from '../../../../services/api/api2.service';
 
 @Component({
   selector: 'app-detail',
@@ -20,7 +21,7 @@ export class DetailComponent {
   routes = "assets/energy/";
 
   constructor(
-    private route: ActivatedRoute,
+    private api2Service: Api2Service,
     private themeService: ThemeService,
     private searchService: SearchService,
     private router: Router,
@@ -51,7 +52,6 @@ export class DetailComponent {
       if (card && card.description) {
         try {
           this.card = JSON.parse(card.description);
-          console.log('Carta parseada:', this.card);
         } catch (e) {
           console.error('Error al parsear la descripción de la carta:', e);
         }
@@ -59,7 +59,12 @@ export class DetailComponent {
         console.error('No hay carta seleccionada o no tiene descripción.');
       }
     });
-  
+    
+    this.api2Service.getProductByCardId(this.card.id).subscribe((data: any) => { 
+      this.card = data.find((item: any) => item.id === this.card.id);
+      console.log('Carta obtenida:', this.card);
+    }
+    );
     this.themeService.theme$.subscribe(theme => {
       this.isDarkMode = theme === 'dark';
     });

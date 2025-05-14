@@ -11,7 +11,7 @@ export class CartService {
   constructor() {
     this.loadInitialCart();
   }
-
+  
   // Métodos existentes (no modificados)
   private loadInitialCart() {
     const savedCart = localStorage.getItem('cart');

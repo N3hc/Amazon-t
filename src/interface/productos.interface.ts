@@ -15,5 +15,4 @@ export interface Product {
     state: string;
     deleted: boolean;
     createdAt: string;
-
   }

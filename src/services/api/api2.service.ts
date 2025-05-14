@@ -65,6 +65,12 @@ export class Api2Service {
     return this.http.get(`${this.baseUrl}/index/products`);
   }
 
+  getProductByCardId(id: number): Observable<any> {
+    console.log('Fetching products for card ID:', id);
+    const params = new HttpParams().set('id_card', id); // Pasamos el id como parámetro de consulta
+    return this.http.get(`${this.baseUrl}/index/products`, { params });
+  }
+
   storeProduct(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/store/products`, data);
   }

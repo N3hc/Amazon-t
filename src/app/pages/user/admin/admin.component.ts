@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { Api2Service } from '../../../../services/api/api2.service';
+import { UserService } from '../../../../services/user/user.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin',
@@ -8,5 +11,7 @@ import { Component } from '@angular/core';
   styleUrl: './admin.component.css'
 })
 export class AdminComponent {
+
+
 
 }

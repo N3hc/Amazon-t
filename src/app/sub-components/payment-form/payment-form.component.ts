@@ -156,19 +156,19 @@ onSubmit() {
       return;
     }
   });
-  
+
   if (this.paymentForm.valid) {
     // Obtener el valor del formulario
     const formValue = this.paymentForm.value;
-    
+
     // Dividir la fecha MM/YY y añadir el día "01"
     const [month, year] = formValue.expiration_date.split('/');
-    const expirationDate = `01/${month}/${year}`; // Formato DD/MM/YY
+    const expirationDate = `01/${month}/20${year}`; // Formato DD/MM/YY
 
     // Crear el nuevo pago con la fecha transformada
     const newPayment: Payment = {
       ...formValue,
-      expiration_date: expirationDate, 
+      expiration_date: expirationDate,
       user_id: this.user?.id,
     };
     console.log('Nuevo pago:', newPayment);
@@ -177,7 +177,7 @@ onSubmit() {
       next: (response) => {
         console.log('Tarjeta guardada:', response);
         // Añadir la tarjeta usando la respuesta del servidor (contiene la fecha completa)
-        this.examplePayments.push(response); 
+        this.examplePayments.push(response);
       },
       error: (error) => {
         console.log('Error al guardar la tarjeta:', newPayment);

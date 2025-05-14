@@ -15,7 +15,8 @@ interface Category {
 }
 
 interface Card {
-  id_card: string;
+  id: number;
+  id_card: number;
   name: string;
   image_small: string;
   id_set: string;
@@ -24,7 +25,7 @@ interface Card {
 interface ProductForm {
   quantity: number;
   price: number;
-  state: string;
+  state: number;
 }
 
 @Component({
@@ -107,7 +108,7 @@ loadCardsBySet(setId: string): void {
 
   filterSets(search: string): void {
     this.searchTerm.set(search);
-    const filtered = this.sets().filter(set => 
+    const filtered = this.sets().filter(set =>
       set.name.toLowerCase().includes(search.toLowerCase()) ||
       set.id_set.toLowerCase().includes(search.toLowerCase())
     );
@@ -144,10 +145,11 @@ loadCardsBySet(setId: string): void {
 
   submitProduct(): void {
     if (!this.productForm.valid || !this.selectedCard() || !this.selectedSet()) return;
+    console.log('Formulario enviado:', this.productForm.value); // ← Añade esto para debug
 
     const productData = {
       id_user: this.currentUser()?.id,
-      id_card: this.selectedCard()?.id_card,
+      id_card: this.selectedCard()?.id,
       ...this.productForm.value
     };
 

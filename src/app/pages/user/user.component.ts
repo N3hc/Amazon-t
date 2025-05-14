@@ -111,7 +111,7 @@ export class UserComponent implements OnInit {
 private loadUserTickets(userId: number): void {
   this.api2Service.getTicketsByUser(userId).pipe(
     switchMap((tickets: Ticket[]) => {
-      const ticketRequests = tickets.map(ticket => 
+      const ticketRequests = tickets.map(ticket =>
         this.api2Service.getTicketLinesByTicket(ticket.id).pipe(
           map(lines => ({
             ...ticket,

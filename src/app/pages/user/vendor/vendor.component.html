@@ -6,8 +6,8 @@
         </header>
 
         <!-- Main Container -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700" 
-             role="region" 
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700"
+             role="region"
              aria-labelledby="main-heading">
 
             <!-- Accessible Stepper -->
@@ -16,8 +16,8 @@
                     @for (step of ['Set', 'Card', 'Details']; track $index; let i = $index) {
                     <li class="flex items-center gap-2" role="listitem">
                         <div [class]="['w-8 h-8 rounded-full flex items-center justify-center transition-colors',
-                          currentStep() > i ? 'bg-blue-600 text-white' : 
-                          currentStep() === i ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300' : 
+                          currentStep() > i ? 'bg-blue-600 text-white' :
+                          currentStep() === i ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300' :
                           'bg-gray-100 dark:bg-gray-700 text-gray-500']"
                           [attr.aria-current]="currentStep() === i ? 'step' : null">
                             <span class="sr-only">{{ currentStep() > i ? 'Completed' : 'Step' }}</span>
@@ -39,12 +39,12 @@
             <div class="space-y-6" role="region" aria-labelledby="set-selection-heading">
                 <h2 id="set-selection-heading" class="sr-only">Set Selection</h2>
                 <div class="relative">
-                    <input type="text" 
-                           [ngModel]="searchTerm()" 
+                    <input type="text"
+                           [ngModel]="searchTerm()"
                            (ngModelChange)="searchTerm.set($event)"
-                           (input)="filterSets(searchTerm())" 
-                           placeholder="Search set by name or ID..." 
-                           class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                           (input)="filterSets(searchTerm())"
+                           placeholder="Search set by name or ID..."
+                           class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600
                                   dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
                            aria-label="Search sets"
                            aria-describedby="search-instructions">
@@ -61,8 +61,8 @@
                              [attr.aria-selected]="selectedSet()?.id === set.id"
                              class="p-3 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer flex items-center gap-4
                                     focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <img [src]="set.logo" 
-                                 alt="" 
+                            <img [src]="set.logo"
+                                 alt=""
                                  class="w-12 h-12 object-contain"
                                  aria-hidden="true">
                             <div>
@@ -77,8 +77,8 @@
 
                 @if (selectedSet()) {
                 <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg flex items-center gap-4" role="status">
-                    <img [src]="selectedSet()?.logo" 
-                         alt="" 
+                    <img [src]="selectedSet()?.logo"
+                         alt=""
                          class="w-16 h-16 object-contain"
                          aria-hidden="true">
                     <div>
@@ -95,21 +95,21 @@
 
             <!-- Step 2: Card Selection -->
             @if (currentStep() === 1) {
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" 
-                 role="region" 
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                 role="region"
                  aria-labelledby="card-selection-heading">
                 <h2 id="card-selection-heading" class="sr-only">Card Selection</h2>
                 @for (card of cards(); track card.id_card) {
                 <div (click)="selectCard(card)"
                      (keydown.enter)="selectCard(card)"
                      [class]="['relative cursor-pointer group border rounded-lg p-2 transition-all focus:outline-none',
-                       selectedCard()?.id_card === card.id_card ? 
-                       'border-blue-500 ring-2 ring-blue-500/20' : 
+                       selectedCard()?.id_card === card.id_card ?
+                       'border-blue-500 ring-2 ring-blue-500/20' :
                        'border-gray-200 dark:border-gray-600 hover:border-blue-300']"
                      role="button"
                      tabindex="0">
-                    <img [src]="card.image_small" 
-                         [alt]="card.name" 
+                    <img [src]="card.image_small"
+                         [alt]="card.name"
                          class="w-full h-48 object-contain mb-2">
                     <div class="p-2">
                         <p id="card-{{card.id_card}}-name" class="font-medium dark:text-white truncate">
@@ -132,9 +132,9 @@
                     <!-- Quantity Input -->
                     <div>
                         <label for="quantity" class="block text-sm font-medium mb-2 dark:text-white">Quantity</label>
-                        <input type="number" 
-                               id="quantity" 
-                               formControlName="quantity" 
+                        <input type="number"
+                               id="quantity"
+                               formControlName="quantity"
                                class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
                                       dark:border-gray-600 focus:ring-2 focus:ring-blue-500"
                                aria-describedby="quantity-error"
@@ -147,10 +147,10 @@
                     <!-- Price Input -->
                     <div>
                         <label for="price" class="block text-sm font-medium mb-2 dark:text-white">Price (€)</label>
-                        <input type="number" 
-                               step="0.01" 
-                               id="price" 
-                               formControlName="price" 
+                        <input type="number"
+                               step="0.01"
+                               id="price"
+                               formControlName="price"
                                class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
                                       dark:border-gray-600 focus:ring-2 focus:ring-blue-500"
                                aria-describedby="price-error"
@@ -163,13 +163,13 @@
                     <!-- Condition Select -->
                     <div>
                         <label for="state" class="block text-sm font-medium mb-2 dark:text-white">Condition</label>
-                        <select id="state" 
-                                formControlName="state" 
+                        <select id="state"
+                                formControlName="state"
                                 class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
                                        dark:border-gray-600 focus:ring-2 focus:ring-blue-500">
-                            <option value="New">New</option>
-                            <option value="Used">Used</option>
-                            <option value="Damaged">Damaged</option>
+                            <option value="0">New</option>
+                            <option value="1">Used</option>
+                            <option value="2">Damaged</option>
                         </select>
                     </div>
                 </div>
@@ -179,8 +179,8 @@
                     <h3 class="text-lg font-semibold mb-4 dark:text-white">Product Summary</h3>
                     <div class="flex items-center gap-4 mb-4">
                         @if (selectedCard()) {
-                        <img [src]="selectedCard()?.image_small" 
-                             [alt]="selectedCard()?.name + ' thumbnail'" 
+                        <img [src]="selectedCard()?.image_small"
+                             [alt]="selectedCard()?.name + ' thumbnail'"
                              class="w-16 h-16 object-contain">
                         }
                         <div>
@@ -210,24 +210,24 @@
             <div class="mt-8 flex justify-between">
                 @if (currentStep() > 0) {
                 <button (click)="prevStep()"
-                        class="px-6 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 
+                        class="px-6 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700
                                rounded-lg transition-colors focus:ring-2 focus:ring-blue-500"
                         aria-label="Previous step">
                     ← Back
                 </button>
                 }
-                @if (currentStep() < 2) { <button (click)="nextStep()" 
-                          [disabled]="!canProceed()" 
-                          class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 
+                @if (currentStep() < 2) { <button (click)="nextStep()"
+                          [disabled]="!canProceed()"
+                          class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50
                                  disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-500"
                           [attr.aria-disabled]="!canProceed()">
                     Continue →
                     </button>
                     }
                     @if (currentStep() === 2) {
-                    <button (click)="submitProduct()" 
-                            [disabled]="!productForm.valid" 
-                            class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 
+                    <button (click)="submitProduct()"
+                            [disabled]="!productForm.valid"
+                            class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50
                                    disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-green-500"
                             [attr.aria-disabled]="!productForm.valid">
                         Publish Product

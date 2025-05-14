@@ -9,11 +9,13 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo de
                     tarjeta</label>
-                <select formControlName="name" class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white">
-                    @for (type of cardTypes; track type.value) {
+<!--                 <select formControlName="name" class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"> -->
+                  <label for="name"></label>
+                  <input type="text" formControlName="name">
+<!--                     @for (type of cardTypes; track type.value) {
                     <option [value]="type.value">{{ type.label }}</option>
-                    }
-                </select>
+                    } -->
+<!--                 </select> -->
             </div>
 
             <div>

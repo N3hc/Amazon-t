@@ -61,8 +61,8 @@ export class DetailComponent {
         console.error('No hay carta seleccionada o no tiene descripción.');
       }
     });
-    
-    this.api2Service.getProductByCardId(this.cardid).subscribe((data: any) => { 
+
+    this.api2Service.getProductByCardId(this.cardid).subscribe((data: any) => {
       this.card = data.find((item: any) => item.id === this.card.id);
       console.log('Carta obtenida:', this.card);
     }
@@ -71,5 +71,5 @@ export class DetailComponent {
       this.isDarkMode = theme === 'dark';
     });
   }
-  
+
 }

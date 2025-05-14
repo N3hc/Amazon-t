@@ -1,61 +1,96 @@
 <div class="relative flex min-h-screen items-center justify-center bg-gray-800 p-6 overflow-hidden"
-    style="background: url('assets/backgrounds/pokemon-pixel-art-wallpaper-preview.jpg') center/cover no-repeat;">
+    style="background: url('assets/backgrounds/pokemon-pixel-art-wallpaper-preview.jpg') center/cover no-repeat;"
+    role="main">
 
-    <!-- Charizard GIF (arriba) -->
-    <img src="assets/backgrounds/charizard.gif" alt="Flying Charizard"
-        class="absolute top-0 left-0 w-70 animate-marquee-1" />
+    <!-- Decorative background elements -->
+    <img src="assets/backgrounds/charizard.gif" 
+         alt="" 
+         class="absolute top-0 left-0 w-70 animate-marquee-1"
+         aria-hidden="true" />
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()"
-        class="w-full max-w-sm bg-black/20 p-6 rounded-lg shadow-md transition duration-300 hover:bg-black/70">
-
+    <form [formGroup]="loginForm" 
+          (ngSubmit)="onSubmit()"
+          class="w-full max-w-sm bg-black/20 p-6 rounded-lg shadow-md transition duration-300 hover:bg-black/70"
+          aria-label="Login form">
+        
+        <!-- Email Input -->
         <div class="relative mb-4 flex flex-col">
-            <label for="email" class="text-white mb-1">Correo Electrónico</label>
-            <input type="email" id="email" formControlName="email" placeholder="ejemplo@email.com"
-                class="w-full bg-transparent p-2 text-white border border-gray-400 rounded focus:outline-none"
-                required />
+            <label for="email" class="text-white mb-1">Email Address</label>
+            <input type="email" 
+                   id="email" 
+                   formControlName="email" 
+                   placeholder="example@email.com"
+                   class="w-full bg-transparent p-2 text-white border border-gray-400 rounded focus:outline-none"
+                   required
+                   aria-required="true"
+                   [attr.aria-invalid]="loginForm.controls.email.invalid">
             @if (loginForm.controls.email.invalid && loginForm.controls.email.touched) {
-                <p class="text-red-500 text-sm mt-1">Correo inválido</p>
+                <p class="text-red-500 text-sm mt-1" role="alert">Invalid email format</p>
             }
         </div>
 
+        <!-- Password Input -->
         <div class="relative mb-4 flex items-center border-b border-gray-400 py-2">
-            <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
-                placeholder="Password" class="w-full bg-transparent p-2 text-white focus:outline-none" />
-            <button type="button" (click)="togglePassword()" class="absolute right-2 text-gray-400">
+            <label for="password" class="sr-only">Password</label>
+            <input [type]="showPassword ? 'text' : 'password'" 
+                   id="password" 
+                   formControlName="password"
+                   placeholder="Password" 
+                   class="w-full bg-transparent p-2 text-white focus:outline-none"
+                   aria-required="true"
+                   [attr.aria-invalid]="loginForm.controls.password.invalid">
+            <button type="button" 
+                    (click)="togglePassword()" 
+                    class="absolute right-2 text-gray-400"
+                    [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
                 @if (!showPassword) {
-                    <img src="assets/icons/eye.png" alt="Show Password" width="20" height="20" />
+                    <img src="assets/icons/eye.png" alt="" width="20" height="20" aria-hidden="true" />
                 } @else {
-                    <img src="assets/icons/hidden.png" alt="Hide Password" width="20" height="20" />
+                    <img src="assets/icons/hidden.png" alt="" width="20" height="20" aria-hidden="true" />
                 }
             </button>
         </div>
 
         @if (loginForm.controls.password.invalid && loginForm.controls.password.touched) {
-            <p class="text-red-500 text-sm mt-1">La contraseña debe tener al menos 6 caracteres</p>
+            <p class="text-red-500 text-sm mt-1" role="alert">Password must be at least 6 characters</p>
         }
 
+        <!-- Submit Button -->
         <button type="submit"
             class="w-full bg-gradient-to-r from-teal-500 to-teal-400 py-2 text-white font-semibold rounded-lg hover:scale-105 transition-transform"
-            [disabled]="loginForm.invalid">
-            Iniciar Sesión
+            [disabled]="loginForm.invalid"
+            aria-label="Log in to your account">
+            Log In
         </button>
 
+        <!-- Additional Links -->
         <div class="mt-4 text-center">
-            <a href="#" class="text-teal-300 text-sm hover:underline">¿Olvidaste tu contraseña?</a>
-            <p class="text-gray-400 text-sm">¿No tienes cuenta?
-                <a class="text-teal-300 text-sm hover:underline" (click)="goToRegister()">Regístrate aquí</a>
+            <a href="#" class="text-teal-300 text-sm hover:underline" role="button">Forgot password?</a>
+            <p class="text-gray-400 text-sm">
+                Don't have an account?
+                <a class="text-teal-300 text-sm hover:underline" 
+                   (click)="goToRegister()"
+                   role="button"
+                   tabindex="0">
+                    Register here
+                </a>
             </p>
-            <a class="text-teal-300 text-sm hover:underline" (click)="continueWithoutSession()">
-                Seguir sin sesión
+            <a class="text-teal-300 text-sm hover:underline" 
+               (click)="continueWithoutSession()"
+               role="button"
+               tabindex="0">
+                Continue without account
             </a>
-
         </div>
     </form>
 
-    <!-- Pikachu GIF (abajo) -->
-    <img src="assets/backgrounds/pikachu.gif" alt="Running Pikachu"
-        class="absolute bottom-10 left-0 w-24 animate-marquee-2" />
-    <img src="assets/backgrounds/emeraldHero.gif" alt="Running Hero"
-        class="absolute bottom-5 left-0 w-30 animate-marquee-3" />
-
+    <!-- Decorative animations -->
+    <img src="assets/backgrounds/pikachu.gif" 
+         alt="" 
+         class="absolute bottom-10 left-0 w-24 animate-marquee-2"
+         aria-hidden="true" />
+    <img src="assets/backgrounds/emeraldHero.gif" 
+         alt="" 
+         class="absolute bottom-5 left-0 w-30 animate-marquee-3"
+         aria-hidden="true" />
 </div>

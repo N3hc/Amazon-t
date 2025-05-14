@@ -1,42 +1,54 @@
-<div class="relative flex items-center justify-center">
-    <!-- Carrusel -->
-    <div class="flex gap-2 sm:gap-6 scroll-smooth p-4 m-2 bg-indigo-50 dark:bg-[#151E21] shadow-inner rounded-2xl relative w-auto">
+<div class="relative flex items-center justify-center" role="region" aria-label="Carousel">
+    <!-- Carousel container -->
+    <div class="flex gap-2 sm:gap-6 scroll-smooth p-4 m-2 bg-indigo-50 dark:bg-[#151E21] shadow-inner rounded-2xl relative w-auto"
+         aria-live="polite">
       
-      <!-- Botón Izquierdo -->
+      <!-- Previous Button -->
       <button
         class="absolute left-4 sm:left-20 top-1/2 -translate-y-1/2 z-20 bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 sm:px-4 sm:py-3 rounded shadow-lg transition-all opacity-75 hover:opacity-100 hover:scale-110 sm:-translate-x-1/2"
-        (click)="move(-1)">
-        &lt;
+        (click)="move(-1)"
+        aria-label="Previous slide">
+        <span aria-hidden="true">&lt;</span>
       </button>
   
-      <!-- Elementos del Carrusel (items) -->
+      <!-- Carousel Items -->
       @if (sets.length > 0) {
         @for (i of getVisibleIndices(); track i) {
-          <!-- Ajustes para modo móvil y ordenador -->
           <div class="item bg-white dark:bg-[#1E272A] rounded-xl shadow-md hover:shadow-xl p-2 sm:p-4 flex flex-col items-center justify-center transition-all duration-300 hover:-translate-y-2 
-          min-w-[100px] sm:min-w-[180px] md:min-w-[250px] w-[100px] sm:w-[180px] md:w-[250px] h-[120px] sm:h-[200px] md:h-[250px] relative">
-            <div class="content cursor-pointer flex flex-col items-center justify-center space-y-2 sm:space-y-3" (click)="selectCategory(sets[i].id)">
-              <img [src]="sets[i].logo" [alt]="sets[i].name" class="w-[60px] sm:w-[120px] md:w-[150px] h-[40px] sm:h-[80px] md:h-[100px] object-contain rounded-lg mb-2 p-2">
+               min-w-[100px] sm:min-w-[180px] md:min-w-[250px] w-[100px] sm:w-[180px] md:w-[250px] h-[120px] sm:h-[200px] md:h-[250px] relative"
+               role="group" 
+               [attr.aria-label]="'Card ' + (i + 1) + ' of ' + sets.length">
+            <div class="content cursor-pointer flex flex-col items-center justify-center space-y-2 sm:space-y-3" 
+                 (click)="selectCategory(sets[i].id)"
+                 role="button"
+                 tabindex="0"
+                 [attr.aria-label]="'Select category ' + sets[i].name">
+              <img [src]="sets[i].logo" 
+                   [alt]="sets[i].name + ' logo'" 
+                   class="w-[60px] sm:w-[120px] md:w-[150px] h-[40px] sm:h-[80px] md:h-[100px] object-contain rounded-lg mb-2 p-2">
               <p class="font-semibold text-gray-700 dark:text-gray-300 text-xs sm:text-sm md:text-base text-center min-h-[30px] sm:min-h-[40px] md:min-h-[50px]">
                 {{ sets[i].name }}
               </p>
-              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 dark:via-[#1E272A]/30 to-transparent opacity-0 hover:opacity-100 transition-opacity rounded-xl"></div>
+              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 dark:via-[#1E272A]/30 to-transparent opacity-0 hover:opacity-100 transition-opacity rounded-xl"
+                   aria-hidden="true"></div>
             </div>
           </div>
         }
       } @else {
-        <div class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 italic p-4">
-          <img src='assets/extras/Ploading.gif' alt="Cargando Sets" class="mb-2">
-          <p class="text-gray-500 dark:text-gray-400 italic">Cargando sets...</p>
+        <div class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 italic p-4"
+             role="status" 
+             aria-live="polite">
+          <img src='assets/extras/Ploading.gif' alt="Loading sets" class="mb-2">
+          <p>Loading sets...</p>
         </div>
       }
   
-      <!-- Botón Derecho -->
+      <!-- Next Button -->
       <button
         class="absolute right-4 sm:right-20 top-1/2 -translate-y-1/2 z-20 bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 sm:px-4 sm:py-3 rounded shadow-lg transition-all opacity-75 hover:opacity-100 hover:scale-110 sm:translate-x-1/2"
-        (click)="move(1)">
-        &gt;
+        (click)="move(1)"
+        aria-label="Next slide">
+        <span aria-hidden="true">&gt;</span>
       </button>
     </div>
-  </div>
-  
+</div>

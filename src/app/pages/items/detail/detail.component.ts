@@ -6,19 +6,28 @@ import { ThemeService } from '../../../../services/theme/theme.service';
 import { CartService } from '../../../../services/cart/cart.service';
 import { CartItem } from '../../../../interface/productos.interface';
 import { Api2Service } from '../../../../services/api/api2.service';
+import { TicketsService } from '../../../../services/tickets/tickets.service';
+import { UserService } from '../../../../services/user/user.service';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-detail',
   standalone: true,
-  imports: [HeaderComponent],
+  imports: [HeaderComponent, FormsModule],
   templateUrl: './detail.component.html',
   styleUrl: './detail.component.css'
 })
 export class DetailComponent {
 
+  selectedProduct: { id: number, price: number } = { id: 0, price: 0 };
+
+  selectedPrice: number = 0;
   isDarkMode = false;
   card: any;
   cardid: any;
+  ProductCard: any;
+  user: any;
   routes = "assets/energy/";
 
   constructor(
@@ -26,7 +35,9 @@ export class DetailComponent {
     private themeService: ThemeService,
     private searchService: SearchService,
     private router: Router,
-    private cartService: CartService
+    private cartService: CartService,
+    private ticketsService: TicketsService,
+    private userService: UserService,
   ) { }
 
   addToCart(product: any) {
@@ -39,6 +50,7 @@ export class DetailComponent {
     };
     //console.log(item)
     this.cartService.addToCart(item);
+    this.ticketsService.addProductToTicket(this.selectedProduct.id, 1, this.selectedProduct.price,this.user.id);
   }
 
   backToProducts() {
@@ -63,13 +75,37 @@ export class DetailComponent {
     });
 
     this.api2Service.getProductByCardId(this.cardid).subscribe((data: any) => {
-      this.card = data.find((item: any) => item.id === this.card.id);
-      console.log('Carta obtenida:', this.card);
-    }
-    );
+      this.ProductCard = data;
+      console.log('Carta obtenida:', this.ProductCard);
+    });
+    this.userService.getUser().subscribe({
+      next: (user) => {
+        this.user = user;
+        if (user) {
+          console.log('Usuario cargado:', user);
+        } else {
+          console.log('No hay usuario en el localStorage');
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener usuario:', err);
+      }
+    });
     this.themeService.theme$.subscribe(theme => {
       this.isDarkMode = theme === 'dark';
     });
   }
+
+  getStateLabel(state: number): string {
+    switch (state) {
+      case 0: return 'Poor';
+      case 1: return 'Fair';
+      case 2: return 'Good';
+      case 3: return 'Very Good';
+      case 4: return 'Excellent';
+      default: return 'Unknown';
+    }
+  }
+
 
 }

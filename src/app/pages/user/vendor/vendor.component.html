@@ -7,8 +7,7 @@
 
         <!-- Main Container -->
         <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700"
-             role="region"
-             aria-labelledby="main-heading">
+            role="region" aria-labelledby="main-heading">
 
             <!-- Accessible Stepper -->
             <nav class="flex justify-center mb-8" aria-label="Progress steps">
@@ -19,221 +18,186 @@
                           currentStep() > i ? 'bg-blue-600 text-white' :
                           currentStep() === i ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300' :
                           'bg-gray-100 dark:bg-gray-700 text-gray-500']"
-                          [attr.aria-current]="currentStep() === i ? 'step' : null">
+                            [attr.aria-current]="currentStep() === i ? 'step' : null">
                             <span class="sr-only">{{ currentStep() > i ? 'Completed' : 'Step' }}</span>
                             {{ currentStep() > i ? '✓' : i + 1 }}
                         </div>
-                        <span [class]="['text-sm font-medium transition-colors',
+                        <span
+                            [class]="['text-sm font-medium transition-colors',
                           currentStep() === i ? 'text-blue-600 dark:text-blue-300' : 'text-gray-500 dark:text-gray-400']">
                             {{ step }}
                         </span>
-                        @if (i < 2) { <div class="w-12 h-px bg-gray-200 dark:bg-gray-600" aria-hidden="true"></div>
-                        }
-                    </li>
-                    }
-                </ol>
-            </nav>
+                        @if (i < 2) { <div class="w-12 h-px bg-gray-200 dark:bg-gray-600" aria-hidden="true">
+        </div>
+        }
+        </li>
+        }
+        </ol>
+        </nav>
 
-            <!-- Step 1: Set Selection -->
-            @if (currentStep() === 0) {
-            <div class="space-y-6" role="region" aria-labelledby="set-selection-heading">
-                <h2 id="set-selection-heading" class="sr-only">Set Selection</h2>
-                <div class="relative">
-                    <input type="text"
-                           [ngModel]="searchTerm()"
-                           (ngModelChange)="searchTerm.set($event)"
-                           (input)="filterSets(searchTerm())"
-                           placeholder="Search set by name or ID..."
-                           class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600
+        <!-- Step 1: Set Selection -->
+        @if (currentStep() === 0) {
+        <div class="space-y-6" role="region" aria-labelledby="set-selection-heading">
+            <h2 id="set-selection-heading" class="sr-only">Set Selection</h2>
+            <div class="relative">
+                <input type="text" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
+                    (input)="filterSets(searchTerm())" placeholder="Search set by name or ID..." class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600
                                   dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
-                           aria-label="Search sets"
-                           aria-describedby="search-instructions">
-                    <p id="search-instructions" class="sr-only">Search through available card sets</p>
+                    aria-label="Search sets" aria-describedby="search-instructions">
+                <p id="search-instructions" class="sr-only">Search through available card sets</p>
 
-                    @if (filteredSets().length > 0) {
-                    <div class="absolute z-10 w-full mt-2 bg-white dark:bg-gray-700 rounded-lg shadow-lg max-h-96 overflow-y-auto"
-                         role="listbox"
-                         aria-labelledby="set-selection-heading">
-                        @for (set of filteredSets(); track set.id) {
-                        <div (click)="selectSet(set)"
-                             (keydown.enter)="selectSet(set)"
-                             role="option"
-                             [attr.aria-selected]="selectedSet()?.id === set.id"
-                             class="p-3 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer flex items-center gap-4
+                @if (filteredSets().length > 0) {
+                <div class="absolute z-10 w-full mt-2 bg-white dark:bg-gray-700 rounded-lg shadow-lg max-h-96 overflow-y-auto"
+                    role="listbox" aria-labelledby="set-selection-heading">
+                    @for (set of filteredSets(); track set.id) {
+                    <div (click)="selectSet(set)" (keydown.enter)="selectSet(set)" role="option"
+                        [attr.aria-selected]="selectedSet()?.id === set.id" class="p-3 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer flex items-center gap-4
                                     focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <img [src]="set.logo"
-                                 alt=""
-                                 class="w-12 h-12 object-contain"
-                                 aria-hidden="true">
-                            <div>
-                                <p class="font-medium dark:text-white">{{ set.name }}</p>
-                                <p class="text-sm text-gray-500 dark:text-gray-300">ID: {{ set.id_set }}</p>
-                            </div>
+                        <img [src]="set.logo" alt="" class="w-12 h-12 object-contain" aria-hidden="true">
+                        <div>
+                            <p class="font-medium dark:text-white">{{ set.name }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-300">ID: {{ set.id_set }}</p>
                         </div>
-                        }
                     </div>
                     }
-                </div>
-
-                @if (selectedSet()) {
-                <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg flex items-center gap-4" role="status">
-                    <img [src]="selectedSet()?.logo"
-                         alt=""
-                         class="w-16 h-16 object-contain"
-                         aria-hidden="true">
-                    <div>
-                        <h3 class="text-xl font-bold dark:text-white">{{ selectedSet()?.name }}</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-300">
-                            Release: {{ selectedSet()?.release_date }} |
-                            Cards: {{ selectedSet()?.total_cards }}
-                        </p>
-                    </div>
                 </div>
                 }
             </div>
-            }
 
-            <!-- Step 2: Card Selection -->
-            @if (currentStep() === 1) {
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-                 role="region"
-                 aria-labelledby="card-selection-heading">
-                <h2 id="card-selection-heading" class="sr-only">Card Selection</h2>
-                @for (card of cards(); track card.id_card) {
-                <div (click)="selectCard(card)"
-                     (keydown.enter)="selectCard(card)"
-                     [class]="['relative cursor-pointer group border rounded-lg p-2 transition-all focus:outline-none',
+            @if (selectedSet()) {
+            <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg flex items-center gap-4" role="status">
+                <img [src]="selectedSet()?.logo" alt="" class="w-16 h-16 object-contain" aria-hidden="true">
+                <div>
+                    <h3 class="text-xl font-bold dark:text-white">{{ selectedSet()?.name }}</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300">
+                        Release: {{ selectedSet()?.release_date }} |
+                        Cards: {{ selectedSet()?.total_cards }}
+                    </p>
+                </div>
+            </div>
+            }
+        </div>
+        }
+
+        <!-- Step 2: Card Selection -->
+        @if (currentStep() === 1) {
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" role="region"
+            aria-labelledby="card-selection-heading">
+            <h2 id="card-selection-heading" class="sr-only">Card Selection</h2>
+            @for (card of cards(); track card.id_card) {
+            <div (click)="selectCard(card)" (keydown.enter)="selectCard(card)" [class]="['relative cursor-pointer group border rounded-lg p-2 transition-all focus:outline-none',
                        selectedCard()?.id_card === card.id_card ?
                        'border-blue-500 ring-2 ring-blue-500/20' :
-                       'border-gray-200 dark:border-gray-600 hover:border-blue-300']"
-                     role="button"
-                     tabindex="0">
-                    <img [src]="card.image_small"
-                         [alt]="card.name"
-                         class="w-full h-48 object-contain mb-2">
-                    <div class="p-2">
-                        <p id="card-{{card.id_card}}-name" class="font-medium dark:text-white truncate">
-                            {{ card.name }}
-                        </p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
-                            #{{ card.id_card }}
-                        </p>
-                    </div>
+                       'border-gray-200 dark:border-gray-600 hover:border-blue-300']" role="button" tabindex="0">
+                <img [src]="card.image_small" [alt]="card.name" class="w-full h-48 object-contain mb-2">
+                <div class="p-2">
+                    <p id="card-{{card.id_card}}-name" class="font-medium dark:text-white truncate">
+                        {{ card.name }}
+                    </p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
+                        #{{ card.id_card }}
+                    </p>
                 </div>
-                }
             </div>
             }
+        </div>
+        }
 
-            <!-- Step 3: Product Details -->
-            @if (currentStep() === 2) {
-            <form [formGroup]="productForm" class="space-y-6" aria-labelledby="product-details-heading">
-                <h2 id="product-details-heading" class="sr-only">Product Details</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Quantity Input -->
-                    <div>
-                        <label for="quantity" class="block text-sm font-medium mb-2 dark:text-white">Quantity</label>
-                        <input type="number"
-                               id="quantity"
-                               formControlName="quantity"
-                               class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
+        <!-- Step 3: Product Details -->
+        @if (currentStep() === 2) {
+        <form [formGroup]="productForm" class="space-y-6" aria-labelledby="product-details-heading">
+            <h2 id="product-details-heading" class="sr-only">Product Details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Quantity Input -->
+                <div>
+                    <label for="quantity" class="block text-sm font-medium mb-2 dark:text-white">Quantity</label>
+                    <input type="number" id="quantity" formControlName="quantity" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
                                       dark:border-gray-600 focus:ring-2 focus:ring-blue-500"
-                               aria-describedby="quantity-error"
-                               [attr.aria-invalid]="productForm.get('quantity')?.invalid">
-                        @if (productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched) {
-                        <p id="quantity-error" class="text-red-500 text-sm mt-1" role="alert">Minimum 1 unit required</p>
-                        }
-                    </div>
+                        aria-describedby="quantity-error" [attr.aria-invalid]="productForm.get('quantity')?.invalid">
+                    @if (productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched) {
+                    <p id="quantity-error" class="text-red-500 text-sm mt-1" role="alert">Minimum 1 unit required</p>
+                    }
+                </div>
 
-                    <!-- Price Input -->
-                    <div>
-                        <label for="price" class="block text-sm font-medium mb-2 dark:text-white">Price (€)</label>
-                        <input type="number"
-                               step="0.01"
-                               id="price"
-                               formControlName="price"
-                               class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
+                <!-- Price Input -->
+                <div>
+                    <label for="price" class="block text-sm font-medium mb-2 dark:text-white">Price (€)</label>
+                    <input type="number" step="0.01" id="price" formControlName="price" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
                                       dark:border-gray-600 focus:ring-2 focus:ring-blue-500"
-                               aria-describedby="price-error"
-                               [attr.aria-invalid]="productForm.get('price')?.invalid">
-                        @if (productForm.get('price')?.invalid && productForm.get('price')?.touched) {
-                        <p id="price-error" class="text-red-500 text-sm mt-1" role="alert">Invalid price</p>
-                        }
-                    </div>
+                        aria-describedby="price-error" [attr.aria-invalid]="productForm.get('price')?.invalid">
+                    @if (productForm.get('price')?.invalid && productForm.get('price')?.touched) {
+                    <p id="price-error" class="text-red-500 text-sm mt-1" role="alert">Invalid price</p>
+                    }
+                </div>
 
-                    <!-- Condition Select -->
-                    <div>
-                        <label for="state" class="block text-sm font-medium mb-2 dark:text-white">Condition</label>
-                        <select id="state"
-                                formControlName="state"
-                                class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
+                <!-- Condition Select -->
+                <div>
+                    <label for="state" class="block text-sm font-medium mb-2 dark:text-white">Condition</label>
+                    <select id="state" formControlName="state" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
                                        dark:border-gray-600 focus:ring-2 focus:ring-blue-500">
-                            <option value="0">New</option>
-                            <option value="1">Used</option>
-                            <option value="2">Damaged</option>
-                        </select>
+                        <option value="0">Poor</option>
+                        <option value="1">Fair</option>
+                        <option value="2">Good</option>
+                        <option value="3">Very Good</option>
+                        <option value="4">Excellent</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4" aria-live="polite">
+                <h3 class="text-lg font-semibold mb-4 dark:text-white">Product Summary</h3>
+                <div class="flex items-center gap-4 mb-4">
+                    @if (selectedCard()) {
+                    <img [src]="selectedCard()?.image_small" [alt]="selectedCard()?.name + ' thumbnail'"
+                        class="w-16 h-16 object-contain">
+                    }
+                    <div>
+                        <p class="font-medium dark:text-white">{{ selectedCard()?.name || 'No card selected' }}</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            Set: {{ selectedSet()?.name || 'Not selected' }}
+                        </p>
                     </div>
                 </div>
+                <dl class="grid grid-cols-2 gap-4 text-sm">
+                    <dt class="text-gray-600 dark:text-gray-300">Quantity:</dt>
+                    <dd class="font-medium dark:text-white">{{ productForm.value.quantity || 0 }}</dd>
 
-                <!-- Summary Section -->
-                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4" aria-live="polite">
-                    <h3 class="text-lg font-semibold mb-4 dark:text-white">Product Summary</h3>
-                    <div class="flex items-center gap-4 mb-4">
-                        @if (selectedCard()) {
-                        <img [src]="selectedCard()?.image_small"
-                             [alt]="selectedCard()?.name + ' thumbnail'"
-                             class="w-16 h-16 object-contain">
-                        }
-                        <div>
-                            <p class="font-medium dark:text-white">{{ selectedCard()?.name || 'No card selected' }}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">
-                                Set: {{ selectedSet()?.name || 'Not selected' }}
-                            </p>
-                        </div>
-                    </div>
-                    <dl class="grid grid-cols-2 gap-4 text-sm">
-                        <dt class="text-gray-600 dark:text-gray-300">Quantity:</dt>
-                        <dd class="font-medium dark:text-white">{{ productForm.value.quantity || 0 }}</dd>
+                    <dt class="text-gray-600 dark:text-gray-300">Unit Price:</dt>
+                    <dd class="font-medium dark:text-white">{{ productForm.value.price || 0 | currency:'EUR' }}</dd>
 
-                        <dt class="text-gray-600 dark:text-gray-300">Unit Price:</dt>
-                        <dd class="font-medium dark:text-white">{{ productForm.value.price || 0 | currency:'EUR' }}</dd>
+                    <dt class="text-gray-600 dark:text-gray-300">Total:</dt>
+                    <dd class="font-medium text-blue-600 dark:text-blue-400">
+                        {{ (productForm.value.quantity * productForm.value.price) || 0 | currency:'EUR' }}
+                    </dd>
+                </dl>
+            </div>
+        </form>
+        }
 
-                        <dt class="text-gray-600 dark:text-gray-300">Total:</dt>
-                        <dd class="font-medium text-blue-600 dark:text-blue-400">
-                            {{ (productForm.value.quantity * productForm.value.price) || 0 | currency:'EUR' }}
-                        </dd>
-                    </dl>
-                </div>
-            </form>
-            }
-
-            <!-- Navigation Controls -->
-            <div class="mt-8 flex justify-between">
-                @if (currentStep() > 0) {
-                <button (click)="prevStep()"
-                        class="px-6 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700
+        <!-- Navigation Controls -->
+        <div class="mt-8 flex justify-between">
+            @if (currentStep() > 0) {
+            <button (click)="prevStep()" class="px-6 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700
                                rounded-lg transition-colors focus:ring-2 focus:ring-blue-500"
-                        aria-label="Previous step">
-                    ← Back
+                aria-label="Previous step">
+                ← Back
+            </button>
+            }
+            @if (currentStep() < 2) { <button (click)="nextStep()" [disabled]="!canProceed()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50
+                                 disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-500"
+                [attr.aria-disabled]="!canProceed()">
+                Continue →
                 </button>
                 }
-                @if (currentStep() < 2) { <button (click)="nextStep()"
-                          [disabled]="!canProceed()"
-                          class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50
-                                 disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-500"
-                          [attr.aria-disabled]="!canProceed()">
-                    Continue →
-                    </button>
-                    }
-                    @if (currentStep() === 2) {
-                    <button (click)="submitProduct()"
-                            [disabled]="!productForm.valid"
-                            class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50
+                @if (currentStep() === 2) {
+                <button (click)="submitProduct()" [disabled]="!productForm.valid" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50
                                    disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-green-500"
-                            [attr.aria-disabled]="!productForm.valid">
-                        Publish Product
-                    </button>
-                    }
-            </div>
+                    [attr.aria-disabled]="!productForm.valid">
+                    Publish Product
+                </button>
+                }
         </div>
     </div>
+</div>
 </div>

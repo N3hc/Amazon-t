@@ -44,7 +44,7 @@ export class CarrouselComponent implements OnInit {
     loadSets(): void {
       this.api2Service.getCategories().subscribe({
         next: (categories) => {
-          this.sets = this.shuffleArray(categories);
+          this.sets = (categories);
           //console.log(categories);
         },
         error: (error) => {

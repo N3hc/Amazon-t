@@ -9,7 +9,7 @@ import { __param } from 'tslib';
 export class Api2Service {
   private baseUrl = 'http://localhost:8000/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // 🧑 USERS
   getUsers(): Observable<any> {
@@ -138,6 +138,16 @@ export class Api2Service {
     return this.http.post(`${this.baseUrl}/store/tikets`, data);
   }
 
+  storeTicketWithUserid(ticketData: {
+    id_user: number;
+    id_adress: number;
+    total: number;
+    completed: boolean;
+  }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/store/tikets`, ticketData);
+  }
+
+
   updateTicket(data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/update/tikets`, data);
   }
@@ -148,7 +158,7 @@ export class Api2Service {
 
   // ➕ TICKET LINES
   getTicketLines(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/index/tiket_lineas`);
+    return this.http.get(`${this.baseUrl}/index/tiket_lines`);
   }
 
   getTicketLinesByTicket(id: number): Observable<any> {
@@ -161,6 +171,10 @@ export class Api2Service {
     return this.http.post(`${this.baseUrl}/store/tiket_lineas`, data);
   }
 
+  storeProductToTicketLine(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/store/tiket_lineas`, data);
+  }
+
   updateTicketLine(data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/update/tiket_lineas`, data);
   }
@@ -169,16 +183,16 @@ export class Api2Service {
     return this.http.request('delete', `${this.baseUrl}/delete/tiket_lineas`, { body: { id } });
   }
 
-//Pagos
+  //Pagos
 
   getPagos(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/index/pago`, );
+    return this.http.get(`${this.baseUrl}/index/pago`,);
   }
   getPagosByUser(id: number): Observable<any> {
-  console.log('Fetching pagos for user ID:', id);
-  const params = new HttpParams().set('id_user', id); // Pasamos el id como parámetro de consulta
-  return this.http.get(`${this.baseUrl}/index/pago/`, { params });
-}
+    console.log('Fetching pagos for user ID:', id);
+    const params = new HttpParams().set('id_user', id); // Pasamos el id como parámetro de consulta
+    return this.http.get(`${this.baseUrl}/index/pago/`, { params });
+  }
   storePago(data: any): Observable<any> {
     console.log('Storing payment data:', data);
     return this.http.post(`${this.baseUrl}/store/pago`, data);

@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HeaderComponent } from "../../main-components/header/header.component";
 import { ThemeService } from '../../../services/theme/theme.service';
 import { CartItem } from '../../../interface/productos.interface';
-import { CartService } from '../../../services/cart/cart.service';
 import { Router } from '@angular/router';
+import { TicketsService } from '../../../services/tickets/tickets.service';
+import { UserService } from '../../../services/user/user.service';
 
 @Component({
   selector: 'app-cart',
@@ -12,68 +13,106 @@ import { Router } from '@angular/router';
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
-export class CartComponent {
+export class CartComponent implements OnInit {
   isDarkMode = false;
   cart: CartItem[] = [];
+  userId: number | null = null;
 
   constructor(
-    private cartService: CartService,
     private themeService: ThemeService,
-    private router: Router
-  ) {
-    this.cartService.cart$.subscribe((cart) => {
-      this.cart = cart;
-    });
-  }
+    private router: Router,
+    private ticketsService: TicketsService,
+    private userService: UserService
+  ) {}
 
   ngOnInit() {
+    // Tema oscuro
     this.themeService.theme$.subscribe(theme => {
       this.isDarkMode = theme === 'dark';
     });
+
+    // Obtener usuario y cargar carrito
+    this.userService.getUser().subscribe({
+      next: (user) => {
+        if (user) {
+          this.userId = user.id;
+          console.log('Usuario cargado:', user);
+          this.loadCart(); // Solo cargamos carrito si hay usuario
+        } else {
+          console.log('No hay usuario en el localStorage');
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener usuario:', err);
+      }
+    });
   }
 
-  // Calcula el subtotal sin impuestos ni envío
+  loadCart() {
+    const savedCart = localStorage.getItem('cart');
+    this.cart = savedCart ? JSON.parse(savedCart) : [];
+  }
+
+  saveCart() {
+    localStorage.setItem('cart', JSON.stringify(this.cart));
+  }
+
+  syncItemToTicket(item: CartItem) {
+    if (!this.userId) return;
+
+    this.ticketsService.getUserLastTicketId(this.userId); // Asegura que haya ticket
+    this.ticketsService.addProductToTicket(+item.id, item.quantity, item.price, this.userId);
+  }
+
+  updateQuantity(itemId: string, newQuantity: number): void {
+    const item = this.cart.find(i => i.id === itemId);
+    if (item) {
+      item.quantity = newQuantity;
+      this.saveCart();
+      this.syncItemToTicket(item);
+    }
+  }
+
+  increaseQuantity(itemId: string): void {
+    const item = this.cart.find(item => item.id === itemId);
+    if (item) {
+      item.quantity += 1;
+      this.saveCart();
+      this.syncItemToTicket(item);
+    }
+  }
+
+  decreaseQuantity(itemId: string): void {
+    const item = this.cart.find(item => item.id === itemId);
+    if (item && item.quantity > 1) {
+      item.quantity -= 1;
+      this.saveCart();
+      this.syncItemToTicket(item);
+    }
+  }
+
+  removeFromCart(itemId: string): void {
+    this.cart = this.cart.filter(item => item.id !== itemId);
+    this.saveCart();
+    // Aquí podrías también eliminar del ticket si tienes el ID de línea
+  }
+
   getSubtotal(): number {
     return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   }
 
-  // Calcula el costo de envío (gratis para compras mayores a $50)
   getShippingCost(): number {
     return this.getSubtotal() > 50 ? 0 : 5;
   }
 
-  // Calcula el total incluyendo impuestos y envío
   getTotal(): number {
     return this.getSubtotal() + this.getShippingCost();
   }
 
-  // Método para proceder al pago
   proceedToCheckout(): void {
     this.router.navigate(['cart/payment']);
   }
 
-  // Aumenta la cantidad de un producto
-  increaseQuantity(itemId: string): void {
-    const item = this.cart.find(item => item.id === itemId);
-    if (item) {
-      this.cartService.updateQuantity(itemId, item.quantity + 1);
-    }
-  }
-
-  // Disminuye la cantidad de un producto
-  decreaseQuantity(itemId: string): void {
-    const item = this.cart.find(item => item.id === itemId);
-    if (item && item.quantity > 1) {
-      this.cartService.updateQuantity(itemId, item.quantity - 1);
-    }
-  }
-
-  // Elimina un producto del carrito
-  removeFromCart(itemId: string): void {
-    this.cartService.removeFromCart(itemId);
-  }
-
-  // Redirige a la página de productos
   continueShopping(): void {
     this.router.navigate(['/home/products']);
   }

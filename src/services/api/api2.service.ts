@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { __param } from 'tslib';
+import { Product } from '../../interface/productos.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ import { __param } from 'tslib';
 export class Api2Service {
   private baseUrl = 'http://localhost:8000/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // 🧑 USERS
   getUsers(): Observable<any> {
@@ -25,14 +26,14 @@ export class Api2Service {
   }
 
   deleteUser(id: number): Observable<any> {
-    return this.http.request('delete', `${this.baseUrl}/delete/user`, { body: { id } });
+    return this.http.request('delete', `${this.baseUrl}/delete/user`, {
+      body: { id },
+    });
   }
 
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/login/user`, credentials);
-
   }
-
 
   // 💳 CARDS
   getCards(): Observable<any> {
@@ -45,6 +46,11 @@ export class Api2Service {
     return this.http.get(`${this.baseUrl}/index/card`, { params });
   }
 
+  getCardsByIds(payload: { ids: number[] }): Observable<Product[]> {
+    return this.http.post<Product[]>(`${this.baseUrl}/getCardsByIds/card`, payload);
+  }
+
+
   storeCard(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/store/card`, data);
   }
@@ -54,7 +60,9 @@ export class Api2Service {
   }
 
   deleteCard(id: number): Observable<any> {
-    return this.http.request('delete', `${this.baseUrl}/delete/card`, { body: { id } });
+    return this.http.request('delete', `${this.baseUrl}/delete/card`, {
+      body: { id },
+    });
   }
 
   getCardsFromSet(setId: any): Observable<any> {
@@ -63,18 +71,19 @@ export class Api2Service {
     return this.http.get(`${this.baseUrl}/index/card`, { params }); // Enviamos el parámetro como parte de la URL
   }
 
-
-
-
   // 📦 PRODUCTS
   getProducts(): Observable<any> {
     return this.http.get(`${this.baseUrl}/index/products`);
   }
 
+
+
   getProductsUserOnlyIdCard(id: number): Observable<any> {
     console.log('Fetching products for user ID:', id);
     const params = new HttpParams().set('id_user', id); // Pasamos el id como parámetro de consulta
-    return this.http.get(`${this.baseUrl}/onlyIdCardIndex/products`, { params });
+    return this.http.get(`${this.baseUrl}/onlyIdCardIndex/products`, {
+      params,
+    });
   }
 
   getProductByCardId(id: number): Observable<any> {
@@ -98,7 +107,9 @@ export class Api2Service {
   }
 
   deleteProduct(id: number): Observable<any> {
-    return this.http.request('delete', `${this.baseUrl}/delete/products`, { body: { id } });
+    return this.http.request('delete', `${this.baseUrl}/delete/products`, {
+      body: { id },
+    });
   }
 
   // 🗂️ CATEGORIES
@@ -115,7 +126,9 @@ export class Api2Service {
   }
 
   deleteCategory(id: number): Observable<any> {
-    return this.http.request('delete', `${this.baseUrl}/delete/categories`, { body: { id } });
+    return this.http.request('delete', `${this.baseUrl}/delete/categories`, {
+      body: { id },
+    });
   }
 
   // 🏠 ADDRESS
@@ -138,7 +151,9 @@ export class Api2Service {
   }
 
   deleteAddress(id: number): Observable<any> {
-    return this.http.request('delete', `${this.baseUrl}/delete/adress`, { body: { id } });
+    return this.http.request('delete', `${this.baseUrl}/delete/adress`, {
+      body: { id },
+    });
   }
 
   // 🎫 TICKETS
@@ -153,10 +168,10 @@ export class Api2Service {
   }
 
   // api2.service.ts
-  createTicket(id_user: number, id_adress: number ): Observable<any> {
+  createTicket(id_user: number, id_adress: number): Observable<any> {
     return this.http.post(`${this.baseUrl}/tikets/create`, {
       id_user,
-      id_adress
+      id_adress,
     });
   }
 
@@ -173,27 +188,30 @@ export class Api2Service {
     return this.http.post(`${this.baseUrl}/store/tikets`, ticketData);
   }
 
-deleteTicketLineChenPing(ticketId: number, productId: number): Observable<any> {
-  return this.http.request('delete', `${this.baseUrl}/delete/tiket_lineas_chenping`, {
-    body: {
-      id_tiket: ticketId,
-      id_producto: productId
-    }
-  });
-}
-
-
-
-
+  deleteTicketLineChenPing(
+    ticketId: number,
+    productId: number
+  ): Observable<any> {
+    return this.http.request(
+      'delete',
+      `${this.baseUrl}/delete/tiket_lineas_chenping`,
+      {
+        body: {
+          id_tiket: ticketId,
+          id_producto: productId,
+        },
+      }
+    );
+  }
 
   updateTicket(data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/update/tikets`, data);
   }
 
-
-
   deleteTicket(id: number): Observable<any> {
-    return this.http.request('delete', `${this.baseUrl}/delete/tikets`, { body: { id } });
+    return this.http.request('delete', `${this.baseUrl}/delete/tikets`, {
+      body: { id },
+    });
   }
 
   // ➕ TICKET LINES
@@ -220,13 +238,15 @@ deleteTicketLineChenPing(ticketId: number, productId: number): Observable<any> {
   }
 
   deleteTicketLine(id: number): Observable<any> {
-    return this.http.request('delete', `${this.baseUrl}/delete/tiket_lineas`, { body: { id } });
+    return this.http.request('delete', `${this.baseUrl}/delete/tiket_lineas`, {
+      body: { id },
+    });
   }
 
   //Pagos
 
   getPagos(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/index/pago`,);
+    return this.http.get(`${this.baseUrl}/index/pago`);
   }
   getPagosByUser(id: number): Observable<any> {
     console.log('Fetching pagos for user ID:', id);
@@ -243,6 +263,8 @@ deleteTicketLineChenPing(ticketId: number, productId: number): Observable<any> {
   }
 
   deletePago(id_user: number): Observable<any> {
-    return this.http.request('delete', `${this.baseUrl}/delete/pago`, { body: { id_user } });
+    return this.http.request('delete', `${this.baseUrl}/delete/pago`, {
+      body: { id_user },
+    });
   }
 }

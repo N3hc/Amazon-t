@@ -20,30 +20,53 @@ export class AdminComponent implements OnInit {
 
   product: Product | null = null;
   user: User | null = null;
-  addresses: any[] = [];
+  temp: number[] = [];
 
-  
+
     constructor(
       private userService: UserService,
       private api2Service: Api2Service,
       private router: Router
     ) { }
 
-  ngOnInit(): void {
-    // Fetch user details if userId is provided
-    this.userService.getUser().subscribe((user: User | null) => {
-      if (!user) {
-        console.warn('No hay usuario cargado');
-        this.router.navigate(['/home']);
-        return;
-      }
-      
-      this.api2Service.getProductsByUser(user.id).subscribe((product: Product) => {
-        this.product =  product;
-        console.log('User:', user);
-        console.log(this.product);
+    ngOnInit(): void {
+      // Fetch user details if userId is provided
+      this.userService.getUser().subscribe((user: User | null) => {
+        if (!user) {
+          console.warn('No hay usuario cargado');
+          this.router.navigate(['/home']);
+          return;
+        }
+        this.user = user;
+
+        this.api2Service.getProductsUserOnlyIdCard(this.user.id).subscribe((response: any) => {
+          const idCardString = response.id_card;
+          console.log('User:', this.user);
+          console.log(this.product);
+
+          response.id_cards = idCardString
+            .split(',')
+            .map((id: string) => Number(id))
+
+            this.temp = response;
+            console.log('Product:', this.temp);
+
+
+
+            if (this.product && Array.isArray(this.product.id_card)) {
+              for (let id_card of this.product.id_card) {
+                console.log('ID Card:', id_card);
+                // Aquí puedes hacer algo con cada id_card, como almacenarlo en un array o procesarlo
+              }
+            } else {
+              console.warn('Product is null or id_cards is not an array.');
+            }
+
+        }, (error) => {
+          console.error('Error fetching product:', error);
+        });
+
       });
-  });
-  
-}
+    }
+
 }

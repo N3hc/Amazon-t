@@ -39,6 +39,12 @@ export class Api2Service {
     return this.http.get(`${this.baseUrl}/index/card`);
   }
 
+  getCardsById(id: number): Observable<any> {
+    console.log('Fetching cards for user ID:', id);
+    const params = new HttpParams().set('id', id); // Pasamos el id como parámetro de consulta
+    return this.http.get(`${this.baseUrl}/index/card`, { params });
+  }
+
   storeCard(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/store/card`, data);
   }
@@ -63,6 +69,12 @@ export class Api2Service {
   // 📦 PRODUCTS
   getProducts(): Observable<any> {
     return this.http.get(`${this.baseUrl}/index/products`);
+  }
+
+  getProductsUserOnlyIdCard(id: number): Observable<any> {
+    console.log('Fetching products for user ID:', id);
+    const params = new HttpParams().set('id_user', id); // Pasamos el id como parámetro de consulta
+    return this.http.get(`${this.baseUrl}/onlyIdCardIndex/products`, { params });
   }
 
   getProductByCardId(id: number): Observable<any> {

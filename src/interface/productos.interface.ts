@@ -5,11 +5,11 @@ export interface CartItem {
     image: string;
     quantity: number;
   }
-  
+
 export interface Product {
     id: string;
     id_user: string;
-    id_card: string;
+    id_card: number;
     quantity: number;
     price: number;
     state: string;

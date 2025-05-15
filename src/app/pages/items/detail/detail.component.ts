@@ -42,9 +42,9 @@ export class DetailComponent {
 
   addToCart(product: any) {
     const item: CartItem = {
-      id: product.id,
+      id: String(this.selectedProduct.id),
       name: product.name,
-      price: product.cardmarket.prices.averageSellPrice,
+      price: this.selectedProduct.price,
       image: product.images.small,
       quantity: 1
     };

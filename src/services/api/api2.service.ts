@@ -140,6 +140,14 @@ export class Api2Service {
     return this.http.get(`${this.baseUrl}/index/tikets`, { params });
   }
 
+  // api2.service.ts
+  createTicket(id_user: number, id_adress: number ): Observable<any> {
+    return this.http.post(`${this.baseUrl}/tikets/create`, {
+      id_user,
+      id_adress
+    });
+  }
+
   storeTicket(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/store/tikets`, data);
   }
@@ -153,10 +161,24 @@ export class Api2Service {
     return this.http.post(`${this.baseUrl}/store/tikets`, ticketData);
   }
 
+deleteTicketLineChenPing(ticketId: number, productId: number): Observable<any> {
+  return this.http.request('delete', `${this.baseUrl}/delete/tiket_lineas_chenping`, {
+    body: {
+      id_tiket: ticketId,
+      id_producto: productId
+    }
+  });
+}
+
+
+
+
 
   updateTicket(data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/update/tikets`, data);
   }
+
+
 
   deleteTicket(id: number): Observable<any> {
     return this.http.request('delete', `${this.baseUrl}/delete/tikets`, { body: { id } });

@@ -1,203 +1,244 @@
 <div class="dark:bg-[#0a0a0a] min-h-screen w-full flex flex-col" role="main">
-    <div class="mx-auto max-w-screen-xl px-4 2xl:px-0 py-8">
-        <!-- Header Section -->
-        <header class="bg-gradient-to-r from-purple-500 to-blue-600 rounded-2xl p-6 mb-8 shadow-lg" role="banner">
-            <h1 class="text-2xl font-bold text-white sm:text-3xl" id="main-heading">Add Product</h1>
+    <div class="mx-auto max-w-screen-2xl w-full px-4 md:px-8 xl:px-12 2xl:px-20 py-10">
+        <!-- Header Section Ampliada -->
+        <header class="bg-gradient-to-r from-purple-500 to-blue-600 rounded-3xl p-8 mb-8 shadow-2xl" role="banner">
+            <h1 class="text-3xl sm:text-4xl font-bold text-white tracking-tight" id="main-heading">Add New Product</h1>
         </header>
 
-        <!-- Main Container -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700"
+        <!-- Main Container Ampliado -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl border border-gray-100 dark:border-gray-700"
             role="region" aria-labelledby="main-heading">
 
-            <!-- Accessible Stepper -->
-            <nav class="flex justify-center mb-8" aria-label="Progress steps">
-                <ol class="flex items-center gap-4" role="list">
+            <!-- Stepper Mejorado -->
+            <nav class="flex justify-center mb-10" aria-label="Progress steps">
+                <ol class="flex items-center gap-6" role="list">
                     @for (step of ['Set', 'Card', 'Details']; track $index; let i = $index) {
-                    <li class="flex items-center gap-2" role="listitem">
-                        <div [class]="['w-8 h-8 rounded-full flex items-center justify-center transition-colors',
-                          currentStep() > i ? 'bg-blue-600 text-white' :
-                          currentStep() === i ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300' :
+                    <li class="flex items-center gap-3" role="listitem">
+                        <div [class]="['w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300',
+                          currentStep() > i ? 'bg-blue-600 text-white scale-110' :
+                          currentStep() === i ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 ring-4 ring-blue-200/50' :
                           'bg-gray-100 dark:bg-gray-700 text-gray-500']"
                             [attr.aria-current]="currentStep() === i ? 'step' : null">
                             <span class="sr-only">{{ currentStep() > i ? 'Completed' : 'Step' }}</span>
                             {{ currentStep() > i ? '✓' : i + 1 }}
                         </div>
                         <span
-                            [class]="['text-sm font-medium transition-colors',
+                            [class]="['text-lg font-semibold transition-colors',
                           currentStep() === i ? 'text-blue-600 dark:text-blue-300' : 'text-gray-500 dark:text-gray-400']">
                             {{ step }}
                         </span>
-                        @if (i < 2) { <div class="w-12 h-px bg-gray-200 dark:bg-gray-600" aria-hidden="true">
-        </div>
-        }
-        </li>
-        }
-        </ol>
-        </nav>
+                        @if (i < 2) { <div class="w-16 h-1 bg-gray-200 dark:bg-gray-600 rounded-full" aria-hidden="true"></div>
+                        }
+                    </li>
+                    }
+                </ol>
+            </nav>
 
-        <!-- Step 1: Set Selection -->
-        @if (currentStep() === 0) {
-        <div class="space-y-6" role="region" aria-labelledby="set-selection-heading">
-            <h2 id="set-selection-heading" class="sr-only">Set Selection</h2>
-            <div class="relative">
-                <input type="text" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
-                    (input)="filterSets(searchTerm())" placeholder="Search set by name or ID..." class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600
-                                  dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
-                    aria-label="Search sets" aria-describedby="search-instructions">
-                <p id="search-instructions" class="sr-only">Search through available card sets</p>
+            <!-- Contenido Principal Ampliado -->
+            <div class="space-y-10">
+                <!-- Step 1: Set Selection Mejorado -->
+                @if (currentStep() === 0) {
+                <div class="space-y-8" role="region" aria-labelledby="set-selection-heading">
+                    <h2 id="set-selection-heading" class="sr-only">Set Selection</h2>
+                    <div class="relative">
+                        <input type="text" 
+                               [ngModel]="searchTerm()" 
+                               (ngModelChange)="searchTerm.set($event)"
+                               (input)="filterSets(searchTerm())" 
+                               placeholder="Search set by name or ID..." 
+                               class="w-full p-4 text-lg rounded-xl border-2 border-gray-300 dark:border-gray-600
+                                      dark:bg-gray-700 dark:text-white focus:ring-4 focus:ring-blue-500/30
+                                      placeholder-gray-400 dark:placeholder-gray-500"
+                               aria-label="Search sets">
+                        
+                        @if (filteredSets().length > 0) {
+                        <div class="absolute z-20 w-full mt-3 bg-white dark:bg-gray-700 rounded-xl shadow-2xl max-h-[500px] overflow-y-auto"
+                            role="listbox">
+                            @for (set of filteredSets(); track set.id) {
+                            <div (click)="selectSet(set)" 
+                                 (keydown.enter)="selectSet(set)" 
+                                 role="option"
+                                 [attr.aria-selected]="selectedSet()?.id === set.id" 
+                                 class="p-4 hover:bg-gray-50 dark:hover:bg-gray-600/50 cursor-pointer flex items-center gap-5
+                                        transition-all duration-200 border-b dark:border-gray-600 last:border-0">
+                                <img [src]="set.logo" alt="" class="w-16 h-16 object-contain rounded-lg" aria-hidden="true">
+                                <div class="space-y-1">
+                                    <p class="text-xl font-semibold dark:text-white">{{ set.name }}</p>
+                                    <p class="text-base text-gray-500 dark:text-gray-300">ID: {{ set.id_set }}</p>
+                                    <p class="text-sm text-gray-400 dark:text-gray-500">
+                                        {{ set.release_date }} • {{ set.total_cards }} cards
+                                    </p>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                        }
+                    </div>
 
-                @if (filteredSets().length > 0) {
-                <div class="absolute z-10 w-full mt-2 bg-white dark:bg-gray-700 rounded-lg shadow-lg max-h-96 overflow-y-auto"
-                    role="listbox" aria-labelledby="set-selection-heading">
-                    @for (set of filteredSets(); track set.id) {
-                    <div (click)="selectSet(set)" (keydown.enter)="selectSet(set)" role="option"
-                        [attr.aria-selected]="selectedSet()?.id === set.id" class="p-3 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer flex items-center gap-4
-                                    focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <img [src]="set.logo" alt="" class="w-12 h-12 object-contain" aria-hidden="true">
-                        <div>
-                            <p class="font-medium dark:text-white">{{ set.name }}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-300">ID: {{ set.id_set }}</p>
+                    @if (selectedSet()) {
+                    <div class="mt-8 p-6 bg-blue-50/80 dark:bg-blue-900/50 rounded-xl flex items-center gap-6 border-2 border-blue-200 dark:border-blue-800">
+                        <img [src]="selectedSet()?.logo" alt="" class="w-20 h-20 object-contain rounded-xl" aria-hidden="true">
+                        <div class="space-y-2">
+                            <h3 class="text-2xl font-bold dark:text-white">{{ selectedSet()?.name }}</h3>
+                            <p class="text-lg text-gray-600 dark:text-gray-300">
+                                Released: {{ selectedSet()?.release_date }} • 
+                                <span class="font-medium">{{ selectedSet()?.total_cards }} cards</span>
+                            </p>
                         </div>
                     </div>
                     }
                 </div>
                 }
-            </div>
 
-            @if (selectedSet()) {
-            <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg flex items-center gap-4" role="status">
-                <img [src]="selectedSet()?.logo" alt="" class="w-16 h-16 object-contain" aria-hidden="true">
-                <div>
-                    <h3 class="text-xl font-bold dark:text-white">{{ selectedSet()?.name }}</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-300">
-                        Release: {{ selectedSet()?.release_date }} |
-                        Cards: {{ selectedSet()?.total_cards }}
-                    </p>
-                </div>
-            </div>
-            }
-        </div>
-        }
-
-        <!-- Step 2: Card Selection -->
-        @if (currentStep() === 1) {
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" role="region"
-            aria-labelledby="card-selection-heading">
-            <h2 id="card-selection-heading" class="sr-only">Card Selection</h2>
-            @for (card of cards(); track card.id_card) {
-            <div (click)="selectCard(card)" (keydown.enter)="selectCard(card)" [class]="['relative cursor-pointer group border rounded-lg p-2 transition-all focus:outline-none',
-                       selectedCard()?.id_card === card.id_card ?
-                       'border-blue-500 ring-2 ring-blue-500/20' :
-                       'border-gray-200 dark:border-gray-600 hover:border-blue-300']" role="button" tabindex="0">
-                <img [src]="card.image_small" [alt]="card.name" class="w-full h-48 object-contain mb-2">
-                <div class="p-2">
-                    <p id="card-{{card.id_card}}-name" class="font-medium dark:text-white truncate">
-                        {{ card.name }}
-                    </p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
-                        #{{ card.id_card }}
-                    </p>
-                </div>
-            </div>
-            }
-        </div>
-        }
-
-        <!-- Step 3: Product Details -->
-        @if (currentStep() === 2) {
-        <form [formGroup]="productForm" class="space-y-6" aria-labelledby="product-details-heading">
-            <h2 id="product-details-heading" class="sr-only">Product Details</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Quantity Input -->
-                <div>
-                    <label for="quantity" class="block text-sm font-medium mb-2 dark:text-white">Quantity</label>
-                    <input type="number" id="quantity" formControlName="quantity" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
-                                      dark:border-gray-600 focus:ring-2 focus:ring-blue-500"
-                        aria-describedby="quantity-error" [attr.aria-invalid]="productForm.get('quantity')?.invalid">
-                    @if (productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched) {
-                    <p id="quantity-error" class="text-red-500 text-sm mt-1" role="alert">Minimum 1 unit required</p>
-                    }
-                </div>
-
-                <!-- Price Input -->
-                <div>
-                    <label for="price" class="block text-sm font-medium mb-2 dark:text-white">Price (€)</label>
-                    <input type="number" step="0.01" id="price" formControlName="price" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
-                                      dark:border-gray-600 focus:ring-2 focus:ring-blue-500"
-                        aria-describedby="price-error" [attr.aria-invalid]="productForm.get('price')?.invalid">
-                    @if (productForm.get('price')?.invalid && productForm.get('price')?.touched) {
-                    <p id="price-error" class="text-red-500 text-sm mt-1" role="alert">Invalid price</p>
-                    }
-                </div>
-
-                <!-- Condition Select -->
-                <div>
-                    <label for="state" class="block text-sm font-medium mb-2 dark:text-white">Condition</label>
-                    <select id="state" formControlName="state" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:text-white
-                                       dark:border-gray-600 focus:ring-2 focus:ring-blue-500">
-                        <option value="0">Poor</option>
-                        <option value="1">Fair</option>
-                        <option value="2">Good</option>
-                        <option value="3">Very Good</option>
-                        <option value="4">Excellent</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Summary Section -->
-            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4" aria-live="polite">
-                <h3 class="text-lg font-semibold mb-4 dark:text-white">Product Summary</h3>
-                <div class="flex items-center gap-4 mb-4">
-                    @if (selectedCard()) {
-                    <img [src]="selectedCard()?.image_small" [alt]="selectedCard()?.name + ' thumbnail'"
-                        class="w-16 h-16 object-contain">
-                    }
-                    <div>
-                        <p class="font-medium dark:text-white">{{ selectedCard()?.name || 'No card selected' }}</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                            Set: {{ selectedSet()?.name || 'Not selected' }}
-                        </p>
+                <!-- Step 2: Card Selection Ampliado -->
+                @if (currentStep() === 1) {
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6" role="region"
+                    aria-labelledby="card-selection-heading">
+                    <h2 id="card-selection-heading" class="sr-only">Card Selection</h2>
+                    @for (card of cards(); track card.id_card) {
+                    <div (click)="selectCard(card)" 
+                         (keydown.enter)="selectCard(card)" 
+                         [class]="['relative group border-2 rounded-xl p-3 transition-all cursor-pointer',
+                                   selectedCard()?.id_card === card.id_card ?
+                                   'border-blue-500 ring-4 ring-blue-500/20 scale-[1.02]' :
+                                   'border-gray-200 dark:border-gray-600 hover:border-blue-300']" 
+                         role="button" 
+                         tabindex="0">
+                        <img [src]="card.image_small" 
+                             [alt]="card.name" 
+                             class="w-full h-56 object-contain mb-3 rounded-lg">
+                        <div class="p-2 space-y-1">
+                            <p class="font-medium dark:text-white truncate text-lg">{{ card.name }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 font-mono">#{{ card.id_card }}</p>
+                        </div>
                     </div>
+                    }
                 </div>
-                <dl class="grid grid-cols-2 gap-4 text-sm">
-                    <dt class="text-gray-600 dark:text-gray-300">Quantity:</dt>
-                    <dd class="font-medium dark:text-white">{{ productForm.value.quantity || 0 }}</dd>
+                }
 
-                    <dt class="text-gray-600 dark:text-gray-300">Unit Price:</dt>
-                    <dd class="font-medium dark:text-white">{{ productForm.value.price || 0 | currency:'EUR' }}</dd>
+                <!-- Step 3: Product Details Ampliado -->
+                @if (currentStep() === 2) {
+                <form [formGroup]="productForm" class="space-y-10" aria-labelledby="product-details-heading">
+                    <h2 id="product-details-heading" class="sr-only">Product Details</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Inputs Ampliados -->
+                        <div class="space-y-4">
+                            <label for="quantity" class="block text-lg font-medium dark:text-white">Quantity</label>
+                            <input type="number" 
+                                   id="quantity" 
+                                   formControlName="quantity" 
+                                   class="w-full p-4 text-lg border-2 rounded-xl dark:bg-gray-700 dark:text-white
+                                          dark:border-gray-600 focus:ring-4 focus:ring-blue-500/30">
+                            @if (productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched) {
+                            <p class="text-red-500 text-base mt-2" role="alert">⚠️ Minimum 1 unit required</p>
+                            }
+                        </div>
 
-                    <dt class="text-gray-600 dark:text-gray-300">Total:</dt>
-                    <dd class="font-medium text-blue-600 dark:text-blue-400">
-                        {{ (productForm.value.quantity * productForm.value.price) || 0 | currency:'EUR' }}
-                    </dd>
-                </dl>
+                        <div class="space-y-4">
+                            <label for="price" class="block text-lg font-medium dark:text-white">Price (€)</label>
+                            <input type="number" 
+                                   step="0.01" 
+                                   id="price" 
+                                   formControlName="price" 
+                                   class="w-full p-4 text-lg border-2 rounded-xl dark:bg-gray-700 dark:text-white
+                                          dark:border-gray-600 focus:ring-4 focus:ring-blue-500/30">
+                            @if (productForm.get('price')?.invalid && productForm.get('price')?.touched) {
+                            <p class="text-red-500 text-base mt-2" role="alert">⚠️ Invalid price format</p>
+                            }
+                        </div>
+
+                        <!-- Selector Mejorado -->
+                        <div class="space-y-4">
+                            <label for="state" class="block text-lg font-medium dark:text-white">Condition</label>
+                            <select id="state" 
+                                    formControlName="state" 
+                                    class="w-full p-4 text-lg border-2 rounded-xl dark:bg-gray-700 dark:text-white
+                                           dark:border-gray-600 focus:ring-4 focus:ring-blue-500/30 appearance-none">
+                                <option value="0">Poor</option>
+                                <option value="1">Fair</option>
+                                <option value="2">Good</option>
+                                <option value="3">Very Good</option>
+                                <option value="4">Excellent</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Summary Section Ampliada -->
+                    <div class="bg-gray-50/80 dark:bg-gray-700 rounded-2xl p-6 border-2 border-gray-200 dark:border-gray-600">
+                        <h3 class="text-xl font-bold mb-6 dark:text-white">Product Summary</h3>
+                        <div class="flex items-center gap-6 mb-6">
+                            @if (selectedCard()) {
+                            <img [src]="selectedCard()?.image_small" 
+                                 [alt]="selectedCard()?.name + ' thumbnail'"
+                                 class="w-24 h-24 object-contain rounded-lg border dark:border-gray-600">
+                            }
+                            <div class="space-y-2">
+                                <p class="text-2xl font-semibold dark:text-white">{{ selectedCard()?.name || 'No card selected' }}</p>
+                                <p class="text-lg text-gray-500 dark:text-gray-400">
+                                    {{ selectedSet()?.name || 'No set selected' }}
+                                </p>
+                            </div>
+                        </div>
+                        <dl class="grid grid-cols-2 gap-6 text-lg">
+                            <div class="flex justify-between items-center py-2 border-b dark:border-gray-600">
+                                <dt class="text-gray-600 dark:text-gray-300">Quantity:</dt>
+                                <dd class="font-medium dark:text-white">{{ productForm.value.quantity || 0 }}</dd>
+                            </div>
+                            
+                            <div class="flex justify-between items-center py-2 border-b dark:border-gray-600">
+                                <dt class="text-gray-600 dark:text-gray-300">Unit Price:</dt>
+                                <dd class="font-medium dark:text-white">{{ productForm.value.price || 0 | currency:'EUR' }}</dd>
+                            </div>
+                            
+                            <div class="flex justify-between items-center py-2 col-span-2">
+                                <dt class="text-gray-600 dark:text-gray-300 text-xl">Total:</dt>
+                                <dd class="font-bold text-blue-600 dark:text-blue-400 text-xl">
+                                    {{ (productForm.value.quantity * productForm.value.price) || 0 | currency:'EUR' }}
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+                </form>
+                }
             </div>
-        </form>
-        }
 
-        <!-- Navigation Controls -->
-        <div class="mt-8 flex justify-between">
-            @if (currentStep() > 0) {
-            <button (click)="prevStep()" class="px-6 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700
-                               rounded-lg transition-colors focus:ring-2 focus:ring-blue-500"
-                aria-label="Previous step">
-                ← Back
-            </button>
-            }
-            @if (currentStep() < 2) { <button (click)="nextStep()" [disabled]="!canProceed()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50
-                                 disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-500"
-                [attr.aria-disabled]="!canProceed()">
-                Continue →
+            <!-- Navigation Controls Ampliados -->
+            <div class="mt-12 flex justify-between items-center gap-6">
+                @if (currentStep() > 0) {
+                <button (click)="prevStep()" 
+                        class="px-8 py-3 text-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700
+                               rounded-xl transition-all duration-300 focus:ring-4 focus:ring-blue-500/30
+                               flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    Back
+                </button>
+                }
+                @if (currentStep() < 2) { <button (click)="nextStep()" 
+                         [disabled]="!canProceed()" 
+                         class="px-8 py-3 text-lg bg-blue-600 text-white rounded-xl hover:bg-blue-700 hover:scale-105
+                                disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300
+                                focus:ring-4 focus:ring-blue-500/30 flex items-center gap-2">
+                    Continue
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
                 </button>
                 }
                 @if (currentStep() === 2) {
-                <button (click)="submitProduct()" [disabled]="!productForm.valid" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50
-                                   disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-green-500"
-                    [attr.aria-disabled]="!productForm.valid">
+                <button (click)="submitProduct()" 
+                        [disabled]="!productForm.valid" 
+                        class="px-8 py-3 text-lg bg-green-600 text-white rounded-xl hover:bg-green-700 hover:scale-105
+                               disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300
+                               focus:ring-4 focus:ring-green-500/30 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
                     Publish Product
                 </button>
                 }
+            </div>
         </div>
     </div>
-</div>
 </div>

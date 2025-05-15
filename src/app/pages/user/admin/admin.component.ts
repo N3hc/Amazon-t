@@ -1,20 +1,19 @@
 import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Api2Service } from '../../../../services/api/api2.service';
 import { UserService } from '../../../../services/user/user.service';
-import { CommonModule, CurrencyPipe } from '@angular/common';
 import { User } from '../../../../interface/user.interface';
 import { Router } from '@angular/router';
 import { Product } from '../../../../interface/productos.interface';
-import { Card } from '../../../../interface/carrousel.interface';
 import { CardObject } from '../../../../interface/card.interface';
 import { forkJoin } from 'rxjs'
-import { HttpClient } from '@angular/common/http';
 
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css',
 })
@@ -22,6 +21,11 @@ export class AdminComponent implements OnInit {
   @Input() userId!: number;
   @Input() isDarkMode: boolean = false;
   @Input() isEditMode: boolean = false;
+
+    productoForm = new FormGroup({
+    precio: new FormControl('', [Validators.required, Validators.min(0)]),
+    cantidad: new FormControl('', [Validators.required, Validators.min(1)]),
+  });
 
   product: Product[] | null = null;
   cards: CardObject[] | null = null;
@@ -80,6 +84,14 @@ export class AdminComponent implements OnInit {
   saveEdit() {
     // Si quieres guardar cambios a backend, aquí va la lógica
     this.editIndex.set(null);
+  }
+
+    onSubmit() {
+    if (this.productoForm.valid) {
+      console.log('Formulario enviado:', this.productoForm.value);
+    } else {
+      console.log('Formulario inválido');
+    }
   }
 
   deleteCard(index: number) {

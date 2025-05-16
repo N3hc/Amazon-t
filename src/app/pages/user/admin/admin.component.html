@@ -1,6 +1,6 @@
 <div class="flex flex-wrap justify-center gap-6 p-6 rounded-2xl shadow-inner dark:bg-[#0a0a0a]">
   @if (cards && cards.length > 0) {
-  @for (card of cards; track card.id; let i = $index) {
+  @for (card of cards; track card.id;let i = $index) {
   <div class="flex justify-center">
     <div
       class="bg-white dark:bg-[#1E272A] p-4 rounded-xl shadow-lg hover:shadow-2xl transition-all w-full max-w-xs border border-gray-200 dark:border-gray-700">
@@ -11,44 +11,46 @@
 
         @if (editIndex() === i) {
         <!-- Modo edición -->
-          <form [formGroup]="productoForm" (ngSubmit)="onSubmit()" class="space-y-6">
-            <!-- Precio -->
-            <div>
-              <h3 class="text-base font-medium text-gray-800 dark:text-gray-200 mb-2">Precio</h3>
-              <input id="precio" type="number" formControlName="precio" class="w-full p-2 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600
+        <form [formGroup]="productoForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          <!-- Precio -->
+          <div>
+            <h3 class="text-base font-medium text-gray-800 dark:text-gray-200 mb-2">Precio</h3>
+            <input id="id" type="hidden" formControlName="id" value="{{ product?.[i]?.id }}">
+            <input id="precio" type="number" formControlName="precio" class="w-full p-2 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600
                focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 dark:text-white">
-               <!--
+            <!--
               @if (productoForm.get('precio')?.invalid && productoForm.get('precio')?.touched) {
               <p class="text-red-500 text-sm mt-1">Ingrese un precio válido</p>
               }
               -->
-            </div>
+          </div>
 
-            <!-- Cantidad -->
-            <div>
-              <h3 class="text-base font-medium text-gray-800 dark:text-gray-200 mb-2">Cantidad</h3>
-              <input id="cantidad" type="number" formControlName="cantidad" class="w-full p-2 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600
+          <!-- Cantidad -->
+          <div>
+            <h3 class="text-base font-medium text-gray-800 dark:text-gray-200 mb-2">Cantidad</h3>
+            <input id="cantidad" type="number" formControlName="cantidad" class="w-full p-2 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600
                focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 dark:text-white">
-              <!--
+            <!--
                @if (productoForm.get('cantidad')?.invalid && productoForm.get('cantidad')?.touched) {
               <p class="text-red-500 text-sm mt-1">Ingrese una cantidad válida</p>
               }-->
-              
-            </div>
 
-            <!-- Botones -->
-            <div class="flex justify-end space-x-3 pt-4">
-              <button type="button" (click)="startEdit(100000)"
-                class="px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
-                Cancelar
-              </button>
+          </div>
 
-              <button type="submit" [disabled]="productoForm.invalid"
-                class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors disabled:opacity-50">
-                Enviar
-              </button>
-            </div>
-          </form>
+          <!-- Botones -->
+          <div class="flex justify-end space-x-3 pt-4">
+            <button type="button" (click)="cancelEdit()"
+            class="px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+            Cancelar
+          </button>
+
+
+            <button type="submit" [disabled]="productoForm.invalid"
+              class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors disabled:opacity-50">
+              Enviar
+            </button>
+          </div>
+        </form>
         } @else {
         <!-- Modo visualización -->
         <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">

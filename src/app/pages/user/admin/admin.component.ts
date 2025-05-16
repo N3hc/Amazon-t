@@ -23,6 +23,7 @@ export class AdminComponent implements OnInit {
   @Input() isEditMode: boolean = false;
 
     productoForm = new FormGroup({
+    id: new FormControl('', [Validators.required]),
     precio: new FormControl('', [Validators.required, Validators.min(0)]),
     cantidad: new FormControl('', [Validators.required, Validators.min(1)]),
   });
@@ -74,8 +75,16 @@ export class AdminComponent implements OnInit {
   editIndex = signal<number | null>(null);
 
   startEdit(index: number) {
-    this.editIndex.set(index);
+    if (this.product && this.product[index]) {
+      this.productoForm.setValue({
+        id: this.product[index].id.toString(),
+        precio: this.product[index].price.toString(),
+        cantidad: this.product[index].quantity.toString()
+      });
+      this.editIndex.set(index);
+    }
   }
+
 
   cancelEdit() {
     this.editIndex.set(null);
@@ -86,16 +95,36 @@ export class AdminComponent implements OnInit {
     this.editIndex.set(null);
   }
 
-    onSubmit() {
+  onSubmit() {
     if (this.productoForm.valid) {
-      console.log('Formulario enviado:', this.productoForm.value);
+      const formValue = this.productoForm.value;
+      const index = this.editIndex();
+
+      if (index !== null && this.product && formValue) {
+        this.product[index] = {
+          ...this.product[index],
+          price: Number(formValue.precio),
+          quantity: Number(formValue.cantidad)
+        };
+        this.cancelEdit();
+      }
     } else {
       console.log('Formulario inválido');
     }
   }
 
-  deleteCard(index: number) {
 
+  deleteCard(index: number) {
+    if (this.product && this.cards) {
+      const cardIdToDelete = this.cards[index].id;
+
+      // Elimina del arreglo de cards
+      this.cards.splice(index, 1);
+
+      // También elimina el producto correspondiente
+      this.product = this.product.filter(p => p.id_card !== cardIdToDelete);
+    }
   }
+
 
   }

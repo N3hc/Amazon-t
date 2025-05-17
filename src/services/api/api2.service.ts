@@ -133,59 +133,59 @@ export class Api2Service {
 
   // 🏠 ADDRESS
   getAddresses(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/index/adress`);
+    return this.http.get(`${this.baseUrl}/index/address`);
   }
 
   getDireccionesByUser(id: number): Observable<any> {
     console.log('Fetching addresses for user ID:', id);
     const params = new HttpParams().set('id_user', id); // Pasamos el id como parámetro de consulta
-    return this.http.get(`${this.baseUrl}/index/adress`, { params });
+    return this.http.get(`${this.baseUrl}/index/address`, { params });
   }
 
   storeAddress(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/store/adress`, data);
+    return this.http.post(`${this.baseUrl}/store/address`, data);
   }
 
   updateAddress(data: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/update/adress`, data);
+    return this.http.put(`${this.baseUrl}/update/address`, data);
   }
 
   deleteAddress(id: number): Observable<any> {
-    return this.http.request('delete', `${this.baseUrl}/delete/adress`, {
+    return this.http.request('delete', `${this.baseUrl}/delete/address`, {
       body: { id },
     });
   }
 
   // 🎫 TICKETS
   getTickets(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/index/tikets`);
+    return this.http.get(`${this.baseUrl}/index/Tickets`);
   }
 
   getTicketsByUser(id: number): Observable<any> {
     console.log('Fetching tickets for user ID:', id);
     const params = new HttpParams().set('id_user', id); // Pasamos el id como parámetro de consulta
-    return this.http.get(`${this.baseUrl}/index/tikets`, { params });
+    return this.http.get(`${this.baseUrl}/index/Tickets`, { params });
   }
 
   // api2.service.ts
-  createTicket(id_user: number, id_adress: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/tikets/create`, {
+  createTicket(id_user: number, id_address: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/Tickets/create`, {
       id_user,
-      id_adress,
+      id_address,
     });
   }
 
   storeTicket(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/store/tikets`, data);
+    return this.http.post(`${this.baseUrl}/store/Tickets`, data);
   }
 
   storeTicketWithUserid(ticketData: {
     id_user: number;
-    id_adress: number;
+    id_address: number;
     total: number;
     completed: boolean;
   }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/store/tikets`, ticketData);
+    return this.http.post(`${this.baseUrl}/store/tickets`, ticketData);
   }
 
   deleteTicketLineChenPing(
@@ -194,10 +194,10 @@ export class Api2Service {
   ): Observable<any> {
     return this.http.request(
       'delete',
-      `${this.baseUrl}/delete/tiket_lineas_chenping`,
+      `${this.baseUrl}/delete/ticket_lineas_chenping`,
       {
         body: {
-          id_tiket: ticketId,
+          id_ticket: ticketId,
           id_producto: productId,
         },
       }
@@ -205,40 +205,40 @@ export class Api2Service {
   }
 
   updateTicket(data: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/update/tikets`, data);
+    return this.http.put(`${this.baseUrl}/update/tickets`, data);
   }
 
   deleteTicket(id: number): Observable<any> {
-    return this.http.request('delete', `${this.baseUrl}/delete/tikets`, {
+    return this.http.request('delete', `${this.baseUrl}/delete/tickets`, {
       body: { id },
     });
   }
 
   // ➕ TICKET LINES
   getTicketLines(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/index/tiket_lines`);
+    return this.http.get(`${this.baseUrl}/index/ticket_lines`);
   }
 
   getTicketLinesByTicket(id: number): Observable<any> {
     console.log('Fetching ticket lines for ticket ID:', id);
     const params = new HttpParams().set('id_ticket', id); // Pasamos el id como parámetro de consulta
-    return this.http.get(`${this.baseUrl}/index/tiket_lineas`, { params });
+    return this.http.get(`${this.baseUrl}/index/Ticket_lineas`, { params });
   }
 
   storeTicketLine(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/store/tiket_lineas`, data);
+    return this.http.post(`${this.baseUrl}/store/Ticket_lineas`, data);
   }
 
   storeProductToTicketLine(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/store/tiket_lineas`, data);
+    return this.http.post(`${this.baseUrl}/store/Ticket_lineas`, data);
   }
 
   updateTicketLine(data: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/update/tiket_lineas`, data);
+    return this.http.put(`${this.baseUrl}/update/Ticket_lineas`, data);
   }
 
   deleteTicketLine(id: number): Observable<any> {
-    return this.http.request('delete', `${this.baseUrl}/delete/tiket_lineas`, {
+    return this.http.request('delete', `${this.baseUrl}/delete/Ticket_lineas`, {
       body: { id },
     });
   }

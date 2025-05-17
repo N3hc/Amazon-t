@@ -14,6 +14,7 @@ import { forkJoin } from 'rxjs';
 import { VendorComponent } from './vendor/vendor.component';
 import { StadisticsComponent } from '../../sub-components/stadistics/stadistics.component';
 import { AdminComponent } from './admin/admin.component';
+import { Observable } from 'rxjs';
 
 interface TicketWithLines extends Ticket {
   ticketLines: TicketLine[];
@@ -22,7 +23,7 @@ interface TicketWithLines extends Ticket {
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [HeaderComponent, ReactiveFormsModule, PaymentFormComponent, AddressFormComponent, VendorComponent, AdminComponent,StadisticsComponent],
+  imports: [HeaderComponent, ReactiveFormsModule, PaymentFormComponent, AddressFormComponent, VendorComponent, AdminComponent, StadisticsComponent],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
@@ -33,6 +34,9 @@ export class UserComponent implements OnInit {
   showOldPassword = false;
   selectedTicket: TicketWithLines | null = null;
   isDarkMode = false;
+userTickets: TicketWithLines[] = [];
+
+  
 
 
   completedTicketLines: TicketLine[] = [
@@ -57,26 +61,26 @@ export class UserComponent implements OnInit {
   ];
 
   completedTickets: TicketWithLines[] = [
-  {
-    id: 1,
-    id_user: 123,
-    id_address: 456,
-    total: 149.99,
-    completed: true,
-    deleted: false,
-    createdAt: new Date('2024-03-15').toISOString(),
-    ticketLines: [  // Añade esta propiedad
-      {
-        id: 1,
-        id_ticket: 1,
-        id_product: 101,
-        quantity: 2,
-        price: 25.99,
-        deleted: false,
-        createdAt: new Date().toISOString()
-      }
-    ]
-  },
+    {
+      id: 1,
+      id_user: 123,
+      id_address: 456,
+      total: 149.99,
+      completed: true,
+      deleted: false,
+      createdAt: new Date('2024-03-15').toISOString(),
+      ticketLines: [  // Añade esta propiedad
+        {
+          id: 1,
+          id_ticket: 1,
+          id_product: 101,
+          quantity: 2,
+          price: 25.99,
+          deleted: false,
+          createdAt: new Date().toISOString()
+        }
+      ]
+    },
   ];
 
   ngOnInit(): void {
@@ -109,28 +113,55 @@ export class UserComponent implements OnInit {
     });
   }
 
+  /**private loadUserTickets(userId: number): void {
+    this.api2Service.getTicketsByUser(userId).pipe(
+      switchMap((tickets: Ticket[]) => {
+        const ticketRequests = tickets.map(ticket =>
+          this.api2Service.getTicketLinesByTicket(ticket.id).pipe(
+            map(lines => ({
+              ...ticket,
+              ticketLines: lines,
+              total: this.calculateTotal(lines)
+            } as TicketWithLines))  // Cambia el tipo aquí
+          )
+        );
+        return forkJoin(ticketRequests);
+      })
+    ).subscribe({
+      next: (completeTickets: TicketWithLines[]) => {  // Actualiza el tipo aquí
+        this.completedTickets = completeTickets;
+        console.log('Tickets completos:', this.completedTickets);
+      },
+      error: (err) => console.error('Error cargando tickets:', err)
+    });
+  }*/
+
 private loadUserTickets(userId: number): void {
-  this.api2Service.getTicketsByUser(userId).pipe(
-    switchMap((tickets: Ticket[]) => {
-      const ticketRequests = tickets.map(ticket =>
-        this.api2Service.getTicketLinesByTicket(ticket.id).pipe(
-          map(lines => ({
-            ...ticket,
-            ticketLines: lines,
-            total: this.calculateTotal(lines)
-          } as TicketWithLines))  // Cambia el tipo aquí
-        )
-      );
-      return forkJoin(ticketRequests);
-    })
-  ).subscribe({
-    next: (completeTickets: TicketWithLines[]) => {  // Actualiza el tipo aquí
-      this.completedTickets = completeTickets;
-      console.log('Tickets completos:', this.completedTickets);
-    },
-    error: (err) => console.error('Error cargando tickets:', err)
+  this.api2Service.getTicketsByUser(userId).subscribe((tickets: Ticket[]) => {
+    const observables = tickets.map(ticket =>
+      this.api2Service.getTicketLinesByTicket(ticket.id).pipe(
+        map((lines: TicketLine[]) => {
+          const filteredLines = lines.filter(line => line.id_ticket === ticket.id);
+          return { ...ticket, ticketLines: filteredLines } as TicketWithLines;
+        })
+      )
+    );
+
+    forkJoin(observables).subscribe((ticketsWithLines: TicketWithLines[]) => {
+      this.completedTickets = ticketsWithLines;
+      
+      // Extraemos todas las líneas en un solo array
+      this.completedTicketLines = ticketsWithLines.flatMap(t => t.ticketLines);
+
+      console.log('Completed Tickets:', this.completedTickets);
+      console.log('Completed Ticket Lines:', this.completedTicketLines);
+    });
   });
 }
+
+
+
+
 
   private calculateTotal(lines: TicketLine[]): number {
     return lines.reduce((acc, line) => acc + (line.price * line.quantity), 0);
@@ -218,14 +249,14 @@ private loadUserTickets(userId: number): void {
     return null;
   }
 
-showTicketDetails(ticket: TicketWithLines): void {
-  if (this.selectedTicket?.id === ticket.id) {
-    this.selectedTicket = null;
-  } else {
-    const fullTicket = this.completedTickets.find(t => t.id === ticket.id);
-    this.selectedTicket = fullTicket || null;
+  showTicketDetails(ticket: TicketWithLines): void {
+    if (this.selectedTicket?.id === ticket.id) {
+      this.selectedTicket = null;
+    } else {
+      const fullTicket = this.completedTickets.find(t => t.id === ticket.id);
+      this.selectedTicket = fullTicket || null;
+    }
   }
-}
 
 
 }

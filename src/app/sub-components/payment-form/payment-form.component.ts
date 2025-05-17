@@ -45,7 +45,6 @@ ngOnInit() {
 
     this.api2service.getPagosByUser(user.id).subscribe((pagos: Payment[]) => {
       this.examplePayments = pagos;
-      console.log('Pagos del usuario:', pagos);
       console.log('Pagos del usuario:', this.examplePayments);
     });
   });

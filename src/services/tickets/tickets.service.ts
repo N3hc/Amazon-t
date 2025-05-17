@@ -18,11 +18,12 @@ export class TicketsService {
         if (lastTicket) {
           // Ya hay un ticket abierto
           const ticketLineData = {
-            id_tiket: lastTicket.id,
+            id_Ticket: lastTicket.id,    // ✅ corregido
             id_producto: productId,
             price: price,
             quantity: quantity
           };
+
           console.log('Datos del ticket:', ticketLineData);
 
           // Llama a la API para agregar el producto al ticket
@@ -41,11 +42,12 @@ export class TicketsService {
               console.log('Nuevo ticket creado:', newTicket);
               // Una vez creado el ticket, agregamos el producto
               const ticketLineData = {
-                id_tiket: newTicket.id,
+                id_Ticket: newTicket.id,     // ✅ Corregido
                 id_producto: productId,
                 price: price,
                 quantity: quantity
               };
+
               this.api2Service.storeProductToTicketLine(ticketLineData).subscribe({
                 next: (response) => {
                   console.log('Producto añadido al ticket:', response);
@@ -136,7 +138,7 @@ export class TicketsService {
   createNewTicket(userId: number, addressId: number): void {
     const newTicketData = {
       id_user: userId,
-      id_adress: addressId, // Usamos la primera dirección
+      id_address: addressId, // Usamos la primera dirección
       total: 0, // Total inicial del ticket (puedes modificar esto)
       completed: false // El ticket recién creado está incompleto
     };

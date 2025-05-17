@@ -132,7 +132,7 @@ ticketLines: TicketLine[] = [];
     const newQuantity = item.quantity + 1;
 
     this.api2Service.storeProductToTicketLine({
-      id_tiket: this.userLastTicketId,
+      id_ticket: this.userLastTicketId,
       id_producto: item.id,
       quantity: newQuantity
     }).subscribe({
@@ -163,7 +163,7 @@ ticketLines: TicketLine[] = [];
       const newQuantity = item.quantity - 1;
 
       const ticketLineData = {
-        id_tiket: this.userLastTicketId,
+        id_ticket: this.userLastTicketId,
         id_producto: item.id,
         quantity: newQuantity
       };

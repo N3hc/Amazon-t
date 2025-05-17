@@ -63,7 +63,6 @@ export class AdminComponent implements OnInit {
           // Filtrar solo las cards que tengan un id presente en los id_card
           this.cards = cards.filter((card: CardObject) => validIds.has(card.id));
 
-          console.log('Productos ordenados:', this.product);
           console.log('Cards filtradas:', this.cards);
         },
         error: (err) => {

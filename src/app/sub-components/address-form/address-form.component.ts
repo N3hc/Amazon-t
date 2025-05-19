@@ -60,8 +60,10 @@ export class AddressFormComponent implements OnInit {
         console.warn('No user is currently loaded');
         return;
       }
+      this.user = user;
+      console.log('Current user:', this.user);
 
-      this.api2service.getDireccionesByUser(user.id).subscribe((addresses: Address[]) => {
+      this.api2service.getDireccionesByUser(this.user.id).subscribe((addresses: Address[]) => {
         this.addressList = addresses;
         console.log('User addresses:', this.addressList);
       });
@@ -71,12 +73,15 @@ export class AddressFormComponent implements OnInit {
   onSubmitAddress() {
     if (this.addressForm.valid) {
       const newAddress: Address = {
-        id: this.generateNewId(),
         ...this.addressForm.value,
         id_user: this.user?.id, // ID de usuario logueado
         delated: false,
         createdAt: new Date().toISOString()
       };
+
+      this.api2service.storeAddress(newAddress).subscribe((response) => {
+        console.log('Address added:', response);
+      });
 
       this.addressList.push(newAddress);
       this.addingAddress = false;
@@ -89,9 +94,5 @@ export class AddressFormComponent implements OnInit {
       console.log('Address deleted:', addressId);
       this.addressList = this.addressList.filter(address => address.id !== addressId);
     });
-  }
-
-  private generateNewId(): number {
-    return Math.max(...this.addressList.map(a => a.id)) + 1;
   }
 }

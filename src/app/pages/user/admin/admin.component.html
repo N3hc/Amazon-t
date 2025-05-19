@@ -1,5 +1,6 @@
 <div class="flex flex-wrap justify-center gap-6 p-6 rounded-2xl shadow-inner dark:bg-[#0a0a0a]">
   @if (cards && cards.length > 0) {
+    @for (product of product; track product.id; let a = $index) {
   @for (card of cards; track card.id;let i = $index) {
   <div class="flex justify-center">
     <div
@@ -15,7 +16,7 @@
           <!-- Precio -->
           <div>
             <h3 class="text-base font-medium text-gray-800 dark:text-gray-200 mb-2">Precio</h3>
-            <input id="id" type="hidden" formControlName="id" value="{{ product?.[i]?.id }}">
+            <input id="id" type="hidden" formControlName="id" value="{{ product?.id }}">
             <input id="precio" type="number" formControlName="precio" class="w-full p-2 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600
                focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 dark:text-white">
             <!--
@@ -64,8 +65,8 @@
         }
 
         <div class="text-sm text-gray-700 dark:text-gray-300 space-y-1 mb-4">
-          <p><span class="font-medium">Precio:</span> {{ product?.[i]?.price }} EUR</p>
-          <p><span class="font-medium">Cantidad:</span> {{ product?.[i]?.quantity }}</p>
+          <p><span class="font-medium">Precio:</span> {{ product?.price }} EUR</p>
+          <p><span class="font-medium">Cantidad:</span> {{ product?.quantity }}</p>
         </div>
 
         <div class="flex justify-center space-x-2">
@@ -83,6 +84,7 @@
     </div>
   </div>
   }
+}
   } @else {
   <div class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 italic p-4">
     <img src='assets/extras/Ploading.gif' alt="Cargando cartas" class="mb-2 w-20 h-20">

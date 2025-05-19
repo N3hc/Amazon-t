@@ -115,8 +115,10 @@ export class AdminComponent implements OnInit {
             console.error('Error al actualizar el producto:', error);
           }
         });
+        
       }
-    } else {
+
+      } else {
       console.log('Formulario inválido');
     }
   }

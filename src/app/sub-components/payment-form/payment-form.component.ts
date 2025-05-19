@@ -177,6 +177,7 @@ onSubmit() {
         console.log('Tarjeta guardada:', response);
         // Añadir la tarjeta usando la respuesta del servidor (contiene la fecha completa)
         this.examplePayments.push(response);
+        this.addingCard = false; // Ocultar el formulario después de guardar
       },
       error: (error) => {
         console.log('Error al guardar la tarjeta:', newPayment);

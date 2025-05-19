@@ -106,6 +106,15 @@ export class AdminComponent implements OnInit {
           quantity: Number(formValue.cantidad)
         };
         this.cancelEdit();
+        console.log('Producto actualizado:', this.product[index]);
+        this.api2Service.updateProduct(this.product[index]).subscribe({
+          next: (response) => {
+            console.log('Producto actualizado en el backend:', response);
+          },
+          error: (error) => {
+            console.error('Error al actualizar el producto:', error);
+          }
+        });
       }
     } else {
       console.log('Formulario inválido');
@@ -115,7 +124,21 @@ export class AdminComponent implements OnInit {
 
   deleteCard(index: number) {
     if (this.product && this.cards) {
-      const cardIdToDelete = this.cards[index].id;
+      const cardIdToDelete = this.product[index].id;
+
+              this.product[index] = {
+          ...this.product[index],
+          deleted: 1,
+        };
+
+      this.api2Service.updateProduct(this.product[index]).subscribe({
+        next: (response) => {
+          console.log('Card eliminada:', response);
+        },
+        error: (error) => {
+          console.error('Error al eliminar la card:', error);
+        }
+      });
 
       // Elimina del arreglo de cards
       this.cards.splice(index, 1);

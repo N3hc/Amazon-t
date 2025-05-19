@@ -13,6 +13,6 @@ export interface Product {
     quantity: number;
     price: number;
     state: string;
-    deleted: boolean;
+    deleted: number;
     createdAt: string;
   }

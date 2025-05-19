@@ -16,6 +16,7 @@ import { User } from '../../../interface/user.interface';
 export class AddressFormComponent implements OnInit {
   addingAddress = false;
   addressForm: FormGroup;
+  user: User | null = null;
 
     @Input() enableSelection: boolean = false;
 
@@ -72,7 +73,7 @@ export class AddressFormComponent implements OnInit {
       const newAddress: Address = {
         id: this.generateNewId(),
         ...this.addressForm.value,
-        id_user: 1, // ID de usuario logueado
+        id_user: this.user?.id, // ID de usuario logueado
         delated: false,
         createdAt: new Date().toISOString()
       };

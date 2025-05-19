@@ -27,7 +27,7 @@ export class RegisterComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
       role: ['client', Validators.required],
-      Genre: ['', Validators.required],
+      gender: ['', Validators.required],
       termsAccepted: [false, Validators.requiredTrue]
     }, { validators: this.passwordMatchValidator });
   }
@@ -42,6 +42,7 @@ export class RegisterComponent implements OnInit {
   onSubmit(): void {
     if (this.registerForm.valid) {
       this.user = this.registerForm.value;
+      console.log(this.registerForm.value);
       this.api2Service.storeUser(this.registerForm.value).subscribe(
         response => {
           console.log('Registro exitoso', response);

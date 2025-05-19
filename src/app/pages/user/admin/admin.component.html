@@ -2,6 +2,7 @@
   @if (cards && cards.length > 0) {
     @for (product of product; track product.id; let a = $index) {
   @for (card of cards; track card.id;let i = $index) {
+    @if (card.id === product.id_card) {
   <div class="flex justify-center">
     <div
       class="bg-white dark:bg-[#1E272A] p-4 rounded-xl shadow-lg hover:shadow-2xl transition-all w-full max-w-xs border border-gray-200 dark:border-gray-700">
@@ -83,6 +84,7 @@
       </div>
     </div>
   </div>
+}
   }
 }
   } @else {

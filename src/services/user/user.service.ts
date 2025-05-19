@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../../interface/user.interface';
+import { Api2Service } from '../api/api2.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-
   // Puede ser null si no hay sesión iniciada
   private userSubject = new BehaviorSubject<User | null>(null);
 
-  constructor() {
-  }
+  constructor(private api2Service: Api2Service) {}
 
   getCurrentUser(): User | null {
     return this.userSubject.value;
@@ -30,6 +29,14 @@ export class UserService {
   setUser(user: User): void {
     this.userSubject.next(user);
     localStorage.setItem('user', JSON.stringify(user));
+    this.api2Service.createTicket(user.id, 1).subscribe({
+      next: (response) => {
+        console.log('Ticket creado:', response);
+      },
+      error: (error) => {
+        console.error('Error al crear el ticket:', error);
+      },
+    });
   }
 
   // Actualizar parcialmente los datos del usuario

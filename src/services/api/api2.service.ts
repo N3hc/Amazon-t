@@ -216,7 +216,7 @@ export class Api2Service {
 
   // ➕ TICKET LINES
   getTicketLines(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/index/ticket_lines`);
+    return this.http.get(`${this.baseUrl}/index/Ticket_lineas`);
   }
 
   getTicketLinesByTicket(id: number): Observable<any> {

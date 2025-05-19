@@ -12,10 +12,10 @@
 
         <div class="relative mb-4 flex flex-col">
             <label for="name" class="text-white mb-1">Full Name</label>
-            <input type="text" id="name" formControlName="name" placeholder="Your full name"
+            <input type="text" id="username" formControlName="username" placeholder="Your full name"
                 class="w-full bg-transparent p-2 text-white border border-gray-400 rounded focus:outline-none"
                 required aria-label="Full Name" />
-            @if (registerForm.controls['name'].invalid && registerForm.controls['name'].touched) {
+            @if (registerForm.controls['username'].invalid && registerForm.controls['username'].touched) {
                 <p class="text-red-500 text-sm mt-1">Invalid name</p>
             }
         </div>
@@ -71,10 +71,10 @@
         }
 
         <div class="relative mb-4 flex flex-col">
-            <label for="accountType" class="text-white mb-1">Account Type</label>
-            <select id="accountType" formControlName="accountType"
+            <label for="role" class="text-white mb-1">Account Type</label>
+            <select id="role" formControlName="role"
                 class="w-full bg-transparent p-2 text-white border border-gray-400 rounded focus:outline-none"
-                required aria-label="Account Type">
+                required aria-label="role">
                 <option value="0">Client</option>
                 <option value="1">Vendor</option>
             </select>
@@ -82,7 +82,7 @@
 
         <div class="relative mb-4 flex flex-col">
             <label for="Genre" class="text-white mb-1">Gender</label>
-            <select id="Genre" formControlName="accountType"
+            <select id="Genre" formControlName="Genre"
                 class="w-full bg-transparent p-2 text-white border border-gray-400 rounded focus:outline-none"
                 required aria-label="Gender">
                 <option value="0">Man</option>

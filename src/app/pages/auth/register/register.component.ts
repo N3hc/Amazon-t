@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Api2Service } from '../../../../services/api/api2.service';
+import { User } from '../../../../interface/user.interface';
 
 @Component({
   selector: 'app-register',
@@ -13,16 +15,19 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   showPassword = false;
   showPassword2 = false;
+  user: User | null = null;
 
-  constructor(private fb: FormBuilder, private router: Router) {}
+
+  constructor(private fb: FormBuilder, private router: Router, private api2Service : Api2Service) {}
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
-      name: ['', Validators.required],
+      username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
-      accountType: ['client', Validators.required],
+      role: ['client', Validators.required],
+      Genre: ['', Validators.required],
       termsAccepted: [false, Validators.requiredTrue]
     }, { validators: this.passwordMatchValidator });
   }
@@ -36,9 +41,19 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     if (this.registerForm.valid) {
-      //console.log('Formulario enviado', this.registerForm.value);
-      alert('¡Creacion de cuenta exitosa!');
-      this.router.navigate(['/login']);
+      this.user = this.registerForm.value;
+      this.api2Service.storeUser(this.registerForm.value).subscribe(
+        response => {
+          console.log('Registro exitoso', response);
+          alert('¡Creacion de cuenta exitosa!');
+          this.router.navigate(['/login']);
+        },
+        error => {
+          console.error('Error en el registro', error);
+          alert('Error al crear la cuenta. Inténtalo de nuevo.');
+        }
+      );
+      console.log('Formulario enviado', this.registerForm.value);
     } else {
       this.registerForm.markAllAsTouched();
     }

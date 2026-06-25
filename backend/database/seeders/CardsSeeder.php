@@ -10,12 +10,15 @@ class CardsSeeder extends Seeder
 {
     public function run()
     {
-        // Obtenemos los sets desde la base de datos
+        // Increase memory limit for seeding large datasets
+        ini_set('memory_limit', '512M');
+
+        // Get sets from the database
         $sets = DB::table('categories')->select('id', 'id_set')->get();
 
         foreach ($sets as $set) {
             $page = 1;
-            $allcards = []; // Array para acumular todas las cartas
+            $allcards = []; // Array to accumulate all cards
 
             do {
                 $response = Http::withoutVerifying()->timeout(600)->get('https://api.pokemontcg.io/v2/cards', [
@@ -48,10 +51,16 @@ class CardsSeeder extends Seeder
                 $page++;
             } while ($hasMore);
 
-            // Inserta todas las cartas del set actual en una sola operación
-            DB::table('cards')->upsert($allcards, ['id_card'], [
-                'id_set', 'name', 'image_small', 'image_large', 'description', 'deleted', 'updated_at'
-            ]);
+            // Insert all cards of the current set in a single operation
+            if (!empty($allcards)) {
+                DB::table('cards')->upsert($allcards, ['id_card'], [
+                    'id_set', 'name', 'image_small', 'image_large', 'description', 'deleted', 'updated_at'
+                ]);
+            }
+
+            // Free memory
+            unset($allcards);
+            gc_collect_cycles();
         }
     }
 }

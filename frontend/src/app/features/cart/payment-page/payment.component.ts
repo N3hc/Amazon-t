@@ -48,10 +48,10 @@ export class PaymentComponent implements OnInit {
     });
     this.api2Service.getTicketsByUser(this.user.id).subscribe({
       next: (tickets: any[]) => {
-        this.lastTicketId = tickets.find(ticket => ticket.completed === 0); // ticket abierto
+        this.lastTicketId = tickets.find(ticket => ticket.completed === 0); // open ticket
       },
       error: (err) => {
-        console.error('Error al obtener tickets:', err);
+        console.error('Error getting tickets:', err);
       }
     });
   }
@@ -61,10 +61,10 @@ export class PaymentComponent implements OnInit {
     this.cartService.clearCart();
     this.api2Service.updateTicket({
       id: this.lastTicketId.id,
-      completed: 1  // o true, según cómo manejes el valor
+      completed: 1  // or true, depending on how you handle the value
     }).subscribe({
       next: (response) => {
-        console.log('Ticket actualizado:', response);
+        console.log('Ticket updated:', response);
       }
     });
 

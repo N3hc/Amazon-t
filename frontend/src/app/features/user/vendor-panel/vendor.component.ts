@@ -51,17 +51,17 @@ export class VendorComponent implements OnInit {
   errorMessage = signal('');
   currentUser = signal<any>(null);
 
-  // Filtrado reactivo
+  // Reactive filtering
   filteredSets = signal<Category[]>([]);
 
-  // Formulario
+  // Form
   productForm: FormGroup;
 
   constructor() {
     this.productForm = this.fb.group({
       quantity: [1, [Validators.required, Validators.min(1)]],
       price: [null, [Validators.required, Validators.min(0.01)]],
-      state: ['Nuevo', Validators.required]
+      state: ['4', Validators.required]
     });
   }
 
@@ -83,28 +83,28 @@ export class VendorComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (error) => {
-        this.errorMessage.set('Error cargando los sets Pokémon');
+        this.errorMessage.set('Error loading Pokémon sets');
         console.error(error);
         this.isLoading.set(false);
       }
     });
   }
 
-loadCardsBySet(setId: string): void {
-  this.isLoading.set(true);
-  this.apiService.getCardsFromSet(setId).subscribe({
-    next: (cards: Card[]) => {
-      console.log('Cartas recibidas:', cards); // ← Añade esto para debug
-      this.cards.set(cards);
-      this.isLoading.set(false);
-    },
-    error: (error) => {
-      console.error('Error en la API:', error); // ← Mejor logging
-      this.errorMessage.set('Error cargando las cartas del set');
-      this.isLoading.set(false);
-    }
-  });
-}
+  loadCardsBySet(setId: string): void {
+    this.isLoading.set(true);
+    this.apiService.getCardsFromSet(setId).subscribe({
+      next: (cards: Card[]) => {
+        console.log('Cards received:', cards); // ← Added for debug
+        this.cards.set(cards);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('API Error:', error); // ← Better logging
+        this.errorMessage.set('Error loading cards from set');
+        this.isLoading.set(false);
+      }
+    });
+  }
 
   filterSets(search: string): void {
     this.searchTerm.set(search);
@@ -145,7 +145,7 @@ loadCardsBySet(setId: string): void {
 
   submitProduct(): void {
     if (!this.productForm.valid || !this.selectedCard() || !this.selectedSet()) return;
-    console.log('Formulario enviado:', this.productForm.value); // ← Añade esto para debug
+    console.log('Form submitted:', this.productForm.value); // ← Added for debug
 
     const productData = {
       id_user: this.currentUser()?.id,
@@ -155,25 +155,25 @@ loadCardsBySet(setId: string): void {
 
     this.apiService.storeProduct(productData).subscribe({
       next: () => {
-        // Resetear formulario
+        // Reset form
         this.currentStep.set(0);
         this.selectedSet.set(null);
         this.selectedCard.set(null);
         this.productForm.reset({
           quantity: 1,
           price: null,
-          state: 'Nuevo'
+          state: '4'
         });
         this.errorMessage.set('');
       },
       error: (error) => {
-        this.errorMessage.set('Error publicando el producto');
+        this.errorMessage.set('Error publishing product');
         console.error(error);
       }
     });
   }
 
-  // Helper para acceder fácil a los controles del formulario
+  // Helper to easily access form controls
   get f() {
     return this.productForm.controls;
   }

@@ -48,7 +48,7 @@ export class CarrouselComponent implements OnInit {
           //console.log(categories);
         },
         error: (error) => {
-          console.error('Error al cargar las categorías:', error);
+          console.error('Error loading categories:', error);
         }
       });
     }
@@ -65,17 +65,17 @@ export class CarrouselComponent implements OnInit {
     const visibleIndices = [];
     let numVisibleItems: number;
 
-    // Si el ancho de la pantalla es menor que 768px, mostramos 1 o 2 elementos
+    // If the screen width is less than 768px, we show 3 items
     if (this.screenWidth < 768) {
-      numVisibleItems = 3; // Mostrar solo 1 elemento
-      //console.log("Modo Movil")
+      numVisibleItems = 3; // Show only 3 items
+      //console.log("Mobile Mode")
     } else {
-      numVisibleItems = 5; // Mostrar 5 elementos en pantallas más grandes
-      //console.log("Modo Ordenador")
+      numVisibleItems = 5; // Show 5 items on larger screens
+      //console.log("Desktop Mode")
 
     }
 
-    // Lógica para obtener los índices de los elementos visibles
+    // Logic to get indices of visible items
     for (let i = -(numVisibleItems - 1) / 2; i <= (numVisibleItems - 1) / 2; i++) {
       const index = (this.currentIndex + i + totalItems) % totalItems;
       visibleIndices.push(index);

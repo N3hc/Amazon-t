@@ -14,7 +14,7 @@ class userController extends Controller
     {
         if (users::all()->isEmpty()) {
             return response()->json([
-                'message' => 'No hay usuarios registrados'
+                'message' => 'No users registered'
             ], 404);
         } elseif ($request->id) {
             $user = users::findOrFail($request->id);
@@ -47,8 +47,8 @@ class userController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'message' => 'Usuario o contraseña incorrectos',
-                'datos'=> $request->all()
+                'message' => 'Incorrect username or password',
+                'data'=> $request->all()
             ], 401);
         }
     }
@@ -65,7 +65,7 @@ class userController extends Controller
             $user->surname = $request->username;
         }
         if ($request->password) {
-            $user->password = Hash::make($request->password); // Hashear la contraseña si se proporciona
+            $user->password = Hash::make($request->password); // Hash password if provided
         }
         if ($request->role){
             $user->role = $request->role;
@@ -112,8 +112,8 @@ class userController extends Controller
                 $user->surname = $request->surname;
             }
             if ($request->has('password')) {
-                $user->old_password = $user->password; // Guardar la contraseña anterior
-                $user->password = Hash::make($request->password); // Hashear la contraseña si se proporciona
+                $user->old_password = $user->password; // Save old password
+                $user->password = Hash::make($request->password); // Hash password if provided
             }
             if ($request->has('role')) {
                 $user->role = $request->role;
@@ -142,7 +142,7 @@ class userController extends Controller
                     'birth_date' => $user->birth_date,
                     'gender' => $user->gender,
                     'deleted' => $user->deleted,
-                    'message' => 'Usuario actualizado'
+                    'message' => 'User updated'
                 ], 200);
             }
         }
@@ -158,16 +158,16 @@ class userController extends Controller
         if ($user) {
             if ($user->delete()) {
                 return response()->json([
-                    'Message' => 'Usuario eliminado'
+                    'message' => 'User deleted'
                 ], 200);
             } else {
                 return response()->json([
-                    'message' => 'Error al actualizar al usuario'
+                    'message' => 'Error deleting user'
                 ], 500);
             }
         } else {
             return response()->json([
-                'message' => 'usuario no encontrado'
+                'message' => 'User not found'
             ], 404);
         }
     }

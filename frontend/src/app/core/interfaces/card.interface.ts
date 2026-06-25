@@ -3,7 +3,7 @@ export interface CardObject {
     id_card: string;
     id_set: number;
     name: string;
-    description: string; // <- este será un JSON string que luego parseas
+    description: string; // <- this will be a JSON string that you parse later
     image_small: string;
     image_large: string;
     created_at: string;

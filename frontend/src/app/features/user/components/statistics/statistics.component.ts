@@ -8,11 +8,11 @@ import { Chart } from 'chart.js/auto';
     templateUrl: './statistics.component.html',
     styleUrl: './statistics.component.css'
   })
-export class StatisticsComponent implements AfterViewInit { // Cambiar a AfterViewInit
+export class StatisticsComponent implements AfterViewInit { // Change to AfterViewInit
   @ViewChild('salesChart') salesChartRef!: ElementRef;
   chart: any;
 
-  // Datos mockeados
+  // Mocked data
   salesData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     currentYearSales: [6500, 5900, 8000, 8100, 5600, 5500, 4000, 8700, 9200, 10500, 14300, 16800],
@@ -23,7 +23,7 @@ export class StatisticsComponent implements AfterViewInit { // Cambiar a AfterVi
   salesChange = ((this.totalSales - this.salesData.previousYearSales) / this.salesData.previousYearSales * 100).toFixed(1);
   isDarkMode = false;
 
-  // Cambiar a ngAfterViewInit
+  // Change to ngAfterViewInit
   ngAfterViewInit() {
     this.createChart();
   }
@@ -70,7 +70,7 @@ export class StatisticsComponent implements AfterViewInit { // Cambiar a AfterVi
             }
           },
           y: {
-            beginAtZero: true, // Añadir esto
+            beginAtZero: true, // Add this
             grid: {
               color: this.isDarkMode ? '#374151' : '#E5E7EB'
             },
@@ -83,13 +83,13 @@ export class StatisticsComponent implements AfterViewInit { // Cambiar a AfterVi
     });
   }
 
-    // Método para actualizar el tema
+    // Method to update the theme
     updateChartTheme(isDark: boolean) {
       this.isDarkMode = isDark;
       this.createChart();
     }
 
-    // Datos mockeados para las cards
+    // Mocked data for the cards
     stats = {
       totalSales: this.totalSales.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
       averageOrder: (this.totalSales / 1240).toLocaleString('en-US', { style: 'currency', currency: 'USD' }),

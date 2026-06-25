@@ -42,7 +42,7 @@ export class Api2Service {
 
   getCardsById(id: number): Observable<any> {
     console.log('Fetching cards for user ID:', id);
-    const params = new HttpParams().set('id', id); // Pasamos el id como parámetro de consulta
+    const params = new HttpParams().set('id', id); // We pass the id as a query parameter
     return this.http.get(`${this.baseUrl}/index/card`, { params });
   }
 
@@ -67,8 +67,8 @@ export class Api2Service {
 
   getCardsFromSet(setId: any): Observable<any> {
     console.log('Fetching cards from set:', setId);
-    const params = new HttpParams().set('id_set', setId); // Pasamos el id_set como parámetro de consulta
-    return this.http.get(`${this.baseUrl}/index/card`, { params }); // Enviamos el parámetro como parte de la URL
+    const params = new HttpParams().set('id_set', setId); // We pass the id_set as a query parameter
+    return this.http.get(`${this.baseUrl}/index/card`, { params }); // We send the parameter as part of the URL
   }
 
   // 📦 PRODUCTS
@@ -80,7 +80,7 @@ export class Api2Service {
 
   getProductsUserOnlyIdCard(id: number): Observable<any> {
     console.log('Fetching products for user ID:', id);
-    const params = new HttpParams().set('id_user', id); // Pasamos el id como parámetro de consulta
+    const params = new HttpParams().set('id_user', id); // We pass the id as a query parameter
     return this.http.get(`${this.baseUrl}/onlyIdCardIndex/products`, {
       params,
     });
@@ -88,13 +88,13 @@ export class Api2Service {
 
   getProductByCardId(id: number): Observable<any> {
     console.log('Fetching products for card ID:', id);
-    const params = new HttpParams().set('id_card', id); // Pasamos el id como parámetro de consulta
+    const params = new HttpParams().set('id_card', id); // We pass the id_card as a query parameter
     return this.http.get(`${this.baseUrl}/index/products`, { params });
   }
 
   getProductsByUser(id: number): Observable<any> {
     console.log('Fetching products for user ID:', id);
-    const params = new HttpParams().set('id_user', id); // Pasamos el id como parámetro de consulta
+    const params = new HttpParams().set('id_user', id); // We pass the id as a query parameter
     return this.http.get(`${this.baseUrl}/index/products`, { params });
   }
 
@@ -138,7 +138,7 @@ export class Api2Service {
 
   getDireccionesByUser(id: number): Observable<any> {
     console.log('Fetching addresses for user ID:', id);
-    const params = new HttpParams().set('id_user', id); // Pasamos el id como parámetro de consulta
+    const params = new HttpParams().set('id_user', id); // We pass the id as a query parameter
     return this.http.get(`${this.baseUrl}/index/address`, { params });
   }
 
@@ -163,7 +163,7 @@ export class Api2Service {
 
   getTicketsByUser(id: number): Observable<any> {
     console.log('Fetching tickets for user ID:', id);
-    const params = new HttpParams().set('id_user', id); // Pasamos el id como parámetro de consulta
+    const params = new HttpParams().set('id_user', id); // We pass the id as a query parameter
     return this.http.get(`${this.baseUrl}/index/Tickets`, { params });
   }
 
@@ -221,7 +221,7 @@ export class Api2Service {
 
   getTicketLinesByTicket(id: number): Observable<any> {
     console.log('Fetching ticket lines for ticket ID:', id);
-    const params = new HttpParams().set('id_ticket', id); // Pasamos el id como parámetro de consulta
+    const params = new HttpParams().set('id_ticket', id); // We pass the id as a query parameter
     return this.http.get(`${this.baseUrl}/index/Ticket_lineas`, { params });
   }
 
@@ -243,14 +243,14 @@ export class Api2Service {
     });
   }
 
-  //Pagos
+  // Payments
 
   getPagos(): Observable<any> {
     return this.http.get(`${this.baseUrl}/index/pago`);
   }
   getPagosByUser(id: number): Observable<any> {
     console.log('Fetching pagos for user ID:', id);
-    const params = new HttpParams().set('id_user', id); // Pasamos el id como parámetro de consulta
+    const params = new HttpParams().set('id_user', id); // We pass the id as a query parameter
     return this.http.get(`${this.baseUrl}/index/pago/`, { params });
   }
   storePago(data: any): Observable<any> {

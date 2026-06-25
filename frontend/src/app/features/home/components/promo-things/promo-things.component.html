@@ -1,17 +1,17 @@
 <div class="flex items-center justify-center min-h-[600px] py-12 relative">
     <div
         class="flex gap-8 p-6 w-full max-w-7xl relative bg-indigo-50 dark:bg-[#151E21] rounded-2xl shadow-inner scroll-smooth mx-4">
-        <!-- Botón Anterior -->
+        <!-- Previous Button -->
         <button
             class="absolute left-4 md:left-8 top-1/2 px-4 py-3 z-20 -translate-y-1/2 
         bg-blue-500 text-white rounded shadow-lg transition-all opacity-75 hover:opacity-100 hover:scale-110 hover:bg-blue-700 focus:outline-none"
-            (click)="anteriorProducto()" aria-label="Producto anterior">
+            (click)="anteriorProducto()" aria-label="Previous product">
             &lt;
         </button>
 
-        <!-- Contenedor de tarjetas -->
+        <!-- Card container -->
         <div class="flex flex-1 items-center justify-center gap-4 p-4 overflow-hidden">
-            <!-- Tarjeta 1 -->
+            <!-- Card 1 -->
             <div
                 class="flex flex-col items-center justify-center p-4 min-w-[200px] md:min-w-[240px] relative 
           bg-white dark:bg-[#1E272A] rounded-xl shadow-md transition-all duration-300 opacity-30 scale-80 hover:shadow-xl hover:-translate-y-2 mx-1">
@@ -27,7 +27,7 @@
                 </div>
             </div>
 
-            <!-- Tarjeta 2 -->
+            <!-- Card 2 -->
             <div
                 class="flex flex-col items-center justify-center p-4 min-w-[220px] md:min-w-[260px] relative 
           bg-white dark:bg-[#1E272A] rounded-xl shadow-md transition-all duration-300 opacity-50 scale-90 hover:shadow-xl hover:-translate-y-2 mx-1">
@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            <!-- Tarjeta Actual -->
+            <!-- Current Card -->
             <div class="flex flex-col items-center justify-center p-6 min-w-[320px] md:min-w-[380px] relative z-10 
             bg-white dark:bg-[#1E272A] rounded-xl shadow-2xl overflow-hidden 
             transition-all duration-300 scale-110 md:hover:scale-100 md:hover:opacity-100 hover:scale-100 hover:opacity-100 mx-2">
@@ -56,14 +56,14 @@
                     </p>
                     <p class="text-sm text-gray-600 dark:text-gray-300 text-center">{{Cards[actual].setName}}</p>
                 </div>
-                <!-- Aquí está la parte del hover para iluminar, solo en pantallas mayores a 'md' -->
+                <!-- Hover to highlight, only on screens larger than 'md' -->
                 <div class="absolute inset-0 rounded-xl opacity-0 
                     bg-gradient-to-r from-transparent via-white/30 to-transparent 
                     transition-opacity md:hover:opacity-100"></div>
             </div>
         </div>
         
-            <!-- Tarjeta 4 -->
+            <!-- Card 4 -->
             <div
                 class="flex flex-col items-center justify-center p-4 min-w-[220px] md:min-w-[260px] relative 
           bg-white dark:bg-[#1E272A] rounded-xl shadow-md transition-all duration-300 opacity-50 scale-90 hover:shadow-xl hover:-translate-y-2 mx-1">
@@ -79,7 +79,7 @@
                 </div>
             </div>
 
-            <!-- Tarjeta 5 -->
+            <!-- Card 5 -->
             <div
                 class="flex flex-col items-center justify-center p-4 min-w-[200px] md:min-w-[240px] relative 
           bg-white dark:bg-[#1E272A] rounded-xl shadow-md transition-all duration-300 opacity-30 scale-80 hover:shadow-xl hover:-translate-y-2 mx-1">
@@ -96,11 +96,11 @@
             </div>
         </div>
 
-        <!-- Botón Siguiente -->
+        <!-- Next Button -->
         <button
             class="absolute right-4 md:right-8 top-1/2 px-4 py-3 z-20 -translate-y-1/2 
         bg-blue-500 text-white rounded shadow-lg transition-all opacity-75 hover:opacity-100 hover:scale-110 hover:bg-blue-700 focus:outline-none"
-            (click)="siguienteProducto()" aria-label="Producto siguiente">
+            (click)="siguienteProducto()" aria-label="Next product">
             &gt;
         </button>
     </div>
@@ -112,13 +112,13 @@
         <thead class="bg-[#3D81B6] dark:bg-[#1E272A] text-white">
             <tr>
                 <th class="px-4 py-2 text-left">
-                    <button class="filter-button" (click)="originalPos()">Nombre</button>
+                    <button class="filter-button" (click)="originalPos()">Name</button>
                 </th>
                 <th class="px-4 py-2 text-left">
-                    <button class="filter-button" (click)="SearchTime()">Fecha de Salida</button>
+                    <button class="filter-button" (click)="SearchTime()">Release Date</button>
                 </th>
                 <th class="px-4 py-2 text-left">
-                    <button class="filter-button" (click)="totalSearchSets()">Total de Cartas</button>
+                    <button class="filter-button" (click)="totalSearchSets()">Total Cards</button>
                 </th>
                 <th class="px-4 py-2 text-left hidden sm:table-cell">Legalities</th>
             </tr>
@@ -160,6 +160,6 @@
         </tbody>
     </table>
     } @else {
-    <h1 class="text-[#3D81B6] dark:text-[#81A1C1] text-2xl font-bold text-center">Cargando...</h1>
+    <h1 class="text-[#3D81B6] dark:text-[#81A1C1] text-2xl font-bold text-center">Loading...</h1>
     }
 </div>

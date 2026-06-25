@@ -24,10 +24,10 @@ export class CardsApiService {
     return observable.pipe(
       catchError(error => {
         if (error.status === 404) {
-          console.warn(`${operation} retornó 404 en ${error.url}. Se devuelve el valor por defecto.`);
+          console.warn(`${operation} returned 404 on ${error.url}. Returning default value.`);
           return of(defaultResult);
         } else {
-          console.error(`${operation} falló: ${error.message}`);
+          console.error(`${operation} failed: ${error.message}`);
           return of(defaultResult);
         }
       })

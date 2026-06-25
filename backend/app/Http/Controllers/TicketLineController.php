@@ -13,7 +13,7 @@ class TicketLineController extends Controller
     {
         if (TicketLine::all()->isEmpty()) {
             return response()->json([
-                'message' => 'No hay lineas de tíquets registradas'
+                'message' => 'No ticket lines registered'
             ], 404);
         } elseif ($request->id) {
             $user = TicketLine::findOrFail($request->id);
@@ -32,32 +32,32 @@ class TicketLineController extends Controller
                            ->first();
 
     if (!$ticketLine) {
-        return response()->json(['message' => 'Línea de ticket no encontrada'], 404);
+        return response()->json(['message' => 'Ticket line not found'], 404);
     }
 
     $producto = Producto::findOrFail($request->id_producto);
     $diferencia = $request->quantity - $ticketLine->quantity;
 
-    // Validar stock
+    // Validate stock
     if ($producto->quantity < $diferencia) {
-        return response()->json(['message' => 'Stock insuficiente'], 400);
+        return response()->json(['message' => 'Insufficient stock'], 400);
     }
 
-    // Actualizar stock
+    // Update stock
     $producto->quantity -= $diferencia;
     $producto->save();
 
-    // Actualizar línea de ticket
+    // Update ticket line
     $ticketLine->quantity = $request->quantity;
     $ticketLine->price = $producto->price * $request->quantity;
     $ticketLine->save();
 
-    // Actualizar total del ticket
+    // Update ticket total
     $ticket = Ticket::findOrFail($request->id_Ticket);
     $ticket->total = TicketLine::where('id_Ticket', $ticket->id)->sum('price');
     $ticket->save();
 
-    return response()->json(['message' => 'Cantidad actualizada con éxito']);
+    return response()->json(['message' => 'Quantity updated successfully']);
 }
 
 
@@ -74,12 +74,12 @@ class TicketLineController extends Controller
         $user->price = $request->quantity * $object->price;
         if($object->quantity < $request->quantity){
             return response()->json([
-                'message' => 'No hay suficiente stock'
+                'message' => 'Not enough stock'
             ], 404);
         } else {
             $object->quantity -=  $request->quantity;
         }
-        //Actualizar producto
+        // Update product
         $product = new ProductoController();
         $TicketController = new TicketController();
 
@@ -92,7 +92,7 @@ class TicketLineController extends Controller
             $requestInstance = new Request($requesty);
             $product->update($requestInstance);
         }
-        //Actualziar Ticket
+        // Update Ticket
 
 
         $requesty = ["id" => $request->id_Ticket, "total" => ($Tickete->total + $user->price)];
@@ -132,7 +132,7 @@ class TicketLineController extends Controller
             if ($request->has('quantity')) {
                 if ($object->quantity < $request->quantity) {
                     return response()->json([
-                        'message' => 'No hay suficiente stock'
+                        'message' => 'Not enough stock'
                     ], 404);
                 } else {
                     $object->quantity -=  $request->quantity;
@@ -144,7 +144,7 @@ class TicketLineController extends Controller
                         $requestInstance = new Request($requesty);
                         $product->update($requestInstance);
                     }
-                    $user->price = $total;//Se ejecuta aquí porque se ha actualizado el producto así se actualiza el costo
+                    $user->price = $total;// Executed here because the product has been updated, updating the cost
                 }
             }
             if ($request->has('deleted')) {
@@ -160,12 +160,12 @@ class TicketLineController extends Controller
                     'deleted' => $user->deleted,
                     '$request'=>$request->quantity,
                     'valor_arb'=>$valor_arb,
-                    'message' => 'Linea de Tíquet actualizado'
+                    'message' => 'Ticket line updated'
                 ], 200);
             }
         }
 
-        return response()->json(['message' => 'User not found'], 404);
+        return response()->json(['message' => 'Ticket line not found'], 404);
     }
 
     public function delete(Request $request)
@@ -178,16 +178,16 @@ class TicketLineController extends Controller
         if ($user) {
             if ($user->delete()) {
                 return response()->json([
-                    'Message' => 'Linea de tíquet eliminada'
+                    'message' => 'Ticket line deleted'
                 ], 200);
             } else {
                 return response()->json([
-                    'message' => 'Error al actualizar al usuario'
+                    'message' => 'Error deleting ticket line'
                 ], 500);
             }
         } else {
             return response()->json([
-                'message' => 'Linea de tíquet no encontrada'
+                'message' => 'Ticket line not found'
             ], 404);
         }
     }
@@ -200,14 +200,14 @@ class TicketLineController extends Controller
 
     if (!$ticketLine) {
         return response()->json([
-            'message' => 'Línea de ticket no encontrada'
+            'message' => 'Ticket line not found'
         ], 404);
     }
 
     $ticketLine->delete();
 
     return response()->json([
-        'message' => 'Línea de ticket eliminada correctamente'
+        'message' => 'Ticket line deleted successfully'
     ], 200);
 }
 

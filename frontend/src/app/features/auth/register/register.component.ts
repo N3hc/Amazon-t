@@ -32,7 +32,7 @@ export class RegisterComponent implements OnInit {
     }, { validators: this.passwordMatchValidator });
   }
 
-  // Validador personalizado para que 'password' y 'confirmPassword' coincidan
+  // Custom validator to ensure 'password' and 'confirmPassword' match
   passwordMatchValidator(group: AbstractControl): { [key: string]: any } | null {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
@@ -45,16 +45,16 @@ export class RegisterComponent implements OnInit {
       console.log(this.registerForm.value);
       this.api2Service.storeUser(this.registerForm.value).subscribe(
         response => {
-          console.log('Registro exitoso', response);
-          alert('¡Creacion de cuenta exitosa!');
+          console.log('Registration successful', response);
+          alert('Account creation successful!');
           this.router.navigate(['/login']);
         },
         error => {
-          console.error('Error en el registro', error);
-          alert('Error al crear la cuenta. Inténtalo de nuevo.');
+          console.error('Registration error', error);
+          alert('Error creating account. Please try again.');
         }
       );
-      console.log('Formulario enviado', this.registerForm.value);
+      console.log('Form submitted', this.registerForm.value);
     } else {
       this.registerForm.markAllAsTouched();
     }

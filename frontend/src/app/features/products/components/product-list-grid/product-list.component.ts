@@ -35,27 +35,27 @@ export class ProductListComponent {
       } else if (category) {
         this.searchCardsFromSet(category);
       } else {
-        this.loadCards("1");  // Aquí cargarías un set por defecto, por ejemplo "base1"
+        this.loadCards("1");  // Here you would load a default set, for example "base1"
       }
     });
   }
 
-  // Cargar las cartas de un set
+  // Load cards of a set
   loadCards(idset: any): void {
     this.cards = [];
     this.api2Service.getCardsFromSet(idset).subscribe({
       next: (response) => {
-        // Asegúrate de que 'response.card' tenga los datos esperados
-        this.cards = response;  // Cambié 'response.card' por 'response.data'
+        // Make sure 'response.card' has the expected data
+        this.cards = response;  // Changed 'response.card' to 'response.data'
         console.log(this.cards);
       },
       error: (error) => {
-        console.error('Error al cargar las cartas:', error);
+        console.error('Error loading cards:', error);
       }
     });
   }
 
-  // Buscar cartas con un término
+  // Search cards by query term
   searchCards(query: string): void {
     this.cards = [];
     this.api2Service.getCards().subscribe({
@@ -66,12 +66,12 @@ export class ProductListComponent {
         );
       },
       error: (error) => {
-        console.error('Error al buscar cartas:', error);
+        console.error('Error searching cards:', error);
       }
     });
   }
 
-  // Buscar cartas por un set (categoría)
+  // Search cards by a set (category)
   searchCardsFromSet(idset: any): void {
     this.cards = [];
     this.api2Service.getCardsFromSet(idset).subscribe({
@@ -80,14 +80,14 @@ export class ProductListComponent {
         console.log(this.cards);
       },
       error: (error) => {
-        console.error('Error al buscar cartas por categoría:', error);
+        console.error('Error searching cards by category:', error);
       }
     });
   }
 
-  // Seleccionar un producto (carta) para ver más detalles
+  // Select a product (card) to view more details
   selectProduct(card: CardObject): void {
-    this.searchService.setCard(card);  // 👈 pasa el objeto completo
+    this.searchService.setCard(card);  // 👈 passes the complete object
     this.router.navigate(['/products/details', card.id]);
   }
   

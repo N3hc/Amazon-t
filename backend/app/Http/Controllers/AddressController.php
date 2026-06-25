@@ -18,19 +18,19 @@ public function index(Request $request)
         $card = Address::find($request->id);
         return $card 
             ? response()->json($card, 200) 
-            : response()->json(['message' => 'Dirección no encontrada'], 404);
+            : response()->json(['message' => 'Address not found'], 404);
     }
 
     if ($request->id_user) {
         $cards = Address::where('id_user', $request->id_user)->get();
         return $cards->isEmpty()
-            ? response()->json(['message' => 'No hay direcciones registradas para este usuario'], 404)
+            ? response()->json(['message' => 'No addresses registered for this user'], 404)
             : response()->json($cards, 200);
     }
 
     $cards = Address::all();
     return $cards->isEmpty()
-        ? response()->json(['message' => 'No hay direcciones registradas'], 404)
+        ? response()->json(['message' => 'No addresses registered'], 404)
         : response()->json($cards, 200);
 }
 
@@ -76,16 +76,16 @@ public function index(Request $request)
                     'address' => $card->address,
                     'number' => $card->number,
                     'id_user' => $card->id_user,
-                    'message' => 'Dirección actualizada'
+                    'message' => 'Address saved successfully'
                 ], 200);
             } else {
                 return response()->json([
-                    'message' => 'Error al actualizar la Dirección'
+                    'message' => 'Error saving Address'
                 ], 500);
             }
         } else {
             return response()->json([
-                'message' => 'Dirección no encontrada'
+                'message' => 'Address not found'
             ], 404);
         }
     }
@@ -98,16 +98,16 @@ public function index(Request $request)
         if ($card) {
             if ($card->delete()) {
                 return response()->json([
-                    'Message' => 'Dirección eliminada'
+                    'message' => 'Address deleted'
                 ], 200);
             } else {
                 return response()->json([
-                    'message' => 'Error al actualizar la Dirección'
+                    'message' => 'Error deleting Address'
                 ], 500);
             }
         } else {
             return response()->json([
-                'message' => 'Dirección no encontrada'
+                'message' => 'Address not found'
             ], 404);
         }
     }

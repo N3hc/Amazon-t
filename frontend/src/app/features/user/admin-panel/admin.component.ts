@@ -44,7 +44,7 @@ export class AdminComponent implements OnInit {
     // Fetch user details if userId is provided
     this.userService.getUser().subscribe((user: User | null) => {
       if (!user) {
-        console.warn('No hay usuario cargado');
+        console.warn('No user loaded');
         this.router.navigate(['/home']);
         return;
       }
@@ -54,19 +54,19 @@ export class AdminComponent implements OnInit {
         cards: this.api2Service.getCards()
       }).subscribe({
         next: ({ products, cards }) => {
-          // Ordenar productos por id_card (de menor a mayor)
+          // Sort products by id_card (ascending)
           this.product = products.sort((a:any, b:any) => Number(a.id_card) - Number(b.id_card));
 
-          // Crear conjunto de id_card válidos
+          // Create a set of valid id_cards
           const validIds = new Set(this.product?.map(p => p.id_card) || []);
 
-          // Filtrar solo las cards que tengan un id presente en los id_card
+          // Filter only cards that have an id present in id_card
           this.cards = cards.filter((card: CardObject) => validIds.has(card.id));
 
-          console.log('Cards filtradas:', this.cards);
+          console.log('Filtered cards:', this.cards);
         },
         error: (err) => {
-          console.error('Error al cargar productos o cards:', err);
+          console.error('Error loading products or cards:', err);
         },
       });
   }
@@ -90,7 +90,7 @@ export class AdminComponent implements OnInit {
   }
 
   saveEdit() {
-    // Si quieres guardar cambios a backend, aquí va la lógica
+    // If you want to save changes to the backend, the logic goes here
     this.editIndex.set(null);
   }
 
@@ -106,20 +106,20 @@ export class AdminComponent implements OnInit {
           quantity: Number(formValue.cantidad)
         };
         this.cancelEdit();
-        console.log('Producto actualizado:', this.product[index]);
+        console.log('Updated product:', this.product[index]);
         this.api2Service.updateProduct(this.product[index]).subscribe({
           next: (response) => {
-            console.log('Producto actualizado en el backend:', response);
+            console.log('Product updated in backend:', response);
           },
           error: (error) => {
-            console.error('Error al actualizar el producto:', error);
+            console.error('Error updating product:', error);
           }
         });
         
       }
 
       } else {
-      console.log('Formulario inválido');
+      console.log('Invalid form');
     }
   }
 
@@ -135,17 +135,17 @@ export class AdminComponent implements OnInit {
 
       this.api2Service.updateProduct(this.product[index]).subscribe({
         next: (response) => {
-          console.log('Card eliminada:', response);
+          console.log('Card deleted:', response);
         },
         error: (error) => {
-          console.error('Error al eliminar la card:', error);
+          console.error('Error deleting card:', error);
         }
       });
 
-      // Elimina del arreglo de cards
+      // Remove from the cards array
       this.cards.splice(index, 1);
 
-      // También elimina el producto correspondiente
+      // Also delete the corresponding product
       this.product = this.product.filter(p => p.id_card !== cardIdToDelete);
     }
   }

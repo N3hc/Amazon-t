@@ -12,49 +12,49 @@
           class="w-full h-auto rounded-lg shadow-md mb-4 bg-white dark:bg-gray-900 p-1">
 
         @if (editIndex() === i) {
-        <!-- Modo edición -->
+        <!-- Edit mode -->
         <form [formGroup]="productoForm" (ngSubmit)="onSubmit()" class="space-y-6">
-          <!-- Precio -->
+          <!-- Price -->
           <div>
-            <h3 class="text-base font-medium text-gray-800 dark:text-gray-200 mb-2">Precio</h3>
+            <h3 class="text-base font-medium text-gray-800 dark:text-gray-200 mb-2">Price</h3>
             <input id="id" type="hidden" formControlName="id" value="{{ product?.id }}">
             <input id="precio" type="number" formControlName="precio" class="w-full p-2 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600
                focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 dark:text-white">
             <!--
               @if (productoForm.get('precio')?.invalid && productoForm.get('precio')?.touched) {
-              <p class="text-red-500 text-sm mt-1">Ingrese un precio válido</p>
+              <p class="text-red-500 text-sm mt-1">Enter a valid price</p>
               }
               -->
           </div>
 
-          <!-- Cantidad -->
+          <!-- Quantity -->
           <div>
-            <h3 class="text-base font-medium text-gray-800 dark:text-gray-200 mb-2">Cantidad</h3>
+            <h3 class="text-base font-medium text-gray-800 dark:text-gray-200 mb-2">Quantity</h3>
             <input id="cantidad" type="number" formControlName="cantidad" class="w-full p-2 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600
                focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 dark:text-white">
             <!--
                @if (productoForm.get('cantidad')?.invalid && productoForm.get('cantidad')?.touched) {
-              <p class="text-red-500 text-sm mt-1">Ingrese una cantidad válida</p>
+              <p class="text-red-500 text-sm mt-1">Enter a valid quantity</p>
               }-->
 
           </div>
 
-          <!-- Botones -->
+          <!-- Buttons -->
           <div class="flex justify-end space-x-3 pt-4">
             <button type="button" (click)="cancelEdit()"
             class="px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
-            Cancelar
+            Cancel
           </button>
 
 
             <button type="submit" [disabled]="productoForm.invalid"
               class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors disabled:opacity-50">
-              Enviar
+              Submit
             </button>
           </div>
         </form>
         } @else {
-        <!-- Modo visualización -->
+        <!-- View mode -->
         <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
           {{ i + 1 }}. {{ card.name }}
         </h3>
@@ -66,18 +66,18 @@
         }
 
         <div class="text-sm text-gray-700 dark:text-gray-300 space-y-1 mb-4">
-          <p><span class="font-medium">Precio:</span> {{ product?.price }} EUR</p>
-          <p><span class="font-medium">Cantidad:</span> {{ product?.quantity }}</p>
+          <p><span class="font-medium">Price:</span> {{ product?.price }} EUR</p>
+          <p><span class="font-medium">Quantity:</span> {{ product?.quantity }}</p>
         </div>
 
         <div class="flex justify-center space-x-2">
           <button (click)="startEdit(i)"
             class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
-            Editar
+            Edit
           </button>
           <button (click)="deleteCard(i)"
             class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors">
-            Borrar
+            Delete
           </button>
         </div>
         }
@@ -89,8 +89,8 @@
 }
   } @else {
   <div class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 italic p-4">
-    <img src='assets/extras/Ploading.gif' alt="Cargando cartas" class="mb-2 w-20 h-20">
-    <p class="text-gray-500 dark:text-gray-400 italic">Cargando cartas...</p>
+    <img src='assets/extras/Ploading.gif' alt="Loading cards" class="mb-2 w-20 h-20">
+    <p class="text-gray-500 dark:text-gray-400 italic">Loading cards...</p>
   </div>
   }
 </div>

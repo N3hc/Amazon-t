@@ -69,7 +69,7 @@ userTickets: TicketWithLines[] = [];
       completed: true,
       deleted: false,
       createdAt: new Date('2024-03-15').toISOString(),
-      ticketLines: [  // Añade esta propiedad
+      ticketLines: [  // Add this property
         {
           id: 1,
           id_ticket: 1,
@@ -86,7 +86,7 @@ userTickets: TicketWithLines[] = [];
   ngOnInit(): void {
     this.userService.getUser().subscribe((user: User | null) => {
       if (!user) {
-        console.warn('No hay usuario cargado');
+        console.warn('No user loaded');
         this.router.navigate(['/home']);
         return;
       }
@@ -106,7 +106,7 @@ userTickets: TicketWithLines[] = [];
         vendor: [user.vendor],
       });
 
-      // Tema oscuro
+      // Dark theme
       this.themeService.theme$.subscribe(theme => {
         this.isDarkMode = theme === 'dark';
       });
@@ -122,17 +122,17 @@ userTickets: TicketWithLines[] = [];
               ...ticket,
               ticketLines: lines,
               total: this.calculateTotal(lines)
-            } as TicketWithLines))  // Cambia el tipo aquí
+            } as TicketWithLines))  // Change the type here
           )
         );
         return forkJoin(ticketRequests);
       })
     ).subscribe({
-      next: (completeTickets: TicketWithLines[]) => {  // Actualiza el tipo aquí
+      next: (completeTickets: TicketWithLines[]) => {  // Update the type here
         this.completedTickets = completeTickets;
-        console.log('Tickets completos:', this.completedTickets);
+        console.log('Complete tickets:', this.completedTickets);
       },
-      error: (err) => console.error('Error cargando tickets:', err)
+      error: (err) => console.error('Error loading tickets:', err)
     });
   }*/
 
@@ -150,7 +150,7 @@ private loadUserTickets(userId: number): void {
     forkJoin(observables).subscribe((ticketsWithLines: TicketWithLines[]) => {
       this.completedTickets = ticketsWithLines;
       
-      // Extraemos todas las líneas en un solo array
+      // Extract all lines into a single array
       this.completedTicketLines = ticketsWithLines.flatMap(t => t.ticketLines);
 
       console.log('Completed Tickets:', this.completedTickets);
@@ -216,19 +216,19 @@ private loadUserTickets(userId: number): void {
 
     const userData = { ...this.userForm.value };
 
-    // Si no hay contraseña, elimínala antes de enviar
+    // If there is no password, delete it before sending
     if (!userData.password) {
       delete userData.password;
     }
-    console.log('Datos del formulario:', userData);
+    console.log('Form data:', userData);
     this.userService.updateUser(userData);
     this.api2Service.updateUser(userData).subscribe({
       next: (response) => {
-        console.log('Usuario actualizado:', response);
+        console.log('Updated user:', response);
         //this.userService.setUser(userData);
       },
       error: (error) => {
-        console.error('Error al actualizar el usuario:', error);
+        console.error('Error updating user:', error);
       }
     });
     this.router.navigate(['/user/profile']);

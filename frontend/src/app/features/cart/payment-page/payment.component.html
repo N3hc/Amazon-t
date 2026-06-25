@@ -3,30 +3,30 @@
   <div class="dark:bg-[#0a0a0a] min-h-screen w-full flex flex-col">
     <div class="mx-auto max-w-screen-xl px-4 2xl:px-0 py-8">
 
-      <!-- Encabezado -->
+      <!-- Header -->
       <div class="bg-gradient-to-r from-purple-500 to-blue-600 rounded-2xl p-6 mb-8 shadow-lg">
-        <h2 class="text-2xl font-bold text-white sm:text-3xl">💳 Checkout</h2>
+        <h2 class="text-2xl font-bold text-white sm:text-3xl">🛒 Checkout</h2>
         <p class="text-purple-100 mt-2">Complete your purchase</p>
       </div>
 
-      <!-- Formulario o confirmación -->
+      <!-- Form or confirmation -->
       @if (!purchaseConfirmed) {
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- ===== Columna de formularios ===== -->
+        <!-- ===== Form column ===== -->
         <div class="lg:col-span-2 space-y-6">
 
-          <!-- Dirección de envío con selección -->
+          <!-- Shipping address with selection -->
           <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Shipping Address</h3>
 
-            <!-- Listado de direcciones guardadas -->
+            <!-- List of saved addresses -->
             <app-address-form [enableSelection]="true"></app-address-form>
 
 
           </div>
 
-          <!-- Métodos de pago -->
+          <!-- Payment methods -->
           <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Payment Method</h3>
 
@@ -35,7 +35,7 @@
 
         </div>
 
-        <!-- Resumen del pedido -->
+        <!-- Order summary -->
         <div class="lg:sticky lg:top-6 h-fit">
           <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Order Summary</h3>
@@ -72,7 +72,7 @@
             </div>
           </div>
 
-          <!-- Sección de seguridad -->
+          <!-- Security section -->
           <div
             class="mt-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 border border-blue-100 dark:border-blue-900/30">
             <div class="flex items-start gap-3">
@@ -93,7 +93,7 @@
         </div>
       </div>
       } @else {
-      <!-- Confirmación de compra -->
+      <!-- Purchase confirmation -->
       <div
         class="bg-white dark:bg-gray-800 rounded-2xl p-8 text-center shadow-sm border border-gray-100 dark:border-gray-700 max-w-2xl mx-auto">
         <div

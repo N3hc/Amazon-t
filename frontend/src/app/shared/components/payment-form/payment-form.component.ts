@@ -35,17 +35,17 @@ user: User | null = null;
 
 ngOnInit() {
   this.userService.getUser().subscribe((user: User | null) => {
-    console.log('Usuario actual:', user);
+    console.log('Current user:', user);
     this.user = user;
 
     if (!user) {
-      console.warn('No hay usuario cargado');
+      console.warn('No user loaded');
       return;
     }
 
     this.api2service.getPagosByUser(user.id).subscribe((pagos: Payment[]) => {
       this.examplePayments = pagos;
-      console.log('Pagos del usuario:', this.examplePayments);
+      console.log('User payments:', this.examplePayments);
     });
   });
 }
@@ -116,13 +116,13 @@ ngOnInit() {
       expiration_date: ['', [
         Validators.required,
         Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/),
-        this.expirationDateValidator // Añadido validador personalizado
+        this.expirationDateValidator // Custom validator added
       ]],
       cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]]
     });
   }
 
-  // Mejorado el validador de fecha de expiración
+  // Improved expiration date validator
   private expirationDateValidator(control: any) {
     const value = control.value;
     if (!value) return null;
@@ -135,9 +135,9 @@ ngOnInit() {
       return { invalidFormat: true };
     }
 
-    const expirationDate = new Date(2000 + year, month - 1, 1); // día 1 del mes/año indicado
+    const expirationDate = new Date(2000 + year, month - 1, 1); // day 1 of the indicated month/year
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // ignorar hora para comparación de solo fechas
+    today.setHours(0, 0, 0, 0); // ignore time for date-only comparison
 
     if (expirationDate < today) {
       return { expired: true };
@@ -148,40 +148,40 @@ ngOnInit() {
 
 onSubmit() {
   this.userService.getUser().subscribe((user: User | null) => {
-    console.log('Usuario actual:', user);
+    console.log('Current user:', user);
 
     if (!user) {
-      console.warn('No hay usuario cargado');
+      console.warn('No user loaded');
       return;
     }
   });
 
   if (this.paymentForm.valid) {
-    // Obtener el valor del formulario
+    // Get the form value
     const formValue = this.paymentForm.value;
 
-    // Dividir la fecha MM/YY y añadir el día "01"
+    // Split MM/YY date and add day "01"
     const [month, year] = formValue.expiration_date.split('/');
-    const expirationDate = `01/${month}/20${year}`; // Formato DD/MM/YY
+    const expirationDate = `01/${month}/20${year}`; // Format DD/MM/YY
 
-    // Crear el nuevo pago con la fecha transformada
+    // Create the new payment with the transformed date
     const newPayment: Payment = {
       ...formValue,
       expiration_date: expirationDate,
       user_id: this.user?.id,
     };
-    console.log('Nuevo pago:', newPayment);
+    console.log('New payment:', newPayment);
 
     this.api2service.storePago(newPayment).subscribe({
       next: (response) => {
-        console.log('Tarjeta guardada:', response);
-        // Añadir la tarjeta usando la respuesta del servidor (contiene la fecha completa)
+        console.log('Saved card:', response);
+        // Add card using server response (contains full date)
         this.examplePayments.push(response);
-        this.addingCard = false; // Ocultar el formulario después de guardar
+        this.addingCard = false; // Hide form after saving
       },
       error: (error) => {
-        console.log('Error al guardar la tarjeta:', newPayment);
-        console.error('Error al guardar la tarjeta:', error);
+        console.log('Error saving card:', newPayment);
+        console.error('Error saving card:', error);
       }
     });
   }
@@ -189,7 +189,7 @@ onSubmit() {
 
   // Generador de nuevos IDs
 
-  // Mejorado el formateo del número de tarjeta
+  // Improved card number formatting
   formatCardNumber(event: Event) {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/\D/g, '');
@@ -198,7 +198,7 @@ onSubmit() {
       value = value.substr(0, 16);
     }
 
-    // Formatear con espacios cada 4 dígitos
+    // Format with spaces every 4 digits
     const parts = [];
     for (let i = 0; i < value.length; i += 4) {
       parts.push(value.substr(i, 4));
@@ -208,7 +208,7 @@ onSubmit() {
     this.paymentForm.get('number')?.setValue(value);
   }
 
-  // Mejorado el formateo de fecha
+  // Improved date formatting
   formatExpirationDate(event: Event) {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/\D/g, '');
@@ -226,14 +226,14 @@ onSubmit() {
   }
 
   deleteCard(cardId: number) {
-    console.log('Eliminando tarjeta con ID:', cardId);
+    console.log('Deleting card with ID:', cardId);
     this.api2service.updatePago({ id: cardId, deleted: 1 }).subscribe({
       next: () => {
         this.examplePayments = this.examplePayments.filter(card => card.id !== cardId);
-        console.log('Tarjeta eliminada correctamente');
+        console.log('Card deleted successfully');
       },
       error: (error) => {
-        console.error('Error al eliminar la tarjeta:', error);
+        console.error('Error deleting card:', error);
       }
     });
   }

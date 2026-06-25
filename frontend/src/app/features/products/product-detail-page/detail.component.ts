@@ -55,7 +55,7 @@ export class DetailComponent {
 
   backToProducts() {
     if (this.card && this.card.id_set) {
-      this.searchService.setCategory(this.card.id_set); // Emitimos el ID del set
+      this.searchService.setCategory(this.card.id_set); // Emit the set ID
     }
     this.router.navigate(['/home/products']);
   }
@@ -67,28 +67,28 @@ export class DetailComponent {
           this.cardid = card.id;
           this.card = JSON.parse(card.description);
         } catch (e) {
-          console.error('Error al parsear la descripción de la carta:', e);
+          console.error('Error parsing card description:', e);
         }
       } else {
-        console.error('No hay carta seleccionada o no tiene descripción.');
+        console.error('No card selected or card has no description.');
       }
     });
 
     this.api2Service.getProductByCardId(this.cardid).subscribe((data: any) => {
       this.ProductCard = data;
-      console.log('Carta obtenida:', this.ProductCard);
+      console.log('Card retrieved:', this.ProductCard);
     });
     this.userService.getUser().subscribe({
       next: (user) => {
         this.user = user;
         if (user) {
-          console.log('Usuario cargado:', user);
+          console.log('User loaded:', user);
         } else {
-          console.log('No hay usuario en el localStorage');
+          console.log('No user in localStorage');
         }
       },
       error: (err) => {
-        console.error('Error al obtener usuario:', err);
+        console.error('Error retrieving user:', err);
       }
     });
     this.themeService.theme$.subscribe(theme => {

@@ -14,9 +14,9 @@ import { UserService } from '../../../core/services/user.service';
 })
 export class HeaderComponent implements OnInit {
   isDarkMode: boolean = false;
-  user: any = null; // Cambia esto según tu lógica de usuario
+  user: any = null; // Change this according to your user logic
   cart: CartItem[] = [];
-  loggedIn: boolean = false; // Cambia esto según tu lógica de autenticación
+  loggedIn: boolean = false; // Change this according to your authentication logic
 
   showUserMenu: boolean = false;
 
@@ -63,17 +63,17 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Cargar el tema guardado desde localStorage
+    // Load the saved theme from localStorage
     this.themeService.theme$.subscribe((theme) => {
       this.isDarkMode = theme === 'dark';
     });
 
     if (this.userService.isLogged()) {
-      // Suscribirse al observable para obtener el usuario
+      // Subscribe to the observable to get the user
       this.userService.getUser().subscribe((user) => {
         this.user = user;
-        this.loggedIn = true; // Marcar como logueado
-        //console.log(this.user); // Verifica si el usuario se carga correctamente
+        this.loggedIn = true; // Mark as logged in
+        //console.log(this.user); // Check if the user is loaded correctly
       });
     }
   }

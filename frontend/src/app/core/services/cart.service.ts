@@ -12,7 +12,7 @@
       this.loadInitialCart();
     }
     
-    // Métodos existentes (no modificados)
+    // Existing methods (unmodified)
     private loadInitialCart() {
       const savedCart = localStorage.getItem('cart');
       if (savedCart) {
@@ -44,7 +44,7 @@
       this.saveCartToLocalStorage(updatedCart);
     }
 
-    // Métodos adicionales requeridos por el componente
+    // Additional methods required by the component
     updateQuantity(itemId: string, newQuantity: number): void {
       const updatedCart = this.cartSubject.value.map(item => 
         item.id === itemId ? {...item, quantity: newQuantity} : item
@@ -58,7 +58,7 @@
       localStorage.removeItem('cart');
     }
 
-    // Método auxiliar para calcular el total de items (opcional)
+    // Auxiliary method to calculate total items (optional)
     getTotalItems(): number {
       return this.cartSubject.value.reduce((total, item) => total + item.quantity, 0);
     }

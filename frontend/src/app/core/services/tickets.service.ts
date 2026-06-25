@@ -13,36 +13,36 @@ export class TicketsService {
   addProductToTicket(productId: number, quantity: number, price: number, userId: number): void {
     this.api2Service.getTicketsByUser(userId).subscribe({
       next: (tickets: any[]) => {
-        let lastTicket = tickets.find(ticket => ticket.completed === 0); // ticket abierto
+        let lastTicket = tickets.find(ticket => ticket.completed === 0); // open ticket
 
         if (lastTicket) {
-          // Ya hay un ticket abierto
+          // There is already an open ticket
           const ticketLineData = {
-            id_Ticket: lastTicket.id,    // ✅ corregido
+            id_Ticket: lastTicket.id,    // ✅ corrected
             id_producto: productId,
             price: price,
             quantity: quantity
           };
 
-          console.log('Datos del ticket:', ticketLineData);
+          console.log('Ticket data:', ticketLineData);
 
-          // Llama a la API para agregar el producto al ticket
+          // Call API to add product to ticket
           this.api2Service.storeProductToTicketLine(ticketLineData).subscribe({
             next: (response) => {
-              console.log('Producto añadido al ticket:', response);
+              console.log('Product added to ticket:', response);
             },
             error: (err) => {
-              console.error('Error al añadir producto al ticket:', err);
+              console.error('Error adding product to ticket:', err);
             }
           });
         } else {
-          // No hay ticket abierto, creamos uno
+          // No open ticket, create one
           this.api2Service.createTicket(userId, 1).subscribe({
             next: (newTicket) => {
-              console.log('Nuevo ticket creado:', newTicket);
-              // Una vez creado el ticket, agregamos el producto
+              console.log('New ticket created:', newTicket);
+              // Once ticket is created, add the product
               const ticketLineData = {
-                id_Ticket: newTicket.id,     // ✅ Corregido
+                id_Ticket: newTicket.id,     // ✅ Corrected
                 id_producto: productId,
                 price: price,
                 quantity: quantity
@@ -50,21 +50,21 @@ export class TicketsService {
 
               this.api2Service.storeProductToTicketLine(ticketLineData).subscribe({
                 next: (response) => {
-                  console.log('Producto añadido al ticket:', response);
+                  console.log('Product added to ticket:', response);
                 },
                 error: (err) => {
-                  console.error('Error al añadir producto al ticket:', err);
+                  console.error('Error adding product to ticket:', err);
                 }
               });
             },
             error: (err) => {
-              console.error('Error al crear nuevo ticket:', err);
+              console.error('Error creating new ticket:', err);
             }
           });
         }
       },
       error: (err) => {
-        console.error('Error al obtener tickets del usuario:', err);
+        console.error('Error getting user tickets:', err);
       }
     });
   }
@@ -73,41 +73,41 @@ export class TicketsService {
 
   /** 
   getUserLastTicketId(userId: number): void {
-    // Obtener las direcciones del usuario
+    // Get user addresses
     this.api2Service.getDireccionesByUser(userId).subscribe({
       next: (direcciones: any[]) => {
-        // Seleccionamos solo la primera dirección
+        // Select only the first address
         const firstAddress = direcciones.length > 0 ? direcciones[0] : null;
   
         if (!firstAddress) {
-          console.log('No se encontraron direcciones para el usuario.');
+          console.log('No addresses found for the user.');
           return;
         }
   
-        // Obtener los tickets del usuario
+        // Get user tickets
         this.api2Service.getTicketsByUser(userId).subscribe({
           next: (tickets: Ticket[]) => {
             const lastTicket = tickets.length > 0 ? tickets[tickets.length - 1] : null;
   
             if (lastTicket && lastTicket.completed === true) {
-              console.log('El último ticket está completo.');
-              // Crear un nuevo ticket con la primera dirección
+              console.log('The last ticket is complete.');
+              // Create a new ticket with the first address
               this.createNewTicket(userId, 1);
             } else if (!lastTicket) {
-              console.log('No hay tickets, creando uno nuevo...');
-              // Crear un nuevo ticket con la primera dirección
+              console.log('No tickets, creating a new one...');
+              // Create a new ticket with the first address
               this.createNewTicket(userId, 1);
             } else {
-              console.log('El último ticket está abierto.');
+              console.log('The last ticket is open.');
             }
           },
           error: (err) => {
-            console.error('Error al obtener tickets:', err);
+            console.error('Error getting tickets:', err);
           }
         });
       },
       error: (err) => {
-        console.error('Error al obtener direcciones:', err);
+        console.error('Error getting addresses:', err);
       }
     });
   }
@@ -121,34 +121,34 @@ export class TicketsService {
         const lastTicket = tickets.length > 0 ? tickets[tickets.length - 1] : null;
 
         if (!lastTicket || lastTicket.completed === true) {
-          console.log('No hay tickets abiertos. Creando uno nuevo...');
+          console.log('No open tickets. Creating a new one...');
           this.createNewTicket(userId, defaultAddressId);
         } else {
-          console.log('Ya existe un ticket abierto. ID:', lastTicket.id);
+          console.log('An open ticket already exists. ID:', lastTicket.id);
         }
       },
       error: (err) => {
-        console.error('Error al obtener tickets:', err);
+        console.error('Error getting tickets:', err);
       }
     });
   }
 
 
-  // Función para crear un ticket nuevo
+  // Function to create a new ticket
   createNewTicket(userId: number, addressId: number): void {
     const newTicketData = {
       id_user: userId,
-      id_address: addressId, // Usamos la primera dirección
-      total: 0, // Total inicial del ticket (puedes modificar esto)
-      completed: false // El ticket recién creado está incompleto
+      id_address: addressId, // Use the first address
+      total: 0, // Initial ticket total (can be modified)
+      completed: false // The newly created ticket is incomplete
     };
 
     this.api2Service.storeTicketWithUserid(newTicketData).subscribe({
       next: (response) => {
-        console.log('Nuevo ticket creado:', response);
+        console.log('New ticket created:', response);
       },
       error: (err) => {
-        console.error('Error al crear ticket:', err);
+        console.error('Error creating ticket:', err);
       }
     });
   }

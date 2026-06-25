@@ -12,7 +12,7 @@ class categoriesController extends Controller
     {
         if (categories::all()->isEmpty()) {
             return response()->json([
-                'message' => 'No hay categorías registradas'
+                'message' => 'No categories registered'
             ], 404);
         }elseif ($request->id) {
             $card = categories::findOrFail($request->id);
@@ -85,16 +85,16 @@ class categoriesController extends Controller
                     'total_cards' => $card->total_cards,
                     'id_set' => $card->id_set,
                     'release_date' => $card->release_date,
-                    'message' => 'Categorías actualizada'
+                    'message' => 'Category saved successfully'
                 ], 200);
             } else {
                 return response()->json([
-                    'message' => 'Error al actualizar la categoria'
+                    'message' => 'Error saving category'
                 ], 500);
             }
         } else {
             return response()->json([
-                'message' => 'Categoria no encontrada'
+                'message' => 'Category not found'
             ], 404);
         }
     }
@@ -107,16 +107,16 @@ class categoriesController extends Controller
         if ($card) {
             if ($card->delete()) {
                 return response()->json([
-                    'Message' => 'Categoria eliminada'
+                    'message' => 'Category deleted'
                 ], 200);
             } else {
                 return response()->json([
-                    'message' => 'Error al actualizar la categoria'
+                    'message' => 'Error deleting category'
                 ], 500);
             }
         } else {
             return response()->json([
-                'message' => 'Categoria no encontrada'
+                'message' => 'Category not found'
             ], 404);
         }
     }

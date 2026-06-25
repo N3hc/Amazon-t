@@ -29,7 +29,7 @@ export class CartComponent {
   user: any;
   userLastTicketId: any;
   openTicket: TicketWithLines | null = null;
-ticketLines: TicketLine[] = [];
+  ticketLines: TicketLine[] = [];
 
 
   constructor(
@@ -55,7 +55,7 @@ ticketLines: TicketLine[] = [];
     );
     this.api2Service.getTicketsByUser(this.user.id).subscribe({
       next: (tickets: any[]) => {
-        let lastTicket = tickets.find(ticket => ticket.completed === 0); // ticket abierto
+        let lastTicket = tickets.find(ticket => ticket.completed === 0); // open ticket
         if (lastTicket) {
           this.userLastTicketId = lastTicket.id;
         } else {
@@ -64,20 +64,20 @@ ticketLines: TicketLine[] = [];
       }
     });
     this.userService.getUser().subscribe(user => {
-  this.user = user;
-  this.loadOpenTicketLines(this.user.id); // 👈 Añadir aquí
-});
+      this.user = user;
+      this.loadOpenTicketLines(this.user.id); // 👈 Add here
+    });
 
   }
 
 
  private loadOpenTicketLines(userId: number): void {
   this.api2Service.getTicketsByUser(userId).pipe(
-    map((tickets: Ticket[]) => tickets.find(t => !t.completed)),  // Solo el ticket abierto
+    map((tickets: Ticket[]) => tickets.find(t => !t.completed)),  // Only the open ticket
     switchMap((openTicket) => {
       if (!openTicket) {
-        console.warn('No hay ticket abierto');
-        return of(null); // Retorna null si no hay ticket abierto
+        console.warn('No open ticket');
+        return of(null); // Returns null if no open ticket
       }
 
       return this.api2Service.getTicketLinesByTicket(openTicket.id).pipe(
@@ -93,38 +93,38 @@ ticketLines: TicketLine[] = [];
       if (ticketData) {
         this.openTicket = ticketData;
         this.ticketLines = ticketData.ticketLines;
-        console.log('Ticket abierto con líneas:', this.ticketLines);
+        console.log('Open ticket with lines:', this.ticketLines);
       } else {
         this.ticketLines = [];
       }
     },
-    error: (err) => console.error('Error cargando líneas del ticket abierto:', err)
+    error: (err) => console.error('Error loading lines of the open ticket:', err)
   });
 }
 
 
 
-  // Calcula el subtotal sin impuestos ni envío
+  // Calculate the subtotal without taxes or shipping
   getSubtotal(): number {
     return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   }
 
-  // Calcula el costo de envío (gratis para compras mayores a $50)
+  // Calculate shipping cost (free for purchases over $50)
   getShippingCost(): number {
     return this.getSubtotal() > 50 ? 0 : 5;
   }
 
-  // Calcula el total incluyendo impuestos y envío
+  // Calculate total including taxes and shipping
   getTotal(): number {
     return this.getSubtotal() + this.getShippingCost();
   }
 
-  // Método para proceder al pago
+  // Method to proceed to payment
   proceedToCheckout(): void {
     this.router.navigate(['cart/payment']);
   }
 
-  // Aumenta la cantidad de un producto
+  // Increase the quantity of a product
   increaseQuantity(itemId: string): void {
     const item = this.cart.find(item => item.id === itemId);
     if (!item) return;
@@ -137,15 +137,15 @@ ticketLines: TicketLine[] = [];
       quantity: newQuantity
     }).subscribe({
       next: (response) => {
-        console.log('Producto añadido al ticket:', response);
-        // Actualiza el carrito solo si la API responde bien
+        console.log('Product added to ticket:', response);
+        // Only update the cart if the API responds successfully
         this.cartService.updateQuantity(itemId, newQuantity);
       },
       error: (err) => {
-        alert('Has llegado al máximo de número del producto');
-        console.error('Error al añadir producto al ticket:', err);
+        alert('You have reached the maximum quantity for this product');
+        console.error('Error adding product to ticket:', err);
 
-        // Aquí restamos 1 a la cantidad en el carrito (porque no se pudo aumentar en el backend)
+        // Here we subtract 1 from the quantity in the cart (because it could not be increased in the backend)
         this.cartService.updateQuantity(itemId, item.quantity - 1);
       }
     });
@@ -156,7 +156,7 @@ ticketLines: TicketLine[] = [];
   return lines.reduce((total, line) => total + (line.price * line.quantity), 0);
 }
 
-  // Disminuye la cantidad de un producto
+  // Decrease the quantity of a product
   decreaseQuantity(itemId: string): void {
     const item = this.cart.find(item => item.id === itemId);
     if (item && item.quantity > 1) {
@@ -170,43 +170,43 @@ ticketLines: TicketLine[] = [];
 
       this.api2Service.storeProductToTicketLine(ticketLineData).subscribe({
         next: (response) => {
-          console.log('Cantidad disminuida en el ticket:', response);
+          console.log('Quantity decreased in the ticket:', response);
           this.cartService.updateQuantity(itemId, newQuantity);
         },
         error: (err) => {
-          console.error('Error al disminuir la cantidad en el ticket:', err);
+          console.error('Error decreasing quantity in the ticket:', err);
         }
       });
     } else {
-      console.warn('Cantidad mínima alcanzada o producto no encontrado');
+      console.warn('Minimum quantity reached or product not found');
     }
   }
 
 
 
-  // Elimina un producto del carrito
+  // Remove a product from the cart
   removeFromCart(itemId: string): void {
     const item = this.cart.find(i => i.id === itemId);
 
     if (!item) {
-      console.warn('Producto no encontrado en el carrito');
+      console.warn('Product not found in the cart');
       return;
     }
 
     this.api2Service.deleteTicketLineChenPing(this.userLastTicketId, Number(item.id)).subscribe({
       next: () => {
-        console.log('Producto eliminado del ticket correctamente');
+        console.log('Product removed from ticket successfully');
         this.cartService.removeFromCart(itemId);
       },
       error: (err) => {
-        console.error('Error al eliminar del ticket:', err);
+        console.error('Error deleting from ticket:', err);
       }
     });
 
   }
 
 
-  // Redirige a la página de productos
+  // Redirects to the products page
   continueShopping(): void {
     this.router.navigate(['/home/products']);
   }

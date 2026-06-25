@@ -7,7 +7,7 @@ import { Api2Service } from './api2.service';
   providedIn: 'root',
 })
 export class UserService {
-  // Puede ser null si no hay sesión iniciada
+  // Can be null if no session is started
   private userSubject = new BehaviorSubject<User | null>(null);
 
   constructor(private api2Service: Api2Service) {}
@@ -25,21 +25,21 @@ export class UserService {
     return this.userSubject.asObservable();
   }
 
-  // Establecer el usuario completo
+  // Set the complete user
   setUser(user: User): void {
     this.userSubject.next(user);
     localStorage.setItem('user', JSON.stringify(user));
     this.api2Service.createTicket(user.id, 1).subscribe({
       next: (response) => {
-        console.log('Ticket creado:', response);
+        console.log('Ticket created:', response);
       },
       error: (error) => {
-        console.error('Error al crear el ticket:', error);
+        console.error('Error creating ticket:', error);
       },
     });
   }
 
-  // Actualizar parcialmente los datos del usuario
+  // Partially update user data
   updateUser(updatedUser: Partial<User>): void {
     const currentUser = this.userSubject.value;
     if (!currentUser) return;
@@ -47,13 +47,13 @@ export class UserService {
     this.userSubject.next({ ...currentUser, ...updatedUser });
   }
 
-  // Limpiar usuario (por ejemplo al cerrar sesión)
+  // Clear user (for example on logout)
   clearUser(): void {
     this.userSubject.next(null);
     localStorage.removeItem('user');
   }
 
-  // Simular cambio de contraseña (solo si ya hay sesión)
+  // Simulate password change (only if there is a session)
   changePassword(oldPassword: string, newPassword: string): boolean {
     const currentUser = this.userSubject.value;
     if (currentUser && currentUser.password === oldPassword) {
@@ -63,9 +63,9 @@ export class UserService {
     return false;
   }
 
-  // Función isLogged para verificar si el usuario está logueado
+  // isLogged function to check if the user is logged in
   isLogged(): boolean {
     const savedUser = localStorage.getItem('user');
-    return savedUser !== null; // Si el usuario está guardado en localStorage, está logueado
+    return savedUser !== null; // If the user is saved in localStorage, they are logged in
   }
 }

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { User } from '../../../core/interfaces/user.interface';
 import { CommonModule } from '@angular/common';
-import { Api2Service } from '../../../core/services/api2.service'; // Ajusta el path según tu estructura
+import { Api2Service } from '../../../core/services/api2.service'; // Adjust the path according to your structure
 import { UserService } from '../../../core/services/user.service';
 
 @Component({
@@ -39,7 +39,7 @@ export class LoginComponent {
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
-      console.error('Formulario inválido');
+      console.error('Invalid form');
       return;
     }
 
@@ -48,11 +48,11 @@ export class LoginComponent {
         this.User = user;
         this.userService.setUser(user);
 
-        //console.log('Usuario actualizado en el servicio:', this.User);
+        //console.log('User updated in service:', this.User);
         this.router.navigate(['/home']);
       },
       error: (err: any) => {
-        console.error('Error al autenticar:', err);
+        console.error('Authentication error:', err);
       }
     });
   }

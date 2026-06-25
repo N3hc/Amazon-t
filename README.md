@@ -1,27 +1,114 @@
-# PokemonTV2
+# Amazon-t Full-Stack Application
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.12.
+This repository is a monorepo containing both the frontend and backend of the Amazon-t application.
 
-## Development server
+## Project Structure
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+*   **`frontend/`**: The Angular 18 client application.
+*   **`backend/`**: The Laravel 10 API backend.
 
-## Code scaffolding
+---
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## 🔌 Backend (Laravel API)
 
-## Build
+The backend is an API built with the Laravel framework. It is configured to use a local **SQLite** database out of the box, meaning you do not need to install or configure any database server (like MySQL).
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Prerequisites
+*   **PHP** (version 8.1 or 8.2 or 8.3)
+    *   *Note for Windows users:* Ensure the following extensions are enabled in your `php.ini`: `openssl`, `zip`, `pdo_sqlite`, `sqlite3`, `mbstring`, `fileinfo`, `curl`.
+*   **Composer** (PHP package manager)
 
-## Running unit tests
+### Setup & Running
+1.  **Navigate to the backend directory:**
+    ```bash
+    cd backend
+    ```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+2.  **Install PHP dependencies:**
+    ```bash
+    php composer.phar install
+    # Or simply 'composer install' if Composer is installed globally
+    ```
 
-## Running end-to-end tests
+3.  **Create the local SQLite database file:**
+    *   **Windows (PowerShell):**
+        ```powershell
+        New-Item -ItemType File -Path database\database.sqlite -Force
+        ```
+    *   **macOS / Linux:**
+        ```bash
+        touch database/database.sqlite
+        ```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+4.  **Configure the Environment (`.env`):**
+    Create a file named `.env` in the `backend/` root directory and paste the following configuration:
+    ```env
+    APP_NAME=Laravel
+    APP_ENV=local
+    APP_KEY=base64:q2rN3hcF1pL8uG8cK8vS7y7T5T5T5T5T5T5T5T5T5T4=
+    APP_DEBUG=true
+    APP_URL=http://localhost:8000
 
-## Further help
+    LOG_CHANNEL=stack
+    LOG_LEVEL=debug
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+    DB_CONNECTION=sqlite
+    DB_DATABASE=absolute_path_to_your_project/backend/database/database.sqlite
+
+    BROADCAST_DRIVER=log
+    CACHE_DRIVER=file
+    FILESYSTEM_DISK=local
+    QUEUE_CONNECTION=sync
+    SESSION_DRIVER=file
+    SESSION_LIFETIME=120
+    ```
+    *Important:* Replace `absolute_path_to_your_project` in `DB_DATABASE` with the actual absolute path of the project folder on your computer.
+
+5.  **Generate the application key:**
+    ```bash
+    php artisan key:generate
+    ```
+
+6.  **Run database migrations and seeders:**
+    This will create all the database tables and automatically download and populate the database with users, categories, cards, and products:
+    ```bash
+    php artisan migrate:fresh --seed
+    ```
+
+7.  **Start the Laravel development server:**
+    ```bash
+    php artisan serve
+    ```
+    The API will run at [http://localhost:8000/api](http://localhost:8000/api).
+
+---
+
+## 💻 Frontend (Angular)
+
+The frontend is built using Angular 18 and Tailwind CSS.
+
+### Prerequisites
+*   **Node.js** (LTS version)
+*   **npm**
+
+### Setup & Running
+1.  **Navigate to the frontend directory:**
+    ```bash
+    cd ../frontend
+    ```
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+3.  **Start the development server:**
+    ```bash
+    npm start
+    ```
+    The frontend will be available at [http://localhost:4200/](http://localhost:4200/).
+
+---
+
+## 🚀 Running Both Simultaneously
+Once both servers are running:
+*   The Angular client (running at `localhost:4200`) will automatically connect to the Laravel API (running at `localhost:8000`).
+*   All features (user registration/login, card browsing, shopping cart, and payment processing) will be fully functional.

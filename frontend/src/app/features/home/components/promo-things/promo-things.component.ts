@@ -20,19 +20,19 @@ export class PromoThingsComponent implements OnInit {
     {
       id: 'base1-1',
       name: 'Alakazam',
-      image: 'https://images.tcgdex.net/en/base/base1/1/low.webp',
+      image: 'https://assets.tcgdex.net/en/base/base1/1/low.webp',
       setName: 'Base Set'
     },
     {
       id: 'base1-4',
       name: 'Charizard',
-      image: 'https://images.tcgdex.net/en/base/base1/4/low.webp',
+      image: 'https://assets.tcgdex.net/en/base/base1/4/low.webp',
       setName: 'Base Set'
     },
     {
       id: 'base1-2',
       name: 'Blastoise',
-      image: 'https://images.tcgdex.net/en/base/base1/2/low.webp',
+      image: 'https://assets.tcgdex.net/en/base/base1/2/low.webp',
       setName: 'Base Set'
     }
   ];

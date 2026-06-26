@@ -138,7 +138,9 @@
             @if (serie == set.series) {
             <tr class="hover:bg-blue-200 dark:hover:bg-[#34495E] transition text-black dark:text-white">
                 <td class="px-4 py-2 inline-flex items-baseline ">{{ set.name }}
-                    <img [src]="set.images.symbol" class="w-[20px] h-[20px] ml-3" [alt]="set.name + ' symbol'">
+                    @if (set.images.symbol) {
+                        <img [src]="set.images.symbol" class="w-[20px] h-[20px] ml-3" [alt]="set.name + ' symbol'">
+                    }
                 </td>
                 <td class="px-4 py-2">{{ set.releaseDate }}</td>
                 <td class="px-4 py-2">{{ set.total }}</td>
@@ -153,7 +155,9 @@
             @for (set of sets; track $index) {
             <tr class="hover:bg-blue-200 dark:hover:bg-[#34495E] transition text-black dark:text-white">
                 <td class="px-4 py-2 inline-flex items-baseline ">{{ set.name }}
-                    <img [src]="set.images.symbol" class="w-[20px] h-[20px] ml-3" [alt]="set.name + ' symbol'">
+                    @if (set.images.symbol) {
+                        <img [src]="set.images.symbol" class="w-[20px] h-[20px] ml-3" [alt]="set.name + ' symbol'">
+                    }
                 </td>
                 <td class="px-4 py-2">{{ set.releaseDate }}</td>
                 <td class="px-4 py-2">{{ set.total }}</td>

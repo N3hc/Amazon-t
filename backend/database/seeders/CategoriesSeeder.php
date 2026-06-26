@@ -48,14 +48,24 @@ class CategoriesSeeder extends Seeder
                     'es' => $esName
                 ], JSON_UNESCAPED_UNICODE);
 
+                $logoUrl = $setEn['logo'] ?? '';
+                if ($logoUrl && !str_ends_with($logoUrl, '.png')) {
+                    $logoUrl .= '.png';
+                }
+
+                $symbolUrl = $setEn['symbol'] ?? '';
+                if ($symbolUrl && !str_ends_with($symbolUrl, '.png')) {
+                    $symbolUrl .= '.png';
+                }
+
                 DB::table('categories')->updateOrInsert(
                     ['id_set' => $setId],
                     [
                         'name' => $namesJson,
                         'release_date' => Carbon::now()->subYears(10), // Default release date
                         'total_cards' => $setEn['cardCount']['total'] ?? 0,
-                        'logo' => $setEn['logo'] ?? '',
-                        'symbol' => $setEn['symbol'] ?? '',
+                        'logo' => $logoUrl,
+                        'symbol' => $symbolUrl,
                         'legal' => 1,
                         'deleted' => 0,
                         'created_at' => now(),

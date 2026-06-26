@@ -40,7 +40,8 @@ export class DetailComponent {
     private cartService: CartService,
     private ticketsService: TicketsService,
     private userService: UserService,
-    private langService: LanguageService
+    private langService: LanguageService,
+    private route: ActivatedRoute
   ) { }
 
   addToCart(product: any) {
@@ -63,24 +64,55 @@ export class DetailComponent {
     this.router.navigate(['/home/products']);
   }
 
+  loadProductDetails(): void {
+    if (!this.cardid) return;
+    this.api2Service.getProductByCardId(this.cardid).subscribe((data: any) => {
+      this.ProductCard = data;
+      if (data && data.length > 0) {
+        this.selectedProduct = data[0];
+      }
+      console.log('Card retrieved:', this.ProductCard);
+    });
+  }
+
   ngOnInit(): void {
-    this.searchService.selectedCard$.subscribe(card => {
-      if (card && card.description) {
-        try {
-          this.cardid = card.id;
-          this.card = JSON.parse(card.description);
-        } catch (e) {
-          console.error('Error parsing card description:', e);
+    this.route.params.subscribe(params => {
+      const id = params['id'];
+      if (id) {
+        this.cardid = id;
+        
+        // First try to get card from searchService
+        let hasLoadedFromService = false;
+        this.searchService.selectedCard$.subscribe(card => {
+          if (card && String(card.id) === String(id) && card.description) {
+            try {
+              this.card = JSON.parse(card.description);
+              hasLoadedFromService = true;
+              this.loadProductDetails();
+            } catch (e) {
+              console.error('Error parsing card description:', e);
+            }
+          }
+        });
+
+        // If not loaded from searchService, fetch from backend API
+        if (!hasLoadedFromService) {
+          this.api2Service.getCardsById(id).subscribe({
+            next: (response: any) => {
+              if (response) {
+                this.card = JSON.parse(response.description);
+                this.searchService.setCard(response);
+                this.loadProductDetails();
+              }
+            },
+            error: (err) => {
+              console.error('Error fetching card by ID:', err);
+            }
+          });
         }
-      } else {
-        console.error('No card selected or card has no description.');
       }
     });
 
-    this.api2Service.getProductByCardId(this.cardid).subscribe((data: any) => {
-      this.ProductCard = data;
-      console.log('Card retrieved:', this.ProductCard);
-    });
     this.userService.getUser().subscribe({
       next: (user) => {
         this.user = user;

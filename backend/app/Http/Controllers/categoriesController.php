@@ -27,6 +27,12 @@ class categoriesController extends Controller
             if (is_array($names)) {
                 $cat->name = $names[$lang] ?? $names['en'] ?? $cat->name;
             }
+            if ($cat->logo && !str_ends_with($cat->logo, '.png')) {
+                $cat->logo = $cat->logo . '.png';
+            }
+            if ($cat->symbol && !str_ends_with($cat->symbol, '.png')) {
+                $cat->symbol = $cat->symbol . '.png';
+            }
         }
 
         if ($request->id) {

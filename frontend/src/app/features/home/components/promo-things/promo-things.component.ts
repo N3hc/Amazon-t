@@ -18,22 +18,22 @@ export class PromoThingsComponent implements OnInit {
   // Fallback initial cards before local database cards are loaded
   Cards: Card[] = [
     {
-      id: 'base1-1',
-      name: 'Alakazam',
-      image: 'https://assets.tcgdex.net/en/base/base1/1/low.webp',
-      setName: 'Base Set'
+      id: 'sv01-001',
+      name: 'Pineco',
+      image: 'https://assets.tcgdex.net/es/sv/sv01/001/low.webp',
+      setName: 'Escarlata y Púrpura'
     },
     {
-      id: 'base1-4',
-      name: 'Charizard',
-      image: 'https://assets.tcgdex.net/en/base/base1/4/low.webp',
-      setName: 'Base Set'
+      id: 'sv01-002',
+      name: 'Heracross',
+      image: 'https://assets.tcgdex.net/es/sv/sv01/002/low.webp',
+      setName: 'Escarlata y Púrpura'
     },
     {
-      id: 'base1-2',
-      name: 'Blastoise',
-      image: 'https://assets.tcgdex.net/en/base/base1/2/low.webp',
-      setName: 'Base Set'
+      id: 'sv01-004',
+      name: 'Breloom',
+      image: 'https://assets.tcgdex.net/es/sv/sv01/004/low.webp',
+      setName: 'Escarlata y Púrpura'
     }
   ];
 
@@ -64,18 +64,20 @@ export class PromoThingsComponent implements OnInit {
   loadSets(): void {
     this.api2Service.getCategories().subscribe({
       next: (categories: any[]) => {
+        const activeSets = ['xy1', 'sm1', 'swsh1', 'swsh2', 'sv01', 'sv02'];
+        const filteredCategories = categories.filter(c => activeSets.includes(c.id_set));
+
         // Map set IDs to series names for classic Pokémon sets
         const seriesMap: { [key: string]: string } = {
-          'base1': 'Base',
-          'base2': 'Base',
-          'base3': 'Base',
-          'neo1': 'Neo',
-          'ex1': 'EX',
+          'xy1': 'XY',
+          'sm1': 'Sun & Moon',
           'swsh1': 'Sword & Shield',
-          'sv01': 'Scarlet & Violet'
+          'swsh2': 'Sword & Shield',
+          'sv01': 'Scarlet & Violet',
+          'sv02': 'Scarlet & Violet'
         };
 
-        const mappedSets = categories.map((cat: any) => {
+        const mappedSets = filteredCategories.map((cat: any) => {
           return {
             id: cat.id_set,
             name: cat.name,

@@ -16,7 +16,7 @@ class CardsSeeder extends Seeder
         // Get sets from the database
         $sets = DB::table('categories')->select('id', 'id_set')->get();
 
-        $targetSets = ['base1', 'base2', 'base3', 'neo1', 'ex1', 'swsh1', 'sv01'];
+        $targetSets = ['xy1', 'sm1', 'swsh1', 'swsh2', 'sv01', 'sv02'];
 
         foreach ($sets as $set) {
             $setId = $set->id_set;

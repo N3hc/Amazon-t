@@ -43,8 +43,8 @@ export class CarrouselComponent implements OnInit {
     loadSets(): void {
       this.api2Service.getCategories().subscribe({
         next: (categories) => {
-          this.sets = (categories);
-          //console.log(categories);
+          const activeSets = ['xy1', 'sm1', 'swsh1', 'swsh2', 'sv01', 'sv02'];
+          this.sets = categories.filter((c: any) => activeSets.includes(c.id_set));
         },
         error: (error) => {
           console.error('Error loading categories:', error);

@@ -35,7 +35,19 @@ export class ProductListComponent {
       } else if (category) {
         this.searchCardsFromSet(category);
       } else {
-        this.loadCards("1");  // Here you would load a default set, for example "base1"
+        // Dynamically load 'sv01' (Scarlet & Violet) as default to show Spanish cards
+        this.api2Service.getCategories().subscribe({
+          next: (categories: any[]) => {
+            if (categories && categories.length > 0) {
+              const target = categories.find(c => c.id_set === 'sv01') || categories[0];
+              this.loadCards(target.id);
+            }
+          },
+          error: (err) => {
+            console.error('Error loading default category:', err);
+            this.loadCards("1");
+          }
+        });
       }
     });
   }

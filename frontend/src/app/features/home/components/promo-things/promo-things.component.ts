@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Api2Service } from '../../../../core/services/api2.service';
+import { SearchService } from '../../../../core/services/search.service';
 import { Card } from '../../../../core/interfaces/carrousel.interface';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
@@ -55,33 +57,64 @@ export class PromoThingsComponent implements OnInit {
   series: string[] = [];
   ids: string[] = [];
 
-  constructor(private api2Service: Api2Service) {}
+  constructor(
+    private api2Service: Api2Service,
+    private searchService: SearchService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadSets();
   }
 
+  selectCategory(category: any): void {
+    this.searchService.setCategory(category);
+    this.router.navigate(['home/products']);
+  }
+
   loadSets(): void {
     this.api2Service.getCategories().subscribe({
       next: (categories: any[]) => {
-        const activeSets = ['xy1', 'sm1', 'swsh1', 'swsh2', 'sv01', 'sv02'];
-        const filteredCategories = categories.filter(c => activeSets.includes(c.id_set));
-
-        // Map set IDs to series names for classic Pokémon sets
+        // Map set IDs to series names for classic Pokémon sets dynamically
         const seriesMap: { [key: string]: string } = {
-          'xy1': 'XY',
-          'sm1': 'Sun & Moon',
-          'swsh1': 'Sword & Shield',
-          'swsh2': 'Sword & Shield',
-          'sv01': 'Scarlet & Violet',
-          'sv02': 'Scarlet & Violet'
+          'base': 'Original Series',
+          'neo': 'Neo Series',
+          'ecard': 'E-Card Series',
+          'ex': 'EX Series',
+          'dp': 'Diamond & Pearl',
+          'pl': 'Platinum',
+          'hgss': 'HeartGold & SoulSilver',
+          'col': 'Call of Legends',
+          'bw': 'Black & White',
+          'xy': 'XY Series',
+          'sm': 'Sun & Moon',
+          'swsh': 'Sword & Shield',
+          'sv': 'Scarlet & Violet',
+          'pop': 'POP Series',
+          'np': 'Nintendo Promos'
         };
 
-        const mappedSets = filteredCategories.map((cat: any) => {
+        const mappedSets = categories.map((cat: any) => {
+          let seriesId = 'other';
+          if (cat.logo) {
+            const parts = cat.logo.split('/');
+            if (parts.length >= 6) {
+              seriesId = parts[4].toLowerCase();
+            }
+          }
+          if (seriesId === 'other' && cat.id_set) {
+            const match = cat.id_set.match(/^([a-zA-Z]+)/);
+            if (match) {
+              seriesId = match[1].toLowerCase();
+            }
+          }
+
+          const seriesName = seriesMap[seriesId] || (seriesId.toUpperCase() + ' Series');
+
           return {
-            id: cat.id_set,
+            id: cat.id,
             name: cat.name,
-            series: seriesMap[cat.id_set] || 'Other Series',
+            series: seriesName,
             releaseDate: cat.release_date || 'N/A',
             total: cat.total_cards || 0,
             images: {

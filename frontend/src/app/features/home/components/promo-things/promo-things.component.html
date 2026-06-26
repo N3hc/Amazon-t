@@ -129,42 +129,41 @@
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-300 dark:divide-gray-600">
-            @for (serie of series; track $index) {
-            @if (any == 0){
-            <tr class="bg-blue-100 dark:bg-[#2C3E50]">
-                <td colspan="4" class="px-4 py-2 font-semibold text-[#3D81B6] dark:text-[#81A1C1]">{{ serie }}</td>
-            </tr>
-            @for (set of sets; track $index) {
-            @if (serie == set.series) {
-            <tr class="hover:bg-blue-200 dark:hover:bg-[#34495E] transition text-black dark:text-white">
-                <td class="px-4 py-2 inline-flex items-baseline ">{{ set.name }}
-                    @if (set.images.symbol) {
-                        <img [src]="set.images.symbol" class="w-[20px] h-[20px] ml-3" [alt]="set.name + ' symbol'">
+            @if (any == 0) {
+                @for (serie of series; track $index) {
+                    <tr class="bg-blue-100 dark:bg-[#2C3E50]">
+                        <td colspan="4" class="px-4 py-2 font-semibold text-[#3D81B6] dark:text-[#81A1C1]">{{ serie }}</td>
+                    </tr>
+                    @for (set of sets; track $index) {
+                        @if (serie == set.series) {
+                            <tr class="hover:bg-blue-200 dark:hover:bg-[#34495E] transition text-black dark:text-white cursor-pointer" (click)="selectCategory(set.id)">
+                                <td class="px-4 py-2 inline-flex items-baseline">
+                                    {{ set.name }}
+                                    @if (set.images.symbol) {
+                                        <img [src]="set.images.symbol" class="w-[20px] h-[20px] ml-3" [alt]="set.name + ' symbol'">
+                                    }
+                                </td>
+                                <td class="px-4 py-2">{{ set.releaseDate }}</td>
+                                <td class="px-4 py-2">{{ set.total }}</td>
+                                <td class="px-4 py-2 hidden sm:table-cell">{{ set.legalities.unlimited }}</td>
+                            </tr>
+                        }
                     }
-                </td>
-                <td class="px-4 py-2">{{ set.releaseDate }}</td>
-                <td class="px-4 py-2">{{ set.total }}</td>
-                <td class="px-4 py-2 hidden sm:table-cell">{{ set.legalities.unlimited }}</td>
-            </tr>
-            }
-            }
+                }
             } @else {
-            <tr class="bg-blue-100 dark:bg-[#2C3E50]">
-                <td colspan="4" class="px-4 py-2 font-semibold text-[#3D81B6] dark:text-[#81A1C1]"></td>
-            </tr>
-            @for (set of sets; track $index) {
-            <tr class="hover:bg-blue-200 dark:hover:bg-[#34495E] transition text-black dark:text-white">
-                <td class="px-4 py-2 inline-flex items-baseline ">{{ set.name }}
-                    @if (set.images.symbol) {
-                        <img [src]="set.images.symbol" class="w-[20px] h-[20px] ml-3" [alt]="set.name + ' symbol'">
-                    }
-                </td>
-                <td class="px-4 py-2">{{ set.releaseDate }}</td>
-                <td class="px-4 py-2">{{ set.total }}</td>
-                <td class="px-4 py-2 hidden sm:table-cell">{{ set.legalities.unlimited }}</td>
-            </tr>
-            }
-            }
+                @for (set of sets; track $index) {
+                    <tr class="hover:bg-blue-200 dark:hover:bg-[#34495E] transition text-black dark:text-white cursor-pointer" (click)="selectCategory(set.id)">
+                        <td class="px-4 py-2 inline-flex items-baseline">
+                            {{ set.name }}
+                            @if (set.images.symbol) {
+                                <img [src]="set.images.symbol" class="w-[20px] h-[20px] ml-3" [alt]="set.name + ' symbol'">
+                            }
+                        </td>
+                        <td class="px-4 py-2">{{ set.releaseDate }}</td>
+                        <td class="px-4 py-2">{{ set.total }}</td>
+                        <td class="px-4 py-2 hidden sm:table-cell">{{ set.legalities.unlimited }}</td>
+                    </tr>
+                }
             }
         </tbody>
     </table>

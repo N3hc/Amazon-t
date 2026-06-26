@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
+use App\Models\categories;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponse;
 
@@ -66,11 +67,12 @@ class CardController extends Controller
         
         try {
             $resCardEn = \Illuminate\Support\Facades\Http::withoutVerifying()->timeout(15)->get("https://api.tcgdex.net/v2/en/cards/{$cardId}");
-            $resCardEs = \Illuminate\Support\Facades\Http::withoutVerifying()->timeout(15)->get("https://api.tcgdex.net/v2/es/cards/{$cardId}");
-
-            if ($resCardEn->successful() && $resCardEs->successful()) {
+            
+            if ($resCardEn->successful()) {
                 $enDetails = $resCardEn->json();
-                $esDetails = $resCardEs->json();
+                
+                $resCardEs = \Illuminate\Support\Facades\Http::withoutVerifying()->timeout(15)->get("https://api.tcgdex.net/v2/es/cards/{$cardId}");
+                $esDetails = $resCardEs->successful() ? $resCardEs->json() : $enDetails;
 
                 // Map English and Spanish details
                 $enDesc = $this->mapCardDetails($enDetails, $enDetails, 'en');
@@ -187,6 +189,14 @@ class CardController extends Controller
         }
 
         if ($request->id_set) {
+            // Check if cards exist for this category ID, if not dynamically seed them
+            $exists = Card::where('id_set', $request->id_set)->exists();
+            if (!$exists) {
+                $category = categories::find($request->id_set);
+                if ($category) {
+                    $this->dynamicallySeedCardsForSet($category);
+                }
+            }
             $query->where('id_set', $request->id_set);
         }
 
@@ -205,6 +215,73 @@ class CardController extends Controller
         }
 
         return $this->successResponse($cards);
+    }
+
+    private function dynamicallySeedCardsForSet($category)
+    {
+        $setId = $category->id_set;
+        
+        try {
+            $responseEn = \Illuminate\Support\Facades\Http::withoutVerifying()->timeout(30)->get("https://api.tcgdex.net/v2/en/sets/{$setId}");
+            $responseEs = \Illuminate\Support\Facades\Http::withoutVerifying()->timeout(30)->get("https://api.tcgdex.net/v2/es/sets/{$setId}");
+            
+            if ($responseEn->successful()) {
+                $cardsEn = $responseEn->json()['cards'] ?? [];
+                $cardsEs = $responseEs->successful() ? ($responseEs->json()['cards'] ?? []) : [];
+                
+                // Index Spanish cards by ID
+                $cardsEsById = [];
+                foreach ($cardsEs as $cardEs) {
+                    $cardsEsById[$cardEs['id']] = $cardEs;
+                }
+                
+                $allCardsData = [];
+                
+                foreach ($cardsEn as $cardEn) {
+                    $cardId = $cardEn['id'];
+                    $cardEs = $cardsEsById[$cardId] ?? null;
+                    
+                    $enName = $cardEn['name'];
+                    $esName = $cardEs ? $cardEs['name'] : $enName;
+                    
+                    // Map basic details (full details loaded on-the-fly when viewed)
+                    $enDesc = $this->mapCardDetails(null, $cardEn, 'en');
+                    $esDesc = $this->mapCardDetails(null, $cardEs ?: $cardEn, 'es');
+                    
+                    $descriptionJson = json_encode([
+                        'en' => $enDesc,
+                        'es' => $esDesc
+                    ], JSON_UNESCAPED_UNICODE);
+                    
+                    $namesJson = json_encode([
+                        'en' => $enName,
+                        'es' => $esName
+                    ], JSON_UNESCAPED_UNICODE);
+                    
+                    $allCardsData[] = [
+                        'id_card' => $cardId,
+                        'id_set' => $category->id,
+                        'name' => $namesJson,
+                        'image_small' => $cardEn['image'] . '/low.webp',
+                        'image_large' => $cardEn['image'] . '/high.webp',
+                        'description' => $descriptionJson,
+                        'deleted' => 0,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+                
+                if (!empty($allCardsData)) {
+                    // SQLite chunked inserts
+                    $chunks = array_chunk($allCardsData, 100);
+                    foreach ($chunks as $chunk) {
+                        Card::insert($chunk);
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Error dynamically seeding cards for set {$setId}: " . $e->getMessage());
+        }
     }
 
     public function showFromSet(Request $request, $id)

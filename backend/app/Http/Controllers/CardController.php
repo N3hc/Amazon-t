@@ -49,6 +49,111 @@ class CardController extends Controller
         return $card;
     }
 
+    private function ensureDetailedCard($card)
+    {
+        if (!$card) return;
+
+        $descriptions = json_decode($card->description, true);
+        if (!is_array($descriptions)) return;
+
+        // If 'illustrator' is set, it means we already have the detailed card cached
+        if (isset($descriptions['en']['illustrator'])) {
+            return;
+        }
+
+        // It is a basic card, let's fetch the full details on the fly!
+        $cardId = $card->id_card;
+        
+        try {
+            $resCardEn = \Illuminate\Support\Facades\Http::withoutVerifying()->timeout(15)->get("https://api.tcgdex.net/v2/en/cards/{$cardId}");
+            $resCardEs = \Illuminate\Support\Facades\Http::withoutVerifying()->timeout(15)->get("https://api.tcgdex.net/v2/es/cards/{$cardId}");
+
+            if ($resCardEn->successful() && $resCardEs->successful()) {
+                $enDetails = $resCardEn->json();
+                $esDetails = $resCardEs->json();
+
+                // Map English and Spanish details
+                $enDesc = $this->mapCardDetails($enDetails, $enDetails, 'en');
+                $esDesc = $this->mapCardDetails($esDetails, $esDetails, 'es');
+
+                $newDescription = [
+                    'en' => $enDesc,
+                    'es' => $esDesc
+                ];
+
+                // Update the card in the database
+                $card->description = json_encode($newDescription, JSON_UNESCAPED_UNICODE);
+                
+                if (isset($enDesc['images']['small'])) {
+                    $card->image_small = $enDesc['images']['small'];
+                }
+                if (isset($enDesc['images']['large'])) {
+                    $card->image_large = $enDesc['images']['large'];
+                }
+
+                $card->save();
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Error fetching card details on the fly: " . $e->getMessage());
+        }
+    }
+
+    private function mapCardDetails($details, $summary, $lang)
+    {
+        $name = $details['name'] ?? $summary['name'];
+        $image = $details['image'] ?? $summary['image'];
+
+        // Base structure
+        $mapped = [
+            'id' => $details['id'] ?? $summary['id'],
+            'name' => $name,
+            'supertype' => $details['category'] ?? ($lang === 'es' ? 'Entrenador/Pokémon' : 'Trainer/Pokémon'),
+            'subtypes' => isset($details['stage']) ? [$details['stage']] : [],
+            'evolvesFrom' => $details['evolveFrom'] ?? null,
+            'rarity' => $details['rarity'] ?? ($lang === 'es' ? 'Común' : 'Common'),
+            'images' => [
+                'small' => $image . '/low.webp',
+                'large' => $image . '/high.webp'
+            ],
+            'abilities' => [],
+            'attacks' => []
+        ];
+
+        // Map abilities
+        if (isset($details['abilities']) && is_array($details['abilities'])) {
+            foreach ($details['abilities'] as $ab) {
+                $mapped['abilities'][] = [
+                    'name' => $ab['name'] ?? '',
+                    'text' => $ab['effect'] ?? '',
+                    'type' => $ab['type'] ?? 'Ability'
+                ];
+            }
+        }
+
+        // Map attacks
+        if (isset($details['attacks']) && is_array($details['attacks'])) {
+            foreach ($details['attacks'] as $at) {
+                $mapped['attacks'][] = [
+                    'name' => $at['name'] ?? '',
+                    'text' => $at['effect'] ?? '',
+                    'damage' => $at['damage'] ?? '',
+                    'cost' => $at['cost'] ?? []
+                ];
+            }
+        }
+
+        // Add additional detailed fields
+        if ($details) {
+            $mapped['illustrator'] = $details['illustrator'] ?? null;
+            $mapped['hp'] = $details['hp'] ?? null;
+            $mapped['types'] = $details['types'] ?? [];
+            $mapped['stage'] = $details['stage'] ?? null;
+            $mapped['retreat'] = $details['retreat'] ?? null;
+        }
+
+        return $mapped;
+    }
+
     private function getRequestedLang(Request $request)
     {
         $lang = $request->header('Accept-Language') ?? $request->query('lang') ?? 'en';
@@ -76,6 +181,7 @@ class CardController extends Controller
 
         if ($request->id) {
             $card = Card::findOrFail($request->id);
+            $this->ensureDetailedCard($card);
             $this->translateCard($card, $lang);
             return $this->successResponse($card);
         }

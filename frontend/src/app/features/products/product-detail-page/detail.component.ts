@@ -52,7 +52,6 @@ export class DetailComponent {
     'incoloro': 'Colorless',
     'oscuridad': 'Darkness',
     'dragón': 'Dragon',
-    'dragon': 'Dragon',
     'hada': 'Fairy',
     'lucha': 'Fighting',
     'fuego': 'Fire',

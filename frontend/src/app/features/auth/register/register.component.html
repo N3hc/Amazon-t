@@ -11,7 +11,7 @@
         aria-label="User registration form">
 
         <div class="relative mb-4 flex flex-col">
-            <label for="name" class="text-white mb-1">Full Name</label>
+            <label for="username" class="text-white mb-1">Full Name</label>
             <input type="text" id="username" formControlName="username" placeholder="Your full name"
                 class="w-full bg-transparent p-2 text-white border border-gray-400 rounded focus:outline-none"
                 required aria-label="Full Name" />
@@ -108,9 +108,9 @@
 
         <div class="mt-4 text-center">
             <p class="text-gray-400 text-sm">Already have an account?
-                <a (click)="goToLogin()" class="text-teal-300 hover:underline">Login here</a>
+                <a (click)="goToLogin()" (keydown.enter)="goToLogin()" class="text-teal-300 hover:underline cursor-pointer" role="button" tabindex="0">Login here</a>
             </p>
-            <a class="text-teal-300 text-sm hover:underline" (click)="continueWithoutSession()">
+            <a class="text-teal-300 text-sm hover:underline cursor-pointer" (click)="continueWithoutSession()" (keydown.enter)="continueWithoutSession()" role="button" tabindex="0">
                 Continue without logging in
             </a>
         </div>

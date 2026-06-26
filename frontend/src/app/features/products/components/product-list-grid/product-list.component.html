@@ -3,8 +3,13 @@
         @for (card of cards; track $index) {
                 <div class="flex justify-center">
                     <div class="bg-white dark:bg-[#1E272A] p-4 rounded-xl shadow-lg hover:shadow-2xl transition-all w-full max-w-xs">
-                        <div class="text-center cursor-pointer" (click)="selectProduct(card)">
-                            <img [src]="card.image_small" class="w-full h-auto rounded-lg shadow-md">
+                        <div class="text-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-1" 
+                             (click)="selectProduct(card)" 
+                             (keydown.enter)="selectProduct(card)"
+                             role="button" 
+                             tabindex="0"
+                             [attr.aria-label]="'View details of ' + card.name">
+                            <img [src]="card.image_small" class="w-full h-auto rounded-lg shadow-md" [alt]="card.name">
                             <div class="mt-4">
                                 <h4 class="text-lg font-bold text-gray-800 dark:text-gray-200">{{card.name}}</h4>
                             </div>

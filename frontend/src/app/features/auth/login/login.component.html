@@ -68,15 +68,17 @@
             <a href="#" class="text-teal-300 text-sm hover:underline" role="button">Forgot password?</a>
             <p class="text-gray-400 text-sm">
                 Don't have an account?
-                <a class="text-teal-300 text-sm hover:underline" 
+                <a class="text-teal-300 text-sm hover:underline cursor-pointer" 
                    (click)="goToRegister()"
+                   (keydown.enter)="goToRegister()"
                    role="button"
                    tabindex="0">
                     Register here
                 </a>
             </p>
-            <a class="text-teal-300 text-sm hover:underline" 
+            <a class="text-teal-300 text-sm hover:underline cursor-pointer" 
                (click)="continueWithoutSession()"
+               (keydown.enter)="continueWithoutSession()"
                role="button"
                tabindex="0">
                 Continue without account

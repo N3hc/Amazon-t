@@ -31,6 +31,53 @@ export class DetailComponent {
   ProductCard: any;
   user: any;
   routes = "assets/energy/";
+  rawCard: any;
+
+  energyMap: { [key: string]: string } = {
+    // English
+    'colorless': 'Colorless',
+    'darkness': 'Darkness',
+    'dragon': 'Dragon',
+    'fairy': 'Fairy',
+    'fighting': 'Fighting',
+    'fire': 'Fire',
+    'grass': 'Grass',
+    'lightning': 'Lightning',
+    'metal': 'Metal',
+    'psychic': 'Psychic',
+    'water': 'Water',
+    
+    // Spanish translations from TCGdex API
+    'incolora': 'Colorless',
+    'incoloro': 'Colorless',
+    'oscuridad': 'Darkness',
+    'dragón': 'Dragon',
+    'dragon': 'Dragon',
+    'hada': 'Fairy',
+    'lucha': 'Fighting',
+    'fuego': 'Fire',
+    'planta': 'Grass',
+    'rayo': 'Lightning',
+    'metalica': 'Metal',
+    'metálica': 'Metal',
+    'psíquico': 'Psychic',
+    'psiquico': 'Psychic',
+    'psíquica': 'Psychic',
+    'psiquica': 'Psychic',
+    'agua': 'Water'
+  };
+
+  getEnergyImage(energy: string): string {
+    const key = energy.toLowerCase().trim();
+    const mapped = this.energyMap[key] || energy;
+    return `${this.routes}${mapped}.png`;
+  }
+
+  handleImageError(event: any): void {
+    if (this.rawCard && this.rawCard.image_large_en && event.target.src !== this.rawCard.image_large_en) {
+      event.target.src = this.rawCard.image_large_en;
+    }
+  }
 
   constructor(
     private api2Service: Api2Service,
@@ -45,6 +92,10 @@ export class DetailComponent {
   ) { }
 
   addToCart(product: any) {
+    if (!this.user) {
+      this.router.navigate(['/login']);
+      return;
+    }
     const item: CartItem = {
       id: String(this.selectedProduct.id),
       name: product.name,
@@ -86,6 +137,7 @@ export class DetailComponent {
         this.searchService.selectedCard$.subscribe(card => {
           if (card && String(card.id) === String(id) && card.description) {
             try {
+              this.rawCard = card;
               this.card = JSON.parse(card.description);
               hasLoadedFromService = true;
               this.loadProductDetails();
@@ -100,6 +152,7 @@ export class DetailComponent {
           this.api2Service.getCardsById(id).subscribe({
             next: (response: any) => {
               if (response) {
+                this.rawCard = response;
                 this.card = JSON.parse(response.description);
                 this.searchService.setCard(response);
                 this.loadProductDetails();

@@ -102,5 +102,12 @@ export class ProductListComponent {
     this.searchService.setCard(card);  // 👈 passes the complete object
     this.router.navigate(['/products/details', card.id]);
   }
+
+  // Fallback to English image if Spanish image fails to load in the grid
+  handleImageError(event: any, card: any): void {
+    if (card.image_small_en && event.target.src !== card.image_small_en) {
+      event.target.src = card.image_small_en;
+    }
+  }
   
 }

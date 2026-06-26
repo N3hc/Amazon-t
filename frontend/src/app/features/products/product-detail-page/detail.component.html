@@ -12,6 +12,7 @@
     </nav>
 
     <!-- Main Content -->
+    @if (card) {
     <div class="container mx-auto mt-5 p-4">
       <div class="grid md:grid-cols-2 gap-8">
         <!-- Product Images Section -->
@@ -20,7 +21,7 @@
             class="p-4 bg-white dark:bg-gray-800 rounded-xl shadow-xl hover:shadow-2xl transition-shadow holographic-card">
             <h2 id="product-images-heading" class="sr-only">Product Images</h2>
             <img [src]="card.images?.large" class="w-full max-w-xs rounded-lg aspect-[3/4] object-contain"
-              [alt]="card.name + ' full size illustration'" role="img">
+              [alt]="card.name + ' full size illustration'" role="img" (error)="handleImageError($event)">
           </div>
         </section>
 
@@ -34,7 +35,7 @@
             <p class="text-gray-500 dark:text-gray-400">SKU: {{card.id}}</p>
             <div class="text-4xl font-bold text-blue-600 dark:text-blue-400" aria-label="Price">
               <ul class="space-y-2">
-                @if (ProductCard[0]?.price) {
+                @if (ProductCard && ProductCard[0]?.price) {
                 <select [(ngModel)]="selectedProduct" class="w-full px-4 py-2.5 text-lg bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 
               rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 
               transition-colors cursor-pointer dark:text-white" aria-label="Select price">
@@ -138,7 +139,7 @@
           <li class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-sm" role="listitem">
             <div class="flex flex-wrap gap-2 mb-2">
               @for (energy of attack.cost; track $index) {
-              <img class="w-8 h-8" [src]="routes + energy + '.png'" [alt]="energy + ' energy type'" role="img">
+              <img class="w-8 h-8" [src]="getEnergyImage(energy)" [alt]="energy + ' energy type'" role="img">
               }
             </div>
             <h3 class="text-xl font-semibold dark:text-white">{{ attack.name }}</h3>
@@ -151,5 +152,6 @@
         </ul>
       </section>
     </div>
+    }
   </main>
 </div>

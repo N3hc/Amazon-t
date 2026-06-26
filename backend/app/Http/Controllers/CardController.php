@@ -14,6 +14,16 @@ class CardController extends Controller
     {
         if (!$card) return $card;
 
+        // Keep English image URLs as fallbacks
+        $descriptions = json_decode($card->description, true);
+        if (is_array($descriptions)) {
+            $card->image_small_en = $descriptions['en']['images']['small'] ?? $card->image_small;
+            $card->image_large_en = $descriptions['en']['images']['large'] ?? $card->image_large;
+        } else {
+            $card->image_small_en = $card->image_small;
+            $card->image_large_en = $card->image_large;
+        }
+
         // Translate name
         $names = json_decode($card->name, true);
         if (is_array($names)) {
@@ -21,7 +31,6 @@ class CardController extends Controller
         }
 
         // Translate description (which is the full card JSON)
-        $descriptions = json_decode($card->description, true);
         if (is_array($descriptions)) {
             if (isset($descriptions['en']) || isset($descriptions['es'])) {
                 $selectedDesc = $descriptions[$lang] ?? $descriptions['en'] ?? null;

@@ -9,7 +9,7 @@
                              role="button" 
                              tabindex="0"
                              [attr.aria-label]="'View details of ' + card.name">
-                            <img [src]="card.image_small" class="w-full h-auto rounded-lg shadow-md" [alt]="card.name">
+                            <img [src]="card.image_small" class="w-full h-auto rounded-lg shadow-md" [alt]="card.name" (error)="handleImageError($event, card)">
                             <div class="mt-4">
                                 <h4 class="text-lg font-bold text-gray-800 dark:text-gray-200">{{card.name}}</h4>
                             </div>

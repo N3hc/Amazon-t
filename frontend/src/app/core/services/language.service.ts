@@ -441,6 +441,10 @@ export class LanguageService {
       'en': 'cards',
       'es': 'cartas'
     },
+    'total_cards': {
+      'en': 'Total Cards',
+      'es': 'Cartas Totales'
+    },
     'price_eur': {
       'en': 'Price (€)',
       'es': 'Precio (€)'

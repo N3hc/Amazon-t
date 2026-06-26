@@ -16,8 +16,13 @@ class CardsSeeder extends Seeder
         // Get sets from the database
         $sets = DB::table('categories')->select('id', 'id_set')->get();
 
+        $targetSets = ['base1', 'base2', 'base3', 'neo1', 'ex1', 'swsh1', 'sv01'];
+
         foreach ($sets as $set) {
             $setId = $set->id_set;
+            if (!in_array($setId, $targetSets)) {
+                continue;
+            }
             $this->command->info("Fetching cards for set: {$setId}...");
 
             $responseEn = Http::withoutVerifying()->timeout(100)->get("https://api.tcgdex.net/v2/en/sets/{$setId}");

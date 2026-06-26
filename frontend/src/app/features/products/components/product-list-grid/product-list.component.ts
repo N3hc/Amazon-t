@@ -59,8 +59,8 @@ export class ProductListComponent {
   searchCards(query: string): void {
     this.cards = [];
     this.api2Service.getCards().subscribe({
-      next: (response) => {
-        this.cards = response.data.filter((card: any) =>
+      next: (response: any[]) => {
+        this.cards = response.filter((card: any) =>
           card.deleted === 0 &&
           card.name.toLowerCase().includes(query.toLowerCase())
         );

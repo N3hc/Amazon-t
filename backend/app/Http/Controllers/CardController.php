@@ -27,6 +27,12 @@ class CardController extends Controller
                 $selectedDesc = $descriptions[$lang] ?? $descriptions['en'] ?? null;
                 if ($selectedDesc) {
                     $card->description = json_encode($selectedDesc);
+                    if (isset($selectedDesc['images']['small'])) {
+                        $card->image_small = $selectedDesc['images']['small'];
+                    }
+                    if (isset($selectedDesc['images']['large'])) {
+                        $card->image_large = $selectedDesc['images']['large'];
+                    }
                 }
             }
         }

@@ -1,13 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-use Carbon\Carbon;
 
+use Carbon\Carbon;
 use App\Models\categories;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponse;
 
 class categoriesController extends Controller
 {
+    use ApiResponse;
+
     public function index(Request $request)
     {
         $lang = $request->header('Accept-Language') ?? $request->query('lang') ?? 'en';
@@ -16,9 +19,7 @@ class categoriesController extends Controller
         $allCategories = categories::all();
 
         if ($allCategories->isEmpty()) {
-            return response()->json([
-                'message' => 'No categories registered'
-            ], 404);
+            return $this->errorResponse('No categories registered', 404);
         }
 
         foreach ($allCategories as $cat) {
@@ -31,19 +32,19 @@ class categoriesController extends Controller
         if ($request->id) {
             $category = $allCategories->firstWhere('id', $request->id);
             if (!$category) {
-                return response()->json(['message' => 'Category not found'], 404);
+                return $this->errorResponse('Category not found', 404);
             }
-            return response()->json($category, 200);
+            return $this->successResponse($category);
         }
 
-        return response()->json($allCategories, 200);
+        return $this->successResponse($allCategories);
     }
+
     public function update(Request $request)
     {
         $card = categories::find($request->id);
 
-
-        if($card){
+        if ($card) {
             if ($request->has('name')) {
                 $card->name = $request->name;
             }
@@ -55,28 +56,33 @@ class categoriesController extends Controller
             }
             if ($request->has('total_cards')) {
                 $card->total_cards = $request->total_cards;
-            }if ($request->has('logo')){
+            }
+            if ($request->has('logo')) {
                 $card->logo = $request->logo;
-            }if($request->has('symbol')){
+            }
+            if ($request->has('symbol')) {
                 $card->symbol = $request->symbol;
-            }if($request->has('legal')){
+            }
+            if ($request->has('legal')) {
                 $card->legal = $request->legal;
             }
-            if ($request->has('deleted')){
+            if ($request->has('deleted')) {
                 $card->deleted = $request->deleted;
             }
-        }
-        $card->save();
+            $card->save();
 
-        return response()->json([
-            'name' => $card->name,
-            'symbol' => $card->symbol,
-            'logo' => $card->logo,
-            'total_cards' => $card->total_cards,
-            'id_set' => $card->id_set,
-            'release_date' => $card->release_date,
-            'deleted' => $card->deleted
-        ], 200);
+            return $this->successResponse([
+                'name' => $card->name,
+                'symbol' => $card->symbol,
+                'logo' => $card->logo,
+                'total_cards' => $card->total_cards,
+                'id_set' => $card->id_set,
+                'release_date' => $card->release_date,
+                'deleted' => $card->deleted
+            ]);
+        }
+
+        return $this->errorResponse('Category not found', 404);
     }
 
     public function store(Request $request)
@@ -91,9 +97,8 @@ class categoriesController extends Controller
             $card->logo = $request->logo;
             $card->release_date = Carbon::createFromFormat('d/m/Y', $request->release_date)->format('Y-m-d');
 
-
             if ($card->save()) {
-                return response()->json([
+                return $this->successResponse([
                     'name' => $card->name,
                     'logo' => $card->logo,
                     'symbol' => $card->symbol,
@@ -101,38 +106,29 @@ class categoriesController extends Controller
                     'id_set' => $card->id_set,
                     'release_date' => $card->release_date,
                     'message' => 'Category saved successfully'
-                ], 200);
+                ]);
             } else {
-                return response()->json([
-                    'message' => 'Error saving category'
-                ], 500);
+                return $this->errorResponse('Error saving category', 500);
             }
         } else {
-            return response()->json([
-                'message' => 'Category not found'
-            ], 404);
+            return $this->errorResponse('Category not found', 404);
         }
     }
 
     public function delete(Request $request)
     {
-
         $card = categories::find($request->id);
 
         if ($card) {
             if ($card->delete()) {
-                return response()->json([
+                return $this->successResponse([
                     'message' => 'Category deleted'
-                ], 200);
+                ]);
             } else {
-                return response()->json([
-                    'message' => 'Error deleting category'
-                ], 500);
+                return $this->errorResponse('Error deleting category', 500);
             }
         } else {
-            return response()->json([
-                'message' => 'Category not found'
-            ], 404);
+            return $this->errorResponse('Category not found', 404);
         }
     }
 }

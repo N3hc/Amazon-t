@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Card;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponse;
 
 class CardController extends Controller
 {
+    use ApiResponse;
+
     private function translateCard($card, $lang)
     {
         if (!$card) return $card;
@@ -48,7 +51,7 @@ class CardController extends Controller
             $this->translateCard($card, $lang);
         }
 
-        return response()->json($cards);
+        return $this->successResponse($cards);
     }
 
     public function index(Request $request)
@@ -59,7 +62,7 @@ class CardController extends Controller
         if ($request->id) {
             $card = Card::findOrFail($request->id);
             $this->translateCard($card, $lang);
-            return response()->json($card);
+            return $this->successResponse($card);
         }
 
         if ($request->id_set) {
@@ -73,14 +76,14 @@ class CardController extends Controller
         $cards = $query->get();
 
         if ($cards->isEmpty()) {
-            return response()->json(['message' => 'No hay cartas registradas'], 404);
+            return $this->errorResponse('No hay cartas registradas', 404);
         }
 
         foreach ($cards as $card) {
             $this->translateCard($card, $lang);
         }
 
-        return response()->json($cards, 200);
+        return $this->successResponse($cards);
     }
 
     public function showFromSet(Request $request, $id)
@@ -89,16 +92,14 @@ class CardController extends Controller
         $cards = Card::where('id_set', $id)->get();
 
         if ($cards->isEmpty()) {
-            return response()->json([
-                'message' => 'No se encontraron cartas para este set'
-            ], 404);
+            return $this->errorResponse('No se encontraron cartas para este set', 404);
         }
 
         foreach ($cards as $card) {
             $this->translateCard($card, $lang);
         }
 
-        return response()->json($cards, 200);
+        return $this->successResponse($cards);
     }
 
     public function indexCardsByUserProduct($request)
@@ -106,9 +107,7 @@ class CardController extends Controller
         $lang = str_contains(strtolower(request()->header('Accept-Language') ?? request()->query('lang') ?? 'en'), 'es') ? 'es' : 'en';
 
         if ($request->isEmpty()) {
-            return response()->json([
-                'message' => 'No se encontraron cartas para este set'
-            ], 404);
+            return $this->errorResponse('No se encontraron cartas para este set', 404);
         }
 
         $temp = Card::whereIn('id_card', $request)
@@ -119,7 +118,7 @@ class CardController extends Controller
             $this->translateCard($card, $lang);
         }
 
-        return response()->json($temp, 200);
+        return $this->successResponse($temp);
     }
 
     public function update(Request $request)
@@ -149,17 +148,17 @@ class CardController extends Controller
             $card->description = json_encode($card->description);
             $card->save();
 
-            return response()->json([
+            return $this->successResponse([
                 'name' => $card->name,
                 'image' => $card->image,
                 'id_card' => $card->id_card,
                 'id_set' => $card->id_set,
                 'description' => $card->description,
                 'deleted' => $card->deleted
-            ], 200);
+            ]);
         }
 
-        return response()->json(['message' => 'Carta no encontrada'], 404);
+        return $this->errorResponse('Carta no encontrada', 404);
     }
 
     public function store(Request $request)
@@ -173,17 +172,17 @@ class CardController extends Controller
         $card->description = $request->description;
 
         if ($card->save()) {
-            return response()->json([
+            return $this->successResponse([
                 'name' => $card->name,
                 'image' => $card->image,
                 'id_card' => $card->id_card,
                 'id_set' => $card->id_set,
                 'description' => $card->description,
                 'message' => 'Carta guardada'
-            ], 200);
+            ]);
         }
 
-        return response()->json(['message' => 'Error al guardar la carta'], 500);
+        return $this->errorResponse('Error al guardar la carta', 500);
     }
 
     public function delete(Request $request)
@@ -192,11 +191,11 @@ class CardController extends Controller
 
         if ($card) {
             if ($card->delete()) {
-                return response()->json(['message' => 'Carta eliminada'], 200);
+                return $this->successResponse(['message' => 'Carta eliminada']);
             }
-            return response()->json(['message' => 'Error al eliminar la carta'], 500);
+            return $this->errorResponse('Error al eliminar la carta', 500);
         }
 
-        return response()->json(['message' => 'Carta no encontrada'], 404);
+        return $this->errorResponse('Carta no encontrada', 404);
     }
 }

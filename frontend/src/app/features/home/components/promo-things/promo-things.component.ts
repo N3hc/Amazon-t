@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CardsApiService } from '../../../../core/services/cards-api.service';
+import { Component, OnInit } from '@angular/core';
+import { Api2Service } from '../../../../core/services/api2.service';
 import { Card } from '../../../../core/interfaces/carrousel.interface';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
@@ -10,109 +10,30 @@ import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
   templateUrl: './promo-things.component.html',
   styleUrl: './promo-things.component.css'
 })
-export class PromoThingsComponent {
+export class PromoThingsComponent implements OnInit {
   anterior: number = 0;
   actual: number = 1;
   siguiente: number = 2;
 
-  
-
+  // Fallback initial cards before local database cards are loaded
   Cards: Card[] = [
     {
-      id: 'dp5-98',
-      name: 'Glaceon',
-      image: 'https://images.pokemontcg.io/dp5/98.png',
-      setName: 'Majestic Dawn'
+      id: 'base1-1',
+      name: 'Alakazam',
+      image: 'https://images.tcgdex.net/en/base/base1/1/low.webp',
+      setName: 'Base Set'
     },
     {
-      id: 'sv2-222',
-      name: 'Tyranitar',
-      image: 'https://images.pokemontcg.io/sv2/222.png',
-      setName: 'Paldea Evolved'
+      id: 'base1-4',
+      name: 'Charizard',
+      image: 'https://images.tcgdex.net/en/base/base1/4/low.webp',
+      setName: 'Base Set'
     },
     {
-      id: 'pl2-109',
-      name: 'Luxray GL',
-      image: 'https://images.pokemontcg.io/pl2/109.png',
-      setName: 'Rising Rivals'
-    },
-    {
-      id: 'sm75-78',
-      name: 'Ultra Necrozma GX',
-      image: 'https://images.pokemontcg.io/sm75/78.png',
-      setName: 'Dragon Majesty'
-    },
-    {
-      id: 'sm12-249',
-      name: 'Venusaur & Snivy-GX',
-      image: 'https://images.pokemontcg.io/sm12/249.png',
-      setName: 'Cosmic Eclipse'
-    },
-    {
-      id:'swsh10tg-TG23',
-      name:'Garchomp V',
-      image:'https://images.pokemontcg.io/swsh10tg/TG23.png',
-      setName:'Astral Radiance'
-    },
-    {
-      id:'sv7-173',
-      name:'Terapagos Ex',
-      image:'https://images.pokemontcg.io/sv7/170.png',
-      setName:'Stellar  Crown'
-    },
-    {
-      id:'xy4-65a',
-      name:'Aegislash Ex',
-      image:'https://images.pokemontcg.io/xy4/65a.png',
-      setName:'Phantom Forces'
-    },
-    {
-      id:'neo4-10',
-      name:'Dark Typhlosion',
-      image:'https://images.pokemontcg.io/neo4/10.png',
-      setName:'Neo Destiny'
-    },
-    {
-      id:'pl4-SH11',
-      name:'Rapidash',
-      image:'https://images.pokemontcg.io/pl4/SH11.png',
-      setName:'Arceus'
-    },
-    {
-      id:'sm11-71',
-      name:'Mewtwo & Mew GX',
-      image:'https://images.pokemontcg.io/sm11/71.png',
-      setName:'Unified Minds'
-    },
-    {
-      id:'col1-33',
-      name:'Snorlax',
-      image:'https://images.pokemontcg.io/col1/33.png',
-      setName:'Call of Legends'
-    },
-    {
-      id:'sv4-248',
-      name:'Iron Hands Ex',
-      image:'https://images.pokemontcg.io/sv4/248.png',
-      setName:'Parados Rift'
-    },
-    {
-      id:'swsh7-14',
-      name:'Trevenant VMAX',
-      image:'https://images.pokemontcg.io/swsh7/14.png',
-      setName:'Evolving Skies'
-    },
-    {
-      id:'neo1-14',
-      name:'Slowking',
-      image:'https://images.pokemontcg.io/neo1/14.png',
-      setName:'Unseen Forces'
-    },
-    {
-      id:'bw4-72',
-      name:'Shiftry',
-      image:'https://images.pokemontcg.io/bw4/72.png',
-      setName:'Next Destinies'
+      id: 'base1-2',
+      name: 'Blastoise',
+      image: 'https://images.tcgdex.net/en/base/base1/2/low.webp',
+      setName: 'Base Set'
     }
   ];
 
@@ -129,60 +50,117 @@ export class PromoThingsComponent {
   }
 
   setOri: any[] = [];
-  sets:any [] = [];
+  sets: any[] = [];
   any = 0;
   series: string[] = [];
   ids: string[] = [];
 
-    constructor(private cardsApiService: CardsApiService
-    ) {}
+  constructor(private api2Service: Api2Service) {}
 
-    loadSets(): void {
+  ngOnInit(): void {
+    this.loadSets();
+  }
 
-      this.cardsApiService.getPokemonAllSets().subscribe({
-        next: (sets) => {
-          const set = sets.data;
+  loadSets(): void {
+    this.api2Service.getCategories().subscribe({
+      next: (categories: any[]) => {
+        // Map set IDs to series names for classic Pokémon sets
+        const seriesMap: { [key: string]: string } = {
+          'base1': 'Base',
+          'base2': 'Base',
+          'base3': 'Base',
+          'neo1': 'Neo',
+          'ex1': 'EX',
+          'swsh1': 'Sword & Shield',
+          'sv01': 'Scarlet & Violet'
+        };
 
-          this.sets = set;
-          this.setOri = set;
+        const mappedSets = categories.map((cat: any) => {
+          return {
+            id: cat.id_set,
+            name: cat.name,
+            series: seriesMap[cat.id_set] || 'Other Series',
+            releaseDate: cat.release_date || 'N/A',
+            total: cat.total_cards || 0,
+            images: {
+              symbol: cat.symbol || '',
+              logo: cat.logo || ''
+            },
+            legalities: {
+              unlimited: cat.legal === 1 ? 'Legal' : 'Banned'
+            }
+          };
+        });
 
-          // Use a Set to obtain unique values
-          const seriesSet = new Set<string>();
-          const seriesSet2 = new Set<string>();
-          this.sets.forEach((set) => seriesSet.add(set.series));
-          this.sets.forEach((set) => seriesSet2.add(set.id));
+        this.sets = mappedSets;
+        this.setOri = mappedSets;
 
-          // Convert the Set back to an array
-          this.series = Array.from(seriesSet);
-          this.ids = Array.from(seriesSet2);
+        // Use a Set to obtain unique series names for grouping
+        const seriesSet = new Set<string>();
+        const seriesSet2 = new Set<string>();
+        this.sets.forEach((set) => seriesSet.add(set.series));
+        this.sets.forEach((set) => seriesSet2.add(set.id));
 
-          //console.log(sets);
-          //console.log(this.series);
-          //console.log(this.ids);
-        },
-        error: (error) => {
-          console.error('Error loading sets:', error);
+        this.series = Array.from(seriesSet);
+        this.ids = Array.from(seriesSet2);
+
+        // Load cards from our local database to display in the slideshow
+        this.loadSlideshowCards(categories);
+      },
+      error: (error) => {
+        console.error('Error loading sets:', error);
+      }
+    });
+  }
+
+  loadSlideshowCards(categories: any[]): void {
+    this.api2Service.getCards().subscribe({
+      next: (cards: any[]) => {
+        if (cards && cards.length > 0) {
+          // Index sets by their database ID for quick name lookup
+          const setMap = new Map<number, string>();
+          categories.forEach(c => setMap.set(c.id, c.name));
+
+          // Filter cards that have images, select the first 16, and map them
+          const slideshowCards = cards
+            .filter(c => c.image_large || c.image_small)
+            .slice(0, 16)
+            .map((c: any) => {
+              return {
+                id: c.id_card,
+                name: c.name,
+                image: c.image_large || c.image_small,
+                setName: setMap.get(c.id_set) || 'Pokémon Set'
+              };
+            });
+
+          if (slideshowCards.length > 0) {
+            this.Cards = slideshowCards;
+            // Reset slideshow navigation indices
+            this.anterior = 0;
+            this.actual = Math.min(1, slideshowCards.length - 1);
+            this.siguiente = Math.min(2, slideshowCards.length - 1);
+          }
         }
-      });
-    }
+      },
+      error: (err) => {
+        console.error('Error loading local cards for slideshow:', err);
+      }
+    });
+  }
 
-    ngOnInit(): void {
-      this.loadSets();
-    }
+  SearchTime(): void {
+    this.sets = [...this.sets].sort((a: any, b: any) => a.releaseDate.localeCompare(b.releaseDate));
+    this.any = 1;
+  }
 
-    SearchTime(): void {
-      this.sets = this.sets.sort((a: any, b: any) => a.releaseDate.localeCompare(b.releaseDate));
-      this.any = 1;
-    }
+  totalSearchSets(): void {
+    this.sets = [...this.sets].sort((a: any, b: any) => a.total - b.total);
+    this.any = 1;
+  }
 
-    totalSearchSets(): void {
-      this.sets = this.sets.sort((a: any, b: any) => a.total - b.total);
-      this.any = 1;
-    }
-
-    originalPos(): void {
-      this.sets = this.setOri;
-      this.any = 0;
-    }
-
+  originalPos(): void {
+    this.sets = this.setOri;
+    this.any = 0;
+  }
 }

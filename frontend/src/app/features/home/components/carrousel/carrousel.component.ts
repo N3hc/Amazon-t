@@ -1,7 +1,6 @@
-import { Component, HostListener, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SearchService } from '../../../../core/services/search.service';
-import { CardsApiService } from '../../../../core/services/cards-api.service';
 import { Api2Service } from '../../../../core/services/api2.service';
 
 @Component({
@@ -17,7 +16,7 @@ export class CarrouselComponent implements OnInit {
   currentIndex = 0;
   screenWidth: number = window.innerWidth;
 
-  constructor(private cardsApiService: CardsApiService,
+  constructor(
     private searchService: SearchService,
     private router: Router,
     private api2Service: Api2Service

@@ -5,9 +5,9 @@
     <nav class="container mx-auto mt-4 px-4" aria-label="Breadcrumb">
       <button class="flex items-center gap-2 text-gray-800 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 
                transition-colors py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        (click)="backToProducts()" aria-label="Return to previous page">
+        (click)="backToProducts()" [attr.aria-label]="'back_to_products' | translate">
         <i class="bi bi-arrow-left" aria-hidden="true"></i>
-        Back to Products
+        {{ 'back_to_products' | translate }}
       </button>
     </nav>
 
@@ -42,13 +42,13 @@
 
                   <option [ngValue]="product"
                     class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    {{ product.price }} $ | State: {{ getStateLabel(product.state) }}
+                    {{ product.price }} $ | {{ 'condition' | translate }}: {{ getStateLabel(product.state) }}
                   </option>
                   }
                 </select>
                 } @else {
                 <li class="text-lg text-gray-800 dark:text-gray-200">
-                  Not available
+                  {{ 'not_available' | translate }}
                 </li>
                 }
               </ul>
@@ -93,18 +93,18 @@
             @if (ProductCard[0]?.price) {
             <button (click)="addToCart(card)" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 
                      justify-center transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 
-                     focus:ring-offset-2 dark:focus:ring-offset-gray-900" aria-label="Add to shopping cart">
+                     focus:ring-offset-2 dark:focus:ring-offset-gray-900" [attr.aria-label]="'add_to_cart' | translate">
               <i class="bi bi-cart-plus text-lg" aria-hidden="true"></i>
-              Add to Cart
+              {{ 'add_to_cart' | translate }}
             </button>
           }
             <button class="border-2 border-gray-300 hover:border-gray-400 dark:border-gray-600 
                      dark:hover:border-gray-500 px-6 py-3 rounded-lg flex items-center gap-2 justify-center 
                      transition-all focus:outline-none focus:ring-2 focus:ring-gray-500 
                      focus:ring-offset-2 dark:focus:ring-offset-gray-900 dark:text-white"
-              aria-label="Add to favorites">
+              [attr.aria-label]="'add_to_favorites' | translate">
               <i class="bi bi-heart text-lg" aria-hidden="true"></i>
-              Add to Favorites
+              {{ 'add_to_favorites' | translate }}
             </button>
           </div>
         </section>
@@ -114,7 +114,7 @@
       @if (card.abilities) {
       <section class="mt-12" aria-labelledby="abilities-heading">
         <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-xl shadow-sm">
-          <h2 id="abilities-heading" class="text-2xl font-bold mb-4 dark:text-white">Abilities</h2>
+          <h2 id="abilities-heading" class="text-2xl font-bold mb-4 dark:text-white">{{ 'abilities' | translate }}</h2>
           <ul class="space-y-6" role="list">
             @for (ability of card.abilities; track $index) {
             <li class="flex gap-4" role="listitem">
@@ -132,7 +132,7 @@
 
       <!-- Attacks Section -->
       <section class="mt-12" aria-labelledby="attacks-heading">
-        <h2 id="attacks-heading" class="text-2xl font-bold mb-6 dark:text-white">Attacks</h2>
+        <h2 id="attacks-heading" class="text-2xl font-bold mb-6 dark:text-white">{{ 'attacks' | translate }}</h2>
         <ul class="space-y-6" role="list">
           @for (attack of card.attacks; track $index) {
           <li class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-sm" role="listitem">
@@ -144,7 +144,7 @@
             <h3 class="text-xl font-semibold dark:text-white">{{ attack.name }}</h3>
             <p class="text-gray-600 dark:text-gray-300 mb-2">{{ attack.text }}</p>
             <div class="text-sm font-medium text-red-600 dark:text-red-400">
-              Damage: {{ attack.damage || 'None' }}
+              {{ 'damage' | translate }}: {{ attack.damage || ('none' | translate) }}
             </div>
           </li>
           }

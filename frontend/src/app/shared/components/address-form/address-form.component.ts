@@ -5,11 +5,13 @@ import { UserService } from '../../../core/services/user.service';
 import { OnInit } from '@angular/core';
 import { Api2Service } from '../../../core/services/api2.service';
 import { User } from '../../../core/interfaces/user.interface';
+import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-address-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule, TranslatePipe],
   templateUrl: './address-form.component.html',
   styleUrl: './address-form.component.css'
 })

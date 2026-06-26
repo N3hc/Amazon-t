@@ -16,10 +16,12 @@ interface TicketWithLines extends Ticket {
   ticketLines: TicketLine[];
 }
 
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [HeaderComponent],
+  imports: [HeaderComponent, TranslatePipe],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })

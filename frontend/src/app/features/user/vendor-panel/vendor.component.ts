@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Api2Service } from '../../../core/services/api2.service';
 import { UserService } from '../../../core/services/user.service';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
 interface Category {
   id: string;
@@ -31,7 +32,7 @@ interface ProductForm {
 @Component({
   selector: 'app-vendor',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
   templateUrl: './vendor.component.html',
   styleUrls: ['./vendor.component.css']
 })

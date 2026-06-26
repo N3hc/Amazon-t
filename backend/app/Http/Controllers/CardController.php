@@ -7,21 +7,59 @@ use Illuminate\Http\Request;
 
 class CardController extends Controller
 {
+    private function translateCard($card, $lang)
+    {
+        if (!$card) return $card;
+
+        // Translate name
+        $names = json_decode($card->name, true);
+        if (is_array($names)) {
+            $card->name = $names[$lang] ?? $names['en'] ?? $card->name;
+        }
+
+        // Translate description (which is the full card JSON)
+        $descriptions = json_decode($card->description, true);
+        if (is_array($descriptions)) {
+            if (isset($descriptions['en']) || isset($descriptions['es'])) {
+                $selectedDesc = $descriptions[$lang] ?? $descriptions['en'] ?? null;
+                if ($selectedDesc) {
+                    $card->description = json_encode($selectedDesc);
+                }
+            }
+        }
+
+        return $card;
+    }
+
+    private function getRequestedLang(Request $request)
+    {
+        $lang = $request->header('Accept-Language') ?? $request->query('lang') ?? 'en';
+        return str_contains(strtolower($lang), 'es') ? 'es' : 'en';
+    }
+
     public function getCardsByIds(Request $request)
     {
-        $ids = $request->input('ids'); // espera un array
+        $lang = $this->getRequestedLang($request);
+        $ids = $request->input('ids') ?? [];
 
         $cards = Card::whereIn('id_card', $ids)->get();
+
+        foreach ($cards as $card) {
+            $this->translateCard($card, $lang);
+        }
 
         return response()->json($cards);
     }
 
     public function index(Request $request)
     {
+        $lang = $this->getRequestedLang($request);
         $query = Card::query();
 
         if ($request->id) {
-            return response()->json(Card::findOrFail($request->id));
+            $card = Card::findOrFail($request->id);
+            $this->translateCard($card, $lang);
+            return response()->json($card);
         }
 
         if ($request->id_set) {
@@ -38,11 +76,16 @@ class CardController extends Controller
             return response()->json(['message' => 'No hay cartas registradas'], 404);
         }
 
+        foreach ($cards as $card) {
+            $this->translateCard($card, $lang);
+        }
+
         return response()->json($cards, 200);
     }
 
-    public function showFromSet($id)
+    public function showFromSet(Request $request, $id)
     {
+        $lang = $this->getRequestedLang($request);
         $cards = Card::where('id_set', $id)->get();
 
         if ($cards->isEmpty()) {
@@ -51,11 +94,17 @@ class CardController extends Controller
             ], 404);
         }
 
+        foreach ($cards as $card) {
+            $this->translateCard($card, $lang);
+        }
+
         return response()->json($cards, 200);
     }
 
     public function indexCardsByUserProduct($request)
     {
+        $lang = str_contains(strtolower(request()->header('Accept-Language') ?? request()->query('lang') ?? 'en'), 'es') ? 'es' : 'en';
+
         if ($request->isEmpty()) {
             return response()->json([
                 'message' => 'No se encontraron cartas para este set'
@@ -65,6 +114,10 @@ class CardController extends Controller
         $temp = Card::whereIn('id_card', $request)
             ->where('deleted', 0)
             ->get();
+
+        foreach ($temp as $card) {
+            $this->translateCard($card, $lang);
+        }
 
         return response()->json($temp, 200);
     }

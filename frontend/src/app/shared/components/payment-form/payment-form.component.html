@@ -7,46 +7,46 @@
         class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-200 dark:border-gray-700">
         <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()" class="space-y-6">
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Card Type</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'card_type' | translate }}</label>
 <!--                 <select formControlName="name" class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"> -->
                   <label for="name"></label>
                   <input type="text" formControlName="name">
 <!--                     @for (type of cardTypes; track type.value) {
-                    <option [value]="type.value">{{ type.label }}</option>
-                    } -->
+                     <option [value]="type.value">{{ type.label }}</option>
+                     } -->
 <!--                 </select> -->
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Card Number</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'card_number' | translate }}</label>
                 <input type="text" formControlName="number" (input)="formatCardNumber($event)"
                     placeholder="0000 0000 0000 0000"
                     class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
                     [class.border-red-500]="paymentForm.controls['number'].invalid && paymentForm.controls['number'].touched">
                 @if (paymentForm.controls['number'].invalid && paymentForm.controls['number'].touched) {
-                <p class="text-red-500 text-sm mt-1">Invalid card number (16 digits)</p>
+                <p class="text-red-500 text-sm mt-1">{{ 'invalid_card_number' | translate }}</p>
                 }
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Expiration Date</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'expiration_date' | translate }}</label>
                     <input type="text" formControlName="expiration_date" (input)="formatExpirationDate($event)"
                         placeholder="MM/YY" class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
                         [class.border-red-500]="paymentForm.controls['expiration_date'].invalid && paymentForm.controls['expiration_date'].touched">
                     @if (paymentForm.controls['expiration_date'].invalid &&
                     paymentForm.controls['expiration_date'].touched) {
-                    <p class="text-red-500 text-sm mt-1">Format MM/YY</p>
+                    <p class="text-red-500 text-sm mt-1">{{ 'invalid_expiration' | translate }}</p>
                     }
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">CVV</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'cvv' | translate }}</label>
                     <input type="text" formControlName="cvv" maxlength="3" placeholder="123"
                         class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
                         [class.border-red-500]="paymentForm.controls['cvv'].invalid && paymentForm.controls['cvv'].touched">
                     @if (paymentForm.controls['cvv'].invalid && paymentForm.controls['cvv'].touched) {
-                    <p class="text-red-500 text-sm mt-1">3-digit code</p>
+                    <p class="text-red-500 text-sm mt-1">{{ 'invalid_cvv' | translate }}</p>
                     }
                 </div>
             </div>
@@ -54,14 +54,14 @@
             <button type="submit"
                 class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
                 [disabled]="paymentForm.invalid">
-                Save Payment Method
+                {{ 'save_payment_method' | translate }}
             </button>
         </form>
     </div>
     <div class="mt-4 flex justify-between">
         <button type="button" (click)="addingCard = false"
             class="w-full py-2 text-blue-600 dark:text-blue-400 hover:underline">
-            - Cancel
+            - {{ 'cancel' | translate }}
         </button>
     </div>
     }
@@ -78,14 +78,14 @@
                 <div class="text-sm text-gray-500 dark:text-gray-400">
                     <span>{{ card.name }}</span>
                     <span class="mx-2">|</span>
-                    <span>Expires: {{ card.expiration_date }}</span>
+                    <span>{{ 'expires' | translate }}: {{ card.expiration_date }}</span>
                 </div>
             </div>
 
             @if (!enableSelection) {
             <button (click)="deleteCard(card.id)"
                 class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 ml-4">
-                Delete
+                {{ 'delete' | translate }}
             </button>
             }
         </div>
@@ -93,7 +93,7 @@
     </div>
 
     <button (click)="addingCard = true" class="w-full py-2 text-blue-600 dark:text-blue-400 hover:underline">
-        + Add Card
+        {{ 'add_card' | translate }}
     </button>
     }
 </div>

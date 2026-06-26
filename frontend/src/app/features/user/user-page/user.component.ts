@@ -20,10 +20,12 @@ interface TicketWithLines extends Ticket {
   ticketLines: TicketLine[];
 }
 
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [HeaderComponent, ReactiveFormsModule, PaymentFormComponent, AddressFormComponent, VendorComponent, AdminComponent, StatisticsComponent],
+  imports: [HeaderComponent, ReactiveFormsModule, PaymentFormComponent, AddressFormComponent, VendorComponent, AdminComponent, StatisticsComponent, TranslatePipe],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })

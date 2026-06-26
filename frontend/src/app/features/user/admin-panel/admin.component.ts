@@ -7,13 +7,15 @@ import { User } from '../../../core/interfaces/user.interface';
 import { Router } from '@angular/router';
 import { Product } from '../../../core/interfaces/productos.interface';
 import { CardObject } from '../../../core/interfaces/card.interface';
-import { forkJoin } from 'rxjs'
+import { forkJoin } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule, TranslatePipe],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css',
 })

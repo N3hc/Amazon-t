@@ -5,11 +5,12 @@ import { SearchService } from '../../../../core/services/search.service';
 import { Api2Service } from '../../../../core/services/api2.service';
 import { CardObject } from '../../../../core/interfaces/card.interface';
 import { combineLatest } from 'rxjs';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })

@@ -4,8 +4,8 @@
     <div class="mx-auto max-w-screen-xl px-4 2xl:px-0 py-8">
       <!-- Profile Section -->
       <section aria-labelledby="profile-heading" class="bg-gradient-to-r from-purple-500 to-blue-600 rounded-2xl p-6 mb-8 shadow-lg">
-        <h2 id="profile-heading" class="text-2xl font-bold text-white sm:text-3xl">👤 User Profile</h2>
-        <p class="text-purple-100 mt-2">Manage your personal information</p>
+        <h2 id="profile-heading" class="text-2xl font-bold text-white sm:text-3xl">👤 {{ 'user_profile' | translate }}</h2>
+        <p class="text-purple-100 mt-2">{{ 'manage_profile' | translate }}</p>
       </section>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -13,13 +13,13 @@
         <div class="lg:col-span-2 space-y-6">
           <section aria-labelledby="personal-info-heading" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
             <div class="flex justify-between items-start mb-4">
-              <h3 id="personal-info-heading" class="text-xl font-semibold text-gray-900 dark:text-white">Personal Information</h3>
+              <h3 id="personal-info-heading" class="text-xl font-semibold text-gray-900 dark:text-white">{{ 'personal_info' | translate }}</h3>
             </div>
             <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-4">
               <div class="space-y-6">
                 <!-- Form Fields -->
                 <div>
-                  <label for="name" class="block text-sm text-gray-600 dark:text-gray-300">First Name</label>
+                  <label for="name" class="block text-sm text-gray-600 dark:text-gray-300">{{ 'first_name' | translate }}</label>
                   <input id="name" type="text" formControlName="name" [disabled]="!isEditMode" aria-describedby="name-error"
                     class="w-full p-2 border rounded dark:bg-gray-800 dark:text-white bg-gray-50 disabled:opacity-75" />
                   @if (userForm.controls['name'].invalid && userForm.controls['name'].touched) {
@@ -28,7 +28,7 @@
                 </div>
 
                 <div>
-                  <label for="surname" class="block text-sm text-gray-600 dark:text-gray-300">Last Name</label>
+                  <label for="surname" class="block text-sm text-gray-600 dark:text-gray-300">{{ 'last_name' | translate }}</label>
                   <input id="surname" type="text" formControlName="surname" [disabled]="!isEditMode" aria-describedby="surname-error"
                     class="w-full p-2 border rounded dark:bg-gray-800 dark:text-white bg-gray-50 disabled:opacity-75" />
                   @if (userForm.controls['surname'].invalid && userForm.controls['surname'].touched) {
@@ -37,7 +37,7 @@
                 </div>
 
                 <div>
-                  <label for="email" class="block text-sm text-gray-600 dark:text-gray-300">Email</label>
+                  <label for="email" class="block text-sm text-gray-600 dark:text-gray-300">{{ 'email' | translate }}</label>
                   <input id="email" type="email" formControlName="email" [disabled]="!isEditMode" aria-describedby="email-error"
                     class="w-full p-2 border rounded dark:bg-gray-800 dark:text-white bg-gray-50 disabled:opacity-75" />
                   @if (userForm.controls['email'].invalid && userForm.controls['email'].touched) {
@@ -46,7 +46,7 @@
                 </div>
 
                 <div>
-                  <label for="username" class="block text-sm text-gray-600 dark:text-gray-300">Username</label>
+                  <label for="username" class="block text-sm text-gray-600 dark:text-gray-300">{{ 'username' | translate }}</label>
                   <input id="username" type="text" formControlName="username" [disabled]="!isEditMode" aria-describedby="username-error"
                     class="w-full p-2 border rounded dark:bg-gray-800 dark:text-white bg-gray-50 disabled:opacity-75" />
                   @if (userForm.controls['username'].invalid && userForm.controls['username'].touched) {
@@ -55,7 +55,7 @@
                 </div>
 
                 <div>
-                  <label for="birthDate" class="block text-sm text-gray-600 dark:text-gray-300">Birth Date</label>
+                  <label for="birthDate" class="block text-sm text-gray-600 dark:text-gray-300">{{ 'birth_date' | translate }}</label>
                   <input id="birthDate" type="date" formControlName="birthDate" [disabled]="!isEditMode" aria-describedby="birthdate-error"
                     class="w-full p-2 border rounded dark:bg-gray-800 dark:text-white bg-gray-50 disabled:opacity-75" />
                   @if (userForm.controls['birthDate'].invalid && userForm.controls['birthDate'].touched) {
@@ -64,12 +64,12 @@
                 </div>
 
                 <div>
-                  <label for="gender" class="block text-sm text-gray-600 dark:text-gray-300">Gender</label>
+                  <label for="gender" class="block text-sm text-gray-600 dark:text-gray-300">{{ 'gender' | translate }}</label>
                   <select id="gender" formControlName="gender" [disabled]="!isEditMode" aria-describedby="gender-error"
                     class="w-full p-2 border rounded dark:bg-gray-800 dark:text-white bg-gray-50 disabled:opacity-75">
-                    <option value="0">Male</option>
-                    <option value="1">Female</option>
-                    <option value="2">Other</option>
+                    <option value="0">{{ 'male' | translate }}</option>
+                    <option value="1">{{ 'female' | translate }}</option>
+                    <option value="2">{{ 'other' | translate }}</option>
                   </select>
                   @if (userForm.controls['gender'].invalid && userForm.controls['gender'].touched) {
                   <p id="gender-error" class="text-red-500 text-sm mt-1" aria-live="assertive">Gender is required</p>
@@ -78,7 +78,7 @@
 
                 @if (isEditMode) {
                 <div>
-                  <label for="password" class="block text-sm text-gray-600 dark:text-gray-300">New Password</label>
+                  <label for="password" class="block text-sm text-gray-600 dark:text-gray-300">{{ 'password' | translate }}</label>
                   <div class="relative">
                     <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password" aria-describedby="password-error"
                       class="w-full p-2 border rounded dark:bg-gray-800 dark:text-white bg-gray-50" />
@@ -97,12 +97,12 @@
                   @if (userForm.get('role')?.value === 1) {
                   <label class="flex items-center text-sm text-gray-600 dark:text-gray-300">
                     <input type="checkbox" formControlName="role" [disabled]="!isEditMode" class="mr-2" aria-label="Admin role" />
-                    Admin Role
+                    {{ 'admin_role' | translate }}
                   </label>
                   }
                   <label class="flex items-center text-sm text-gray-600 dark:text-gray-300">
                     <input type="checkbox" formControlName="vendor" [disabled]="!isEditMode" class="mr-2" aria-label="Vendor status" />
-                    Vendor Status
+                    {{ 'vendor_status' | translate }}
                   </label>
                 </div>
               </div>
@@ -112,14 +112,14 @@
                 <button type="submit" aria-label="Save changes"
                   class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
                   [disabled]="userForm.invalid">
-                  Save Changes
+                  {{ 'save_changes' | translate }}
                 </button>
                 }
 
                 <button type="button" aria-label="Toggle edit mode"
                   class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
                   (click)="toggleEditMode()">
-                  {{ isEditMode ? 'Cancel' : 'Edit Profile' }}
+                  {{ (isEditMode ? 'cancel' : 'edit_profile') | translate }}
                 </button>
               </div>
             </form>
@@ -129,7 +129,7 @@
           <section aria-labelledby="order-history-heading" class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
             <!-- Completed Tickets -->
             <div class="space-y-4">
-              <h2 id="order-history-heading" class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Completed Tickets</h2>
+              <h2 id="order-history-heading" class="text-2xl font-bold text-gray-800 dark:text-white mb-4">{{ 'completed_tickets' | translate }}</h2>
 
               @for (ticket of completedTickets; track ticket.id) {
               <div role="button" tabindex="0" aria-label="View ticket details"
@@ -147,7 +147,7 @@
               </div>
               } @empty {
               <div class="p-4 text-center text-gray-600 dark:text-gray-400" aria-live="polite">
-                No completed tickets
+                {{ 'no_completed_tickets' | translate }}
               </div>
               }
             </div>
@@ -160,7 +160,7 @@
                 <div class="mb-6 border-b pb-4 border-gray-200 dark:border-gray-700">
                   <div class="flex justify-between items-start mb-2">
                     <div>
-                      <h2 id="ticket-details-heading" class="text-2xl font-bold text-gray-800 dark:text-white">Ticket
+                      <h2 id="ticket-details-heading" class="text-2xl font-bold text-gray-800 dark:text-white">{{ 'ticket_details' | translate }}
                         #{{selectedTicket.id}}</h2>
                       <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
                         Date: {{selectedTicket.createdAt}}
@@ -226,7 +226,7 @@
               </section>
               } @else {
               <div class="p-8 text-center text-gray-600 dark:text-gray-400 border-2 border-dashed rounded-lg" aria-live="polite">
-                Select a ticket to view details
+                {{ 'select_ticket_desc' | translate }}
               </div>
               }
             </div>
@@ -237,23 +237,23 @@
         <div class="space-y-6">
           <!-- Payment Methods -->
           <section aria-labelledby="payment-methods-heading" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-            <h3 id="payment-methods-heading" class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Payment Methods</h3>
+            <h3 id="payment-methods-heading" class="text-xl font-semibold text-gray-900 dark:text-white mb-4">{{ 'payment_methods' | translate }}</h3>
             <app-payment-form></app-payment-form>
           </section>
 
           <!-- User Address -->
           <section aria-labelledby="user-address-heading" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-            <h3 id="user-address-heading" class="text-xl font-semibold text-gray-900 dark:text-white mb-4">User Address</h3>
+            <h3 id="user-address-heading" class="text-xl font-semibold text-gray-900 dark:text-white mb-4">{{ 'user_address' | translate }}</h3>
             <app-address-form></app-address-form>
           </section>
 
           <!-- Security Settings -->
           <section aria-labelledby="security-settings-heading" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-            <h3 id="security-settings-heading" class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Security Settings</h3>
+            <h3 id="security-settings-heading" class="text-xl font-semibold text-gray-900 dark:text-white mb-4">{{ 'security_settings' | translate }}</h3>
             <div class="space-y-4">
               <div class="flex items-center justify-between">
-                <span class="text-gray-700 dark:text-gray-300">Two-Factor Authentication</span>
-                <button aria-label="Enable two-factor authentication" class="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm">Enable</button>
+                <span class="text-gray-700 dark:text-gray-300">{{ 'two_factor' | translate }}</span>
+                <button [attr.aria-label]="'enable' | translate" class="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm">{{ 'enable' | translate }}</button>
               </div>
             </div>
           </section>

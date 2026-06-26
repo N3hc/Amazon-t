@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CardsApiService } from '../../../../core/services/cards-api.service';
 import { Card } from '../../../../core/interfaces/carrousel.interface';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-promo-things',
   standalone: true,
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './promo-things.component.html',
   styleUrl: './promo-things.component.css'
 })

@@ -8,34 +8,34 @@
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()"
         class="w-full max-w-sm bg-black/20 p-6 rounded-lg shadow-md transition duration-300 hover:bg-black/70"
-        aria-label="User registration form">
+        [attr.aria-label]="'User registration form' | translate">
 
         <div class="relative mb-4 flex flex-col">
-            <label for="username" class="text-white mb-1">Full Name</label>
-            <input type="text" id="username" formControlName="username" placeholder="Your full name"
+            <label for="username" class="text-white mb-1">{{ 'full_name' | translate }}</label>
+            <input type="text" id="username" formControlName="username" [placeholder]="'your_full_name' | translate"
                 class="w-full bg-transparent p-2 text-white border border-gray-400 rounded focus:outline-none"
-                required aria-label="Full Name" />
+                required [attr.aria-label]="'full_name' | translate" />
             @if (registerForm.controls['username'].invalid && registerForm.controls['username'].touched) {
-                <p class="text-red-500 text-sm mt-1">Invalid name</p>
+                <p class="text-red-500 text-sm mt-1">{{ 'invalid_name' | translate }}</p>
             }
         </div>
 
         <div class="relative mb-4 flex flex-col">
-            <label for="email" class="text-white mb-1">Email Address</label>
+            <label for="email" class="text-white mb-1">{{ 'email_address' | translate }}</label>
             <input type="email" id="email" formControlName="email" placeholder="example@email.com"
                 class="w-full bg-transparent p-2 text-white border border-gray-400 rounded focus:outline-none"
-                required aria-label="Email Address" />
+                required [attr.aria-label]="'email_address' | translate" />
             @if (registerForm.controls['email'].invalid && registerForm.controls['email'].touched) {
-                <p class="text-red-500 text-sm mt-1">Invalid email</p>
+                <p class="text-red-500 text-sm mt-1">{{ 'invalid_email' | translate }}</p>
             }
         </div>
 
         <div class="relative mb-4 flex items-center border-b border-gray-400 py-2">
             <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
-                placeholder="Password" class="w-full bg-transparent p-2 text-white focus:outline-none"
-                aria-label="Password" />
+                [placeholder]="'password_placeholder' | translate" class="w-full bg-transparent p-2 text-white focus:outline-none"
+                [attr.aria-label]="'password_placeholder' | translate" />
             <button type="button" (click)="togglePassword()" class="absolute right-2 text-gray-400"
-                aria-label="Toggle password visibility">
+                [attr.aria-label]="'Toggle password visibility' | translate">
                 @if (!showPassword) {
                     <img src="assets/icons/eye.png" alt="Show Password" width="20" height="20" />
                 } @else {
@@ -46,10 +46,10 @@
 
         <div class="relative mb-4 flex items-center border-b border-gray-400 py-2">
             <input [type]="showPassword2 ? 'text' : 'password'" id="confirmPassword" formControlName="confirmPassword"
-              placeholder="Repeat Password" class="w-full bg-transparent p-2 text-white focus:outline-none"
-              aria-label="Repeat Password" />
+              [placeholder]="'repeat_password' | translate" class="w-full bg-transparent p-2 text-white focus:outline-none"
+              [attr.aria-label]="'repeat_password' | translate" />
             <button type="button" (click)="togglePassword2()" class="absolute right-2 text-gray-400"
-              aria-label="Toggle confirm password visibility">
+              [attr.aria-label]="'Toggle confirm password visibility' | translate">
               @if (!showPassword2) {
                 <img src="assets/icons/eye.png" alt="Show Password" width="20" height="20" />
               } @else {
@@ -59,59 +59,59 @@
         </div>
 
         @if (registerForm.hasError('mismatch') && registerForm.controls['confirmPassword'].touched) {
-            <p class="text-red-500 text-sm mt-1">Passwords do not match</p>
+            <p class="text-red-500 text-sm mt-1">{{ 'passwords_dont_match' | translate }}</p>
         }
 
         @if (registerForm.controls['password'].invalid && registerForm.controls['password'].touched) {
-            <p class="text-red-500 text-sm mt-1">Password must be at least 6 characters</p>
+            <p class="text-red-500 text-sm mt-1">{{ 'invalid_password' | translate }}</p>
         }
 
         @if (registerForm.controls['confirmPassword'].invalid && registerForm.controls['confirmPassword'].touched) {
-            <p class="text-red-500 text-sm mt-1">Invalid password confirmation</p>
+            <p class="text-red-500 text-sm mt-1">{{ 'invalid_confirm_password' | translate }}</p>
         }
 
         <div class="relative mb-4 flex flex-col">
-            <label for="vendor" class="text-white mb-1">Account Type</label>
+            <label for="vendor" class="text-white mb-1">{{ 'account_type' | translate }}</label>
             <select id="vendor" formControlName="vendor"
                 class="w-full bg-transparent p-2 text-white border border-gray-400 rounded focus:outline-none"
-                required aria-label="vendor">
-                <option value="0">Client</option>
-                <option value="1">Vendor</option>
+                required [attr.aria-label]="'account_type' | translate">
+                <option class="text-black" value="0">{{ 'client' | translate }}</option>
+                <option class="text-black" value="1">{{ 'vendor' | translate }}</option>
             </select>
         </div>
 
         <div class="relative mb-4 flex flex-col">
-            <label for="gender" class="text-white mb-1">Gender</label>
+            <label for="gender" class="text-white mb-1">{{ 'gender' | translate }}</label>
             <select id="gender" formControlName="gender"
                 class="w-full bg-transparent p-2 text-white border border-gray-400 rounded focus:outline-none"
-                required aria-label="gender">
-                <option value="0">Man</option>
-                <option value="1">Female</option>
-                <option value="2">Other</option>
+                required [attr.aria-label]="'gender' | translate">
+                <option class="text-black" value="0">{{ 'man' | translate }}</option>
+                <option class="text-black" value="1">{{ 'female' | translate }}</option>
+                <option class="text-black" value="2">{{ 'other' | translate }}</option>
             </select>
         </div>
 
         <div class="relative mb-4 flex items-center">
             <input type="checkbox" id="terms" formControlName="termsAccepted" class="text-white" required
-                aria-label="Accept terms and conditions" />
+                [attr.aria-label]="'Accept terms and conditions' | translate" />
             <label for="terms" class="text-white text-sm ml-2">
-                I accept the
-                <a href="#" class="text-teal-300 hover:underline">terms and conditions</a>
+                {{ 'accept_terms' | translate }}
+                <a href="#" class="text-teal-300 hover:underline">{{ 'terms_conditions' | translate }}</a>
             </label>
         </div>
 
         <button type="submit"
             class="w-full bg-gradient-to-r from-teal-500 to-teal-400 py-2 text-white font-semibold rounded-lg hover:scale-105 transition-transform"
-            [disabled]="registerForm.invalid" aria-label="Register">
-            Register
+            [disabled]="registerForm.invalid" [attr.aria-label]="'register' | translate">
+            {{ 'register' | translate }}
         </button>
 
         <div class="mt-4 text-center">
-            <p class="text-gray-400 text-sm">Already have an account?
-                <a (click)="goToLogin()" (keydown.enter)="goToLogin()" class="text-teal-300 hover:underline cursor-pointer" role="button" tabindex="0">Login here</a>
+            <p class="text-gray-400 text-sm">{{ 'already_have_account' | translate }}
+                <a (click)="goToLogin()" (keydown.enter)="goToLogin()" class="text-teal-300 hover:underline cursor-pointer" role="button" tabindex="0">{{ 'login_here' | translate }}</a>
             </p>
             <a class="text-teal-300 text-sm hover:underline cursor-pointer" (click)="continueWithoutSession()" (keydown.enter)="continueWithoutSession()" role="button" tabindex="0">
-                Continue without logging in
+                {{ 'continue_without_logging' | translate }}
             </a>
         </div>
     </form>

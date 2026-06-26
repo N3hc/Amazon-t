@@ -9,12 +9,14 @@ import { Api2Service } from '../../../core/services/api2.service';
 import { TicketsService } from '../../../core/services/tickets.service';
 import { UserService } from '../../../core/services/user.service';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { LanguageService } from '../../../core/services/language.service';
 
 
 @Component({
   selector: 'app-detail',
   standalone: true,
-  imports: [HeaderComponent, FormsModule],
+  imports: [HeaderComponent, FormsModule, TranslatePipe],
   templateUrl: './detail.component.html',
   styleUrl: './detail.component.css'
 })
@@ -38,6 +40,7 @@ export class DetailComponent {
     private cartService: CartService,
     private ticketsService: TicketsService,
     private userService: UserService,
+    private langService: LanguageService
   ) { }
 
   addToCart(product: any) {
@@ -98,11 +101,11 @@ export class DetailComponent {
 
   getStateLabel(state: number): string {
     switch (state) {
-      case 0: return 'Poor';
-      case 1: return 'Fair';
-      case 2: return 'Good';
-      case 3: return 'Very Good';
-      case 4: return 'Excellent';
+      case 0: return this.langService.translate('poor');
+      case 1: return this.langService.translate('fair');
+      case 2: return this.langService.translate('good');
+      case 3: return this.langService.translate('very_good');
+      case 4: return this.langService.translate('excellent');
       default: return 'Unknown';
     }
   }

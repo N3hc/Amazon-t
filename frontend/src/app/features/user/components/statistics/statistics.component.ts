@@ -1,10 +1,11 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Chart } from 'chart.js/auto';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
   @Component({
     selector: 'app-statistics',
     standalone: true,
-    imports: [],
+    imports: [TranslatePipe],
     templateUrl: './statistics.component.html',
     styleUrl: './statistics.component.css'
   })

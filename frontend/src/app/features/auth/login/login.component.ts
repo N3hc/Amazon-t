@@ -5,11 +5,12 @@ import { User } from '../../../core/interfaces/user.interface';
 import { CommonModule } from '@angular/common';
 import { Api2Service } from '../../../core/services/api2.service'; // Adjust the path according to your structure
 import { UserService } from '../../../core/services/user.service';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule,],
+  imports: [ReactiveFormsModule, CommonModule, TranslatePipe],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })

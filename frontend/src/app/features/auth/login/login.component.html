@@ -11,11 +11,11 @@
     <form [formGroup]="loginForm" 
           (ngSubmit)="onSubmit()"
           class="w-full max-w-sm bg-black/20 p-6 rounded-lg shadow-md transition duration-300 hover:bg-black/70"
-          aria-label="Login form">
+          [attr.aria-label]="'Login form' | translate">
         
         <!-- Email Input -->
         <div class="relative mb-4 flex flex-col">
-            <label for="email" class="text-white mb-1">Email Address</label>
+            <label for="email" class="text-white mb-1">{{ 'email_address' | translate }}</label>
             <input type="email" 
                    id="email" 
                    formControlName="email" 
@@ -25,24 +25,24 @@
                    aria-required="true"
                    [attr.aria-invalid]="loginForm.controls.email.invalid">
             @if (loginForm.controls.email.invalid && loginForm.controls.email.touched) {
-                <p class="text-red-500 text-sm mt-1" role="alert">Invalid email format</p>
+                <p class="text-red-500 text-sm mt-1" role="alert">{{ 'invalid_email' | translate }}</p>
             }
         </div>
 
         <!-- Password Input -->
         <div class="relative mb-4 flex items-center border-b border-gray-400 py-2">
-            <label for="password" class="sr-only">Password</label>
+            <label for="password" class="sr-only">{{ 'password_placeholder' | translate }}</label>
             <input [type]="showPassword ? 'text' : 'password'" 
                    id="password" 
                    formControlName="password"
-                   placeholder="Password" 
+                   [placeholder]="'password_placeholder' | translate" 
                    class="w-full bg-transparent p-2 text-white focus:outline-none"
                    aria-required="true"
                    [attr.aria-invalid]="loginForm.controls.password.invalid">
             <button type="button" 
                     (click)="togglePassword()" 
                     class="absolute right-2 text-gray-400"
-                    [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                    [attr.aria-label]="(showPassword ? 'hide_password' : 'show_password') | translate">
                 @if (!showPassword) {
                     <img src="assets/icons/eye.png" alt="" width="20" height="20" aria-hidden="true" />
                 } @else {
@@ -52,28 +52,28 @@
         </div>
 
         @if (loginForm.controls.password.invalid && loginForm.controls.password.touched) {
-            <p class="text-red-500 text-sm mt-1" role="alert">Password must be at least 6 characters</p>
+            <p class="text-red-500 text-sm mt-1" role="alert">{{ 'invalid_password' | translate }}</p>
         }
 
         <!-- Submit Button -->
         <button type="submit"
             class="w-full bg-gradient-to-r from-teal-500 to-teal-400 py-2 text-white font-semibold rounded-lg hover:scale-105 transition-transform"
             [disabled]="loginForm.invalid"
-            aria-label="Log in to your account">
-            Log In
+            [attr.aria-label]="'log_in' | translate">
+            {{ 'log_in' | translate }}
         </button>
 
         <!-- Additional Links -->
         <div class="mt-4 text-center">
-            <a href="#" class="text-teal-300 text-sm hover:underline" role="button">Forgot password?</a>
+            <a href="#" class="text-teal-300 text-sm hover:underline" role="button">{{ 'forgot_password' | translate }}</a>
             <p class="text-gray-400 text-sm">
-                Don't have an account?
+                {{ 'dont_have_account' | translate }}
                 <a class="text-teal-300 text-sm hover:underline cursor-pointer" 
                    (click)="goToRegister()"
                    (keydown.enter)="goToRegister()"
                    role="button"
                    tabindex="0">
-                    Register here
+                    {{ 'register_here' | translate }}
                 </a>
             </p>
             <a class="text-teal-300 text-sm hover:underline cursor-pointer" 
@@ -81,7 +81,7 @@
                (keydown.enter)="continueWithoutSession()"
                role="button"
                tabindex="0">
-                Continue without account
+                {{ 'continue_without_account' | translate }}
             </a>
         </div>
     </form>

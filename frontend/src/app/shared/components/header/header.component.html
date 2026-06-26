@@ -1,19 +1,26 @@
 <div role="banner">
   <div class="bg-[#1064A6] p-2.5 grid grid-cols-1 md:grid-cols-12 items-center text-center">
     <!-- First Column: Logo and Theme Toggle -->
-    <div class="ml-2 md:col-span-3 flex justify-between items-center">
+    <div class="ml-2 md:col-span-3 flex justify-between items-center gap-2">
       <img src="assets/logos/logo.png" 
            alt="Company Logo" 
-           class="max-h-[40px] hidden md:block" 
+           class="max-h-[40px] hidden md:block cursor-pointer" 
            (click)="goToHome()"
            role="button"
            tabindex="0"
            aria-label="Home page">
-      <img class="max-h-[60px] cursor-pointer hidden md:block" 
-           (click)="toggleTheme()"
-           [src]="isDarkMode ? 'assets/icons/solgaleoCoin.png' : 'assets/icons/lunalaCoin.png'" 
-           [alt]="isDarkMode ? 'Dark theme icon' : 'Light theme icon'"
-           aria-label="Toggle theme">
+      <div class="flex items-center gap-2">
+        <img class="max-h-[60px] cursor-pointer hidden md:block" 
+             (click)="toggleTheme()"
+             [src]="isDarkMode ? 'assets/icons/solgaleoCoin.png' : 'assets/icons/lunalaCoin.png'" 
+             [alt]="isDarkMode ? 'Dark theme icon' : 'Light theme icon'"
+             aria-label="Toggle theme">
+        <button class="bg-blue-600 border border-white hover:bg-blue-700 text-white px-2.5 py-1.5 text-xs rounded-lg font-bold flex items-center gap-1.5 transition-all focus:outline-none cursor-pointer hidden md:flex"
+                (click)="langService.setLanguage(langService.getCurrentLanguage() === 'en' ? 'es' : 'en')"
+                aria-label="Switch Language">
+          🌐 {{ langService.getCurrentLanguage() === 'en' ? 'ES' : 'EN' }}
+        </button>
+      </div>
     </div>
 
     <!-- Second Column: Search + Theme Toggle (mobile) -->
@@ -23,6 +30,11 @@
            [src]="isDarkMode ? 'assets/icons/solgaleoCoin.png' : 'assets/icons/lunalaCoin.png'" 
            [alt]="isDarkMode ? 'Dark theme icon' : 'Light theme icon'"
            aria-label="Toggle theme">
+      <button class="bg-blue-600 border border-white hover:bg-blue-700 text-white px-2 py-1 text-xs rounded-lg font-bold flex items-center gap-1 transition-all focus:outline-none cursor-pointer block md:hidden"
+              (click)="langService.setLanguage(langService.getCurrentLanguage() === 'en' ? 'es' : 'en')"
+              aria-label="Switch Language">
+        🌐 {{ langService.getCurrentLanguage() === 'en' ? 'ES' : 'EN' }}
+      </button>
       
       <form class="max-w-3/4 mx-auto flex items-center w-full" 
             role="search"
@@ -30,18 +42,18 @@
         <div class="w-5/6">
           <input type="search" 
                  id="default-search" 
-                 placeholder="Search" 
+                 [placeholder]="'search_placeholder' | translate" 
                  name="search" 
                  required
                  aria-required="true"
                  class="w-full px-4 py-2 text-sm text-gray-900 border border-slate-950 rounded-full bg-white focus:ring-blue-500 focus:border-blue-500">
         </div>
         <button type="submit"
-                aria-label="Search"
+                [attr.aria-label]="'search' | translate"
                 class="cursor-pointer bg-blue-500 text-white px-4 py-2 text-xs rounded border-blue-600
                 active:border-b-[2px] active:brightness-90 active:translate-y-[2px] md:px-6 md:py-3 md:ml-4">
           <span class="block md:hidden" aria-hidden="true">🔍</span>
-          <span class="hidden md:block">Search</span>
+          <span class="hidden md:block">{{ 'search' | translate }}</span>
         </button>
       </form>
     </div>
@@ -56,9 +68,9 @@
              aria-haspopup="true"
              [attr.aria-expanded]="showUserMenu && loggedIn">
           <div>
-            <p class="m-0">
-              Hello, {{ loggedIn ? user?.name : 'Sign in' }}<br>
-              <strong>Account & Lists</strong>
+            <p class="m-0 text-left text-xs md:text-sm">
+              {{ 'hello' | translate }}, {{ loggedIn ? user?.name : ('sign_in' | translate) }}<br>
+              <strong>{{ 'account_lists' | translate }}</strong>
             </p>
           </div>
 
@@ -69,14 +81,14 @@
               <button role="menuitem"
                       class="w-full px-4 py-2 text-left hover:bg-gray-100"
                       (click)="viewProfile($event)"
-                      aria-label="View profile">
-                View Profile
+                      [attr.aria-label]="'view_profile' | translate">
+                {{ 'view_profile' | translate }}
               </button>
               <button role="menuitem"
                       class="w-full px-4 py-2 text-left hover:bg-gray-100"
                       (click)="logout($event)"
-                      aria-label="Sign out">
-                Sign Out
+                      [attr.aria-label]="'sign_out' | translate">
+                {{ 'sign_out' | translate }}
               </button>
             </div>
           }

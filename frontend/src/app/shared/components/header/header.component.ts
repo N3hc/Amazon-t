@@ -5,10 +5,13 @@ import { ThemeService } from '../../../core/services/theme.service';
 import { CartService } from '../../../core/services/cart.service';
 import { CartItem } from '../../../core/interfaces/productos.interface';
 import { UserService } from '../../../core/services/user.service';
+import { LanguageService } from '../../../core/services/language.service';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, TranslatePipe],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
@@ -51,7 +54,8 @@ export class HeaderComponent implements OnInit {
     private themeService: ThemeService,
     private router: Router,
     private cartService: CartService,
-    private userService: UserService
+    private userService: UserService,
+    public langService: LanguageService
   ) {
     this.cartService.cart$.subscribe((cart) => {
       this.cart = cart;

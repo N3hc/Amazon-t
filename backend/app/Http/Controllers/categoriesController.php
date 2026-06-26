@@ -10,18 +10,33 @@ class categoriesController extends Controller
 {
     public function index(Request $request)
     {
-        if (categories::all()->isEmpty()) {
+        $lang = $request->header('Accept-Language') ?? $request->query('lang') ?? 'en';
+        $lang = str_contains(strtolower($lang), 'es') ? 'es' : 'en';
+
+        $allCategories = categories::all();
+
+        if ($allCategories->isEmpty()) {
             return response()->json([
                 'message' => 'No categories registered'
             ], 404);
-        }elseif ($request->id) {
-            $card = categories::findOrFail($request->id);
-            return response()->json($card, 200);
         }
-        elseif (categories::all()->isNotEmpty()) {
-            $card = categories::all();
-            return response()->json($card, 200);
+
+        foreach ($allCategories as $cat) {
+            $names = json_decode($cat->name, true);
+            if (is_array($names)) {
+                $cat->name = $names[$lang] ?? $names['en'] ?? $cat->name;
+            }
         }
+
+        if ($request->id) {
+            $category = $allCategories->firstWhere('id', $request->id);
+            if (!$category) {
+                return response()->json(['message' => 'Category not found'], 404);
+            }
+            return response()->json($category, 200);
+        }
+
+        return response()->json($allCategories, 200);
     }
     public function update(Request $request)
     {
